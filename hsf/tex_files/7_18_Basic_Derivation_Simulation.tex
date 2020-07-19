@@ -1,0 +1,335 @@
+\subsection{Derivation: Basic Model}
+
+\begin{enumerate}
+    \item Let $\tau_s$ be the synaptic time constant of each neuron in the network. Define dimensionless time as:
+    \begin{equation*}
+        \xi \overset{\Delta}{=} \frac{t}{\tau_s}.
+    \end{equation*}\\
+    We now assume our Linear Dynamical System is expressed in dimensionless time, i.e
+    
+    \begin{equation}
+        \label{eq:lds_dimensionless}
+        \frac{dx}{d\xi} = Ax(\xi) + B c(\xi).
+    \end{equation}
+    
+    To describe the neuron dynamics in dimensionless time, let $o(\xi) \in \mathbf{R}^{N}$ be the the spike train of N neurons composing the network:
+    \begin{equation*}
+        o_j(\xi) = \sum_{k=1}^{\text{$n_j$ spikes}} \delta(\xi - \xi_{j}^{k}),
+    \end{equation*}
+    where $\xi_j^k$ is the time at which neuron $j$ makes its $k^{th}$ spike. 
+    Define the network's estimate of the state variable as
+    \begin{equation}
+        \label{eq:xhat}
+        \hat{x}(\xi)
+        \overset{\Delta}{=} D r(\xi), 
+    \end{equation}
+    where
+    \begin{equation}
+    \label{eq:rdot}
+        \frac{dr}{d \xi} = -r + o(\xi).
+    \end{equation},\\
+    where $r_j$ is the total received post-synaptic current (PSC) of neuron j. 
+    Define the network error as
+    \begin{equation}
+    \label{eq:error_def}
+        e(\xi) \overset{\Delta}{=} x(\xi) - \hat{x}(\xi)
+    \end{equation}
+    
+    \item From equations (\ref{eq:rdot}) and (\ref{eq:xhat}), we have
+    
+    \begin{align*}
+        D \dot{r} + D r &= Do \\
+        \\
+        \implies \dot{\hat{x}} + \hat{x} &= Do,
+    \end{align*}
+    where the dot denotes derivative w.r.t dimensionless time $\xi$.
+
+    Subtract $\dot{\hat{x}}$ from $\dot{x}$ to get $\dot{e}$:
+    \begin{align}
+    \label{eq:derivation_init}
+        \dot{e} &= \dot{x}-\dot{\hat{x}} \notag \\
+        &= \left( Ax + Bc \right) - \left( Do - \hat{x} \right) \notag \\
+        &= A\left(  e + \hat{x} \right) + Bc - Do + \hat{x} \notag \\
+        &= A e + (A + I)\hat{x} + Bc - Do \notag \\
+        &=  A e + (A + I) \left(Dr\right) + Bc - Do \notag \\
+        \implies A^{-1}\dot{e} &= e + (I + A^{-1}) Dr + A^{-1} Bc - A^{-1}Do \notag \\ 
+        \implies D^{T} A^{-1} \dot{e} &= D^T e +D^T (I + A^{-1}) Dr + D^T A^{-1}Bc - D^T A^{-1} D o 
+    \end{align}
+where the third equality follows from equation (\ref{eq:error_def}).    
+
+\item Assuming both D and A are full rank, diagonalize A and D to a common left basis:
+\begin{align*}
+    A &= \mathcal{U} \Lambda \mathcal{U}^T = \sum_{j=1}^d \Lambda_j \mathcal{U}_j \mathcal{U}_j^T,\\
+    D &= \mathcal{U} \left[S \hspace{2mm} 0 \right]  V^T = \sum_{j=1}^d S_j \mathcal{U}_j  V_j^T,\\
+    D^T &= V \begin{bmatrix} S \\ 0\end{bmatrix} \mathcal{U}^T = \sum_{j=1}^d S_j V_j  \mathcal{U}_j^T,
+\end{align*}
+with $\mathcal{U} \in \mathbf{R}^{d \text{ x } d}$ and $V \in \mathbf{R}^{N \text{ x } N}$, and $S \in \mathbf{R}^{d \text{ x } N }$. \\
+\\
+To express equation (\ref{eq:derivation_init}) with the $\mathcal{U}$ and $V$ bases, first note
+
+\begin{align*}
+     D^{T} A^{-1}  &= V \begin{bmatrix} S \\ 0\end{bmatrix} \mathcal{U}^T  \mathcal{U} \Lambda^{-1} \mathcal{U}^T \\
+     &= V \begin{bmatrix} S \\ 0\end{bmatrix} \Lambda^{-1} \mathcal{U}^T \\
+     &= \sum_{j = 1}^{d} \frac{S_j}{ \Lambda_j} V_j \mathcal{U}_j^T,
+\end{align*}\\
+
+and
+
+\begin{align*}
+D^{T} A^{-1} D  &= V \begin{bmatrix} S \\ 0\end{bmatrix} \mathcal{U}^T  \mathcal{U} \Lambda^{-1} \mathcal{U}^T \mathcal{U} \left[S \hspace{1mm} 0 \right] V^T \\
+  &= V \begin{bmatrix} S \\ 0\end{bmatrix} \Lambda^{-1} \left[S \hspace{1mm} 0 \right] V^T \\
+  &= \sum_{j = 1}^{d} \frac{S_j^2}{ \Lambda_j} V_j V_j^T.
+\end{align*}
+
+Consequently, 
+
+\begin{align}
+    \label{eq:derivation_sub_svd}
+    \sum_{j = 1}^{d} \frac{S_j}{ \Lambda_j} V_j \mathcal{U}_j^T \dot{e} &= 
+     \sum_{j=1}^d S_j V_j  \mathcal{U}_j^T e
+    +
+    \sum_{j = 1}^{d} S_j^2 (1 + \Lambda_j^{-1}) V_j V_j^T r
+    + 
+    \sum_{j = 1}^{d} \frac{S_j}{ \Lambda_j} V_j \mathcal{U}_j^TBc 
+    -
+    \sum_{j = 1}^{d} \frac{S_j^2}{ \Lambda_j} V_j V_j^T o.
+\end{align}
+
+
+Multiply both sides of the preceding equation by $V_j^T$ to arrive at the system of equations
+
+\begin{align*}
+    \frac{S_j}{\Lambda_j} \mathcal{U}_j^T \dot{e} &= 
+    S_j \mathcal{U}_j^T e
+    +
+    S_j^2 (1 + \Lambda_j^{-1})V_j^T r 
+    +
+    S_j \Lambda_j^{-1} \mathcal{U}_j^T B c
+    -
+    S_j^2 \Lambda_j^{-1} V_j^T o\\
+    \\ \implies 
+    S_j \mathcal{U}_j^T \dot{e} &= 
+    S_j \Lambda_j \mathcal{U}_j^T e
+    +
+    S_j^2 (\Lambda_j + 1) V_j^T r 
+    +
+    S_j \mathcal{U}_j^T B c
+    -
+    S_j^2 V_j^T o,\\
+\end{align*}
+for $j = 1, \ldots, d$.
+
+\item To simplify notation, make the following substitutions which define our rotated neuron's spike train, membrane voltage, PSC, and input matrix respectively: 
+\begin{align}
+    \label{eq:rotated_voltage_psc_def}
+    \Omega_j \overset{\Delta}{=} S_j^2 V_j^T o \notag \\  \notag 
+    \\  \notag 
+    v_j \overset{\Delta}{=} S_j \mathcal{U}_j^T e, \notag  \\
+    \\
+    \rho_j \overset{\Delta}{=} S_j^2 V_j^T r  \notag \\  \notag 
+    \\  \notag 
+    \beta_j \overset{\Delta}{=} S_j \mathcal{U}_j^T B. \notag 
+\end{align}
+
+The system of equations simplifies to the membrane voltage dynamics
+\begin{align*}
+    \dot{v}_j &= 
+    \Lambda_j v_j
+    +
+    (\Lambda_j + 1) \rho_j 
+    +
+     \beta_j c
+    -
+   \Omega_j,\\
+\end{align*}
+
+or in matrix form,
+
+\begin{align}
+\label{eq:rotated_voltage_dynamics}
+    \dot{v} &= 
+    \Lambda v
+    +
+    (\Lambda + I) \rho 
+    +
+     \beta c
+    -
+   \Omega.
+   \end{align}
+   \\
+Here, $v$ is a d vector which describes the dynamics of the d-neurons needed to implement the dynamical system. The remaining $N-d$ neurons are unused and do not contribute to the network readout at present.   \\
+From equation (\ref{eq:rdot}) the PSC dynamics are
+\begin{equation}
+\label{eq:rho_dot}
+    \dot{\rho} = -\rho + \Omega.
+\end{equation}
+Similar to equation (\ref{eq:rotated_voltage_dynamics}), $\rho$ describes a d-vector. 
+
+ 
+   
+   
+\item The spike trains $\Omega(\xi)$ are chosen minimize the network estimation error
+\begin{align}
+    \mathcal{L}(\xi) =  || x(\xi + d\xi) - \hat{x}(\xi + d\xi) ||. 
+\end{align}
+The network greedily minimizes $\mathcal{L}$ an instant $d\xi$ ahead in time. Writing $\hat{x}$ in terms of $\Omega$ and $\rho$, equations (\ref{eq:xhat}) and (\ref{eq:rotated_voltage_psc_def}) imply 
+
+\begin{align*}
+    \hat{x} &= D r \\
+    &= \sum_{j=1}^d S_j \mathcal{U}_j  V_j^T r\\
+    &= \sum_{j=1}^d (S_j^{-1}S_j^2) \mathcal{U}_j  V_j^T r\\
+    &=  \sum_{j=1}^d (S_j^{-1}  \mathcal{U}_j) (S_j^2 V_j^T r)\\
+    &=  \sum_{j=1}^d (S_j^{-1}  \mathcal{U}_j) \rho_j \\
+    &= \mathcal{U}S^{-1}\rho\\
+    &= \Delta \rho, 
+\end{align*}
+
+Where
+\begin{align}
+    \label{eq:delta_dec}
+    \Delta \overset{\Delta}{=} \mathcal{U} S^{-1}.
+\end{align}
+
+If neuron $j$ does not spike, the objective is
+\begin{align*}
+    \mathcal{L}_{ns} = ||x - \hat{x}||
+\end{align*}
+ 
+If neuron $j$ spikes at time $\xi$, then $\Omega \leftarrow \Omega + \hat{e}_j$. The estimate $\hat{x}$ is updated so that the objective is now
+\begin{align*}
+    \mathcal{L}_{sp} &= || x - (\hat{x} + \Delta_j) ||,\\
+    \\
+    &= 
+    (x-\hat{x}+\Delta_j)^T (x-\hat{x}+\Delta_j)\\
+    &= 
+    x^T x - x^T \hat{x} + x^T \Delta_j
+    - \hat{x}^T x +\hat{x}^T\hat{x} -\hat{x}^T \Delta_j
+    +
+    \Delta_j^T x - \Delta_j^T \hat{x} + \Delta_j^T \Delta_j
+    \\
+    &=
+    \left(x^T x -2 x^T \hat{x} +\hat{x}^T\hat{x}  \right) + 
+    2 \Delta_j^T \left( x - \hat{x}
+    \right) + \Delta_j^T \Delta_j\\
+    &= 
+    ||x -\hat{x}|| +  2 \Delta_j^T \left( x - \hat{x}
+    \right) + \Delta_j^T \Delta_j\\
+    &= 
+    \mathcal{L}_{ns} + 2 \Delta_j^T \left( x - \hat{x}
+    \right) + \Delta_j^T \Delta_j\\
+\end{align*}
+
+where $\Delta_j$ is the the $j^{th}$ column of $\Delta$. A spike occurs when it lowers the objective more than not spiking. Our spiking condition is therefore
+\begin{align*}
+    \mathcal{L}_{sp} &< \mathcal{L}_{ns}\\
+    \\
+    \implies
+     2 \Delta_j^T \left( x - \hat{x}
+    \right) &+ \Delta_j^T \Delta_j < 0\\
+    \\
+    \implies 
+    \Delta_j^T \left(\hat{x} -x \right) &> \frac{\Delta_j ^T \Delta_j}{2}\\
+    \\
+    \implies
+    \Delta_j^T e &> \frac{\Delta_j^T \Delta_j}{2}.
+\end{align*}
+
+Note $\Delta_j = \mathcal{U}_j S^{-1}_j$ so that
+\begin{align*}
+    \Delta_j^T \Delta_j &= S^{-1}_j \mathcal{U}_j^T \mathcal{U}_j S_j^{-1}\\
+    \\
+    &= S^{-2}_j\\
+    \\
+    \implies
+    \mathcal{U}_j^T S^{-1}_j e &> \frac{S^{-2}_j}{2}\\
+    \implies
+    \mathcal{U}_j^T S_j e &> \frac{1}{2}\\
+    \implies
+    v_j &> \frac{1}{2},
+\end{align*}
+where the last inequality follows from applying the voltage definition from equation ($\ref{eq:rotated_voltage_psc_def}$). Thus neuron $j$ spikes when its membrane voltage $v_j$ exceeds the threshold of $\frac{1}{2}$. Consequently the spiking behavior of each neuron in the network is given by 
+\begin{align}
+\label{eq:voltage_threshold}
+    &v^{th} = \frac{1}{2} 1_N, \notag \\
+    \notag \\
+    &\text{if  } v_j > v^{th}_j,\notag \\
+    \\
+    &\text{then  } v_j \leftarrow v_j - 1,\notag \\
+    \notag \\ 
+    &\text{and  } \rho_j \leftarrow \rho_j + 1 \notag
+\end{align}
+where $1_N$ is the N-vector with entries 1. 
+
+\item Equations (\ref{eq:rotated_voltage_dynamics}), (\ref{eq:rho_dot}), and (\ref{eq:voltage_threshold}) describe how we implement a network with d neurons that produces an accurate estimate $\hat{x}$ of the given target system. 
+
+
+When neuron $j$ spikes, a vector $\Delta_j = S^{-1}_j \mathcal{U}_j$ is added to the network estimate, $\hat{x}$. A spike has a strictly positive area so that the network is only able to modify its estimate by adding from a fixed set of vectors.  This restricts the space representable by the network to strictly positive state-space, or only $\frac{1}{2^d}$ of the desired state-space. To remove this restriction, we add an additional d neurons whose tuning curves $\mathcal{U}_j$ are anti-parallel to neurons $j$ for $j=1, \ldots, d$. Such vectors are required in order to allow subtraction, defined as addition of the additive inverse. Thus the number of neurons required to represent a d-dimensional system is $2d$. We update $U$, $S$, $\Lambda$ and $v_{th}$ to reflect the additional neurons:
+\begin{align*}
+    U &\leftarrow \left[ U \hspace{2mm} -U\right] \in \mathbf{R}^{d \text{ x } 2 d},\\
+    \\
+    S &\leftarrow
+    \begin{bmatrix}
+    S & 0 \\ 0 & S
+    \end{bmatrix}
+    \in \mathbf{R}^{2 d \text{ x } 2 d},\\
+    \\
+    \Lambda &\leftarrow
+    \begin{bmatrix}
+    \Lambda & 0 \\ 0 & \Lambda
+    \end{bmatrix}
+    \in \mathbf{R}^{2 d \text{ x } 2 d},\\
+    \\
+    v_{th} &\leftarrow 
+    \begin{bmatrix}
+    v_{th} \\ v_{th}
+    \end{bmatrix} \in \mathbf{R}^{2d},
+\end{align*}
+and afterward recompute $\beta \in \mathbf{R}^{2 d \text{ x } d}$ and $\Delta \in \mathbf{R}^{d \text{ x } 2 d}$. 
+
+\end{enumerate}
+
+\subsection{Simulation of Basic Equations}
+Here we simulate the above equations (\ref{eq:rotated_voltage_dynamics}), (\ref{eq:rho_dot}), and (\ref{eq:voltage_threshold}) with the $N = 2d$ neurons. The parameters are
+\begin{align}
+\label{eq:sim_I_params}
+A &= -\begin{bmatrix}  
+1 & 0 \\
+0 & 1
+\end{bmatrix},\notag \\
+\notag \\
+B &= \begin{bmatrix}  
+1 & 0 \\
+0 & 1
+\end{bmatrix}, \notag \\
+\notag \\
+c(\xi) &= 10 \begin{bmatrix} 
+cos(\frac{\pi}{4} \xi)\\
+sin(\frac{\pi}{4} \xi)
+\end{bmatrix} \\
+\notag \\
+D_{\text{ij}} &\sim  \mathcal{N} (0, 1) \text{ Columns Normalized to Unit Length} \notag \\
+\notag \\
+d\xi &= 10 \mu s,\notag \\
+\notag \\
+N &= 4,\notag \\
+\notag \\
+x(0) &= \begin{bmatrix} \frac{1}{2} & \frac{1}{2} \end{bmatrix}.\notag 
+\end{align}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=.75\linewidth]{figures/network_decode.png}
+
+    \includegraphics[width=.75\linewidth]{figures/decode_error.png}
+
+    \includegraphics[width=.7\linewidth]{figures/membrane_potential_image.png}
+\end{figure}
+
+\newpage
+
+\captionof{figure}{Simulation of equations (\ref{eq:rotated_voltage_dynamics}),  
+    (\ref{eq:rho_dot}), and
+    (\ref{eq:voltage_threshold}), with parameters listed in equation (\ref{eq:sim_I_params}). \textbf{\textit{Top:}} The decoded network estimate plotted alongside the target dynamical system. \textbf{\textit{Middle:}} The estimation error along each state-space dimension. \textbf{\textit{Bottom: }}The membrane potentials of the 4 neurons during the same time period.\\
+    For the numerical implementation, the matrix exponential was used to integrate the continuous terms over a simulation time step. Continuous terms include all equation terms excepting the spike trains $\Omega$ handled separately. After integrating over a timestep, all neurons above threshold were manually reset according to the spiking rule (\ref{eq:voltage_threshold}). The matrix exponential was computed using a Pad\'{e} approximation via the Python package Scipy: \textit{scipy.linalg.expm()}. 
+    } 
+    \label{fig:Simulation_I}

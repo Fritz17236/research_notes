@@ -1,0 +1,101 @@
+\subsection{Analysis: RMSE vs Spike Rate for Constant Driving Force}
+
+We analyse the network described by equations (\ref{eq:rotated_voltage_dynamics}), (\ref{eq:rho_dot}), and (\ref{eq:voltage_threshold}) for the case of a constant driving force $c(\xi) = k \mathcal{U}_j$. \\
+
+Let 
+\begin{align*}
+A &= -\begin{bmatrix}  
+1 & 0 \\
+0 & 1
+\end{bmatrix},\notag \\
+\notag \\
+B &= \begin{bmatrix}  
+1 & 0 \\
+0 & 1
+\end{bmatrix}, \notag \\
+\notag \\
+c(\xi) &= k \mathcal{U}_1 \\
+\notag \\
+d\xi &= 10 \mu s,\notag \\
+\notag \\
+N &= 4,\notag \\
+\notag \\
+x(0) &= \begin{bmatrix} \frac{1}{2} & 0 \end{bmatrix}.\notag 
+\end{align*}
+
+With the given initial conditions, $v_j = 0$ for $j \neq 1$ for all $\xi$. The dynamics simplify to 
+\begin{equation*}
+\label{eq:simple_voltage_dynamics_constant_driving}
+\dot{v_1} = \Lambda_1 v_1 + (\Lambda_1 + 1)\rho_1 + S_1 - \Omega_1.
+\end{equation*}
+
+We assume that the decoding matrix D is chosen such that $S_1 = 1$. Because A is the negative identity matrix, it is also clear that $\Lambda_1 = -1$. The preceding equation simplifies to  
+\begin{equation}
+\label{eq:simple_voltage_dynamics_constant_driving}
+\dot{v_1} = -v_1 + k - \Omega_1,
+\end{equation}
+which is a form of the well-known Leaky Integrate-and-Fire (LIF) model. With initial condition $v_1(0) = 0$,  and neglecting spiking ($\Omega_1$), the neuron's trajectory is readily integrated as
+\begin{align*}
+v(\xi) = k (1 - e^{-\xi}).
+\end{align*}
+
+Neglecting any spike reset, the voltage will asymptotically approach $v_1=k$. Thus for any spiking to occur, we must have $k > v_{th}$. In this case, the time required to reach a spike threshold $v_{th}$ is 
+\begin{align*}
+v_{th} &= k (1 - e^{-\xi_{spike}})\\
+\\
+\implies 
+\xi_{spike} &= ln\left(\frac{1}
+{
+1-\frac{v_{th}}{k}
+}\right)\\
+\\ \implies
+\frac{1}{\xi_{spike}} &= ln \left( 1 - \frac{v_{th}}{k} \right),
+\end{align*}
+which determines the frequency  at which the LIF neuron spikes.  Denote this frequency as a function of driving strength $k$ by $\phi(k)$:
+\begin{equation}
+\label{eq:freq_vs_driving_strength_const}
+\phi(k)  = ln \left( 1 - \frac{v_{th}}{k} \right).
+\end{equation}
+\\
+The network will encode the constant driving force by spiking at a fixed rate  determined by equation $(\ref{eq:freq_vs_driving_strength_const})$. Similar to membrane voltage, the resulting PSC and readout dynamics are reduced to one neuron periodically spiking:
+\begin{align*}
+\dot{\rho_1} &= -\rho_1 + \Omega_1 \\ 
+\\
+\implies 
+\dot{\hat{x}} &= - \Delta_1 \rho_1 + \Delta_1 \Omega_1\\
+\\ 
+&= - \hat{x} + \mathcal{U}_1 \Omega_1. 
+\end{align*}
+
+The spike train $\Omega_1$ is a periodic sequence of impulses spaced in time by $\frac{1}{\phi{k}}$. Hence $\Omega_1(\xi) = \sum_{l=0}^{\infty} \delta \left(\xi - \frac{l}{\phi(k)}\right).$
+The network estimate therefore has dynamics
+\begin{align*}
+\dot{\hat{x}} &= -\hat{x}  + \mathcal{U}_1 \sum_{l=0}^{\infty} \delta \left(\xi - \frac{l}{\phi(k)}\right)\\\
+\end{align*}
+
+To compute the RMSE, note the target dynamical system is:
+\begin{align*}
+\dot{x} = - x + k 
+ \mathcal{U}_1 \\
+ x(0) = \begin{bmatrix} \frac{1}{2} & 0 \end{bmatrix}.
+\end{align*}
+Therefore the network estimation error has dynamics
+\begin{align}
+\dot{e} &= \dot{x}-\dot{\hat{x}} \notag \\
+\notag \\
+&= -(x - \hat{x}) + \mathcal{U}_1  (k - \sum_{l=0}^{\infty} \delta \left(\xi - \frac{l}{\phi(k)}\right) \notag\\
+\notag \\
+\implies \dot{e} &= -e + \mathcal{U}_1  (k - \sum_{l=0}^{\infty} \delta \left(\xi - \frac{l}{\phi(k)}\right)
+\end{align}
+
+\clearpage
+
+
+
+
+
+
+
+
+
+

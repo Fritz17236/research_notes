@@ -1,0 +1,32 @@
+\section{The self-coupled SNN Model}
+
+
+\subsection{Problem Statement} Given:
+
+\begin{itemize}
+    \item A Linear Dynamical System  $\frac{dx}{dt} = A x(t) + B c(t)$,  $x \in \mathbf{R}^d$
+    
+    \item A Decoder Matrix $D \in \mathbf{R}^{d\hspace{1mm} x \hspace{1mm}N}$ specifying The tuning curve of N neurons in d-dimensional space,
+    
+\end{itemize}
+synthesize a spiking neural network that implements the linear dynamical system.   
+
+
+
+
+\subsection{Features}
+\begin{enumerate}
+    \item \textbf{\textit{Long-Term Network Accuracy}} The Deneve network assumes $\hat{x}=x$. We show this assumption produces estimation error between the network and its target system that increases with time. By avoiding this assumption, the self-coupled network maintains numerical accuracy over time. 
+    
+    \item \textbf{\textit{Tuning Curve Rotation}} To most efficiently use N neurons, we use orthogonal bases to choose tuning cures. The decoder and dynamics matrices D, A are rotated to a common orthonormal basis in d-dimensional space via singular value decomposition (SVD).
+
+    The rotation eliminates off-diagonal elements of the network connectivity matrices.  This decoupling prevents numerical instability when spikes simultaneously occur.  Multiple neurons may now spike in the same simulation time step whereas Deneve networks forbid simultaneous spiking.  
+    
+    Two neurons per dimension are required since voltage thresholds are strictly positive.
+    N-neuron ensembles can thus represent systems with $\frac{N}{2}$ dimensions or less. 
+    
+    \item \textbf{\textit{Post-synaptic Spike Dropping}} At each synapse, neurotransmitter release due to an action potential is probabilistic.  We incorporate probabilistic spike transmission by stochastic thinning of the post-synaptic potential (PSP) at every synaptic connection. The pre-synaptic neuron's membrane potential is still reset by an action potential. 
+    
+    \item \textbf{\textit{Dimensionless Time}} We describe both the network and target system in dimensionless time. Time is normalized by the neuron's synaptic time constant, $\tau_s$. This dimensionless representation ensures consistent numerical simulation independent of simulation timestep. Furthermore, the PSP decay rate is implicitly specified as 1, reducing the required simulation parameters.     
+\end{enumerate}
+
