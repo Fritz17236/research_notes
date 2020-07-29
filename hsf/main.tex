@@ -9,10 +9,9 @@
     urlcolor=cyan,
 }
 
+\numberwithin{equation}{section}
 
-\usepackage{subfiles} 
-
-\title{Self-Coupled Spiking Nets}
+\title{Research Notes on Self-Coupled Spiking Neural Networks}
 \author{Chris Fritz }
 \date{July 2020}
 
@@ -25,15 +24,24 @@
 
 \clearpage
 
-\subfile{tex_files/7_18_Overview}
+\include{tex_files/7_18_Overview}
 
 \clearpage
 
-\subfile{tex_files/7_18_Basic_Derivation_Simulation}
+\include{tex_files/7_18_Basic_Derivation_Simulation}
 
 \clearpage
 
-\subfile{tex_files/7_19_Analysis_Basic_Constant_Spike_Rate}
+\include{tex_files/7_19_Analysis_Basic_Constant_Spike_Rate}
 
+\clearpage
+
+\include{tex_files/7_25_Analysis_Basic_Constant_Dynamical_System}
+
+\clearpage
+
+\include{tex_files/7_29_Aanalysis_Comparison_w_PCF}
+
+\clearpage
 \end{document}
 

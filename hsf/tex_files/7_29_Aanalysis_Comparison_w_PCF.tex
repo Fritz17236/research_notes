@@ -1,0 +1,182 @@
+\section{Analysis: Comparison with Predictive Coding Framework and Gap-Junction Coupling}
+
+
+Here we compare the self-coupled model with the predictive coding framework (PCF) as defined in Boerlin \& Deneve, 2013. We demonstrate that an assumption in this model leads to a network estimate whose accuracy indefinitely diverges with time. The correction of this assumption leads to an intermittent model featuring membrane voltage coupling we loosely term gap-junction coupling. We show that the gap-junction model rectifies network estimation error introduced by the PCF. We then show that the corrected gap-junction model and the self-coupled mode produce identical results.
+
+\begin{enumerate}
+
+\item \textbf{\textit{The Predictive Coding Framework (PCF):}} The PCF synthesizes a spiking neural network that implements a given dynamical system. It is briefly derived as follows:\\
+\\
+Assume we are given in dimensionless form
+\begin{itemize}
+    \item A Linear Dynamical System  $\dot{x}(\xi) = A x(\xi) + B c(\xi)$,  $x \in \mathbf{R}^d$
+    
+    \item A Decoder Matrix $D \in \mathbf{R}^{d\hspace{1mm} x \hspace{1mm}N}$ specifying The tuning curve of N neurons in d-dimensional space. \\
+\\   
+Let $o(t) \in \mathbf{R}^{N}$ describe the spike trains whose $j^{th}$ component is given by
+\begin{align*}
+	o_j(t) \overset{\Delta}{=} \sum_{k=0}^{\infty} \delta(t - t_j^k),
+\end{align*} 
+where $t_j^k$ is the time of the $k^{th}$ spike of neuron $j$. 
+Define the time-varying firing rate of the neurons by 
+\begin{align*}
+	\frac{d r}{d t}(t) \overset{\Delta}{=} - \tau_s^{-1} r(t) + \tau_s^{-1} o(t),
+\end{align*}
+where $\tau_s{-1}$ is the decay rate of $r(t)$ given by the inverse synaptic time constant $\tau_s$. For consistency across models, we transform the preceding two equations to dimensionless time via $\xi = \frac{t}{\tau_s} \implies  \tau_s \, d \xi = dt$. This gives
+\begin{align}
+	\label{eq:analysis:comparison_sc_vs_pcf_vs_gj:pcf_o_def}
+	o_j(\xi) \overset{\Delta}{=} \sum_{k=0}^{\infty} \delta(\xi - \xi_j^k),
+\end{align}
+where $\xi_j^k$ is the $k^{th}$ spike of neuron $j$ in dimensionless time, and
+\begin{align*}
+	\frac{d r}{d t}(t) &= - \tau_s^{-1} r(t) + \tau_s^{-1}o(t),
+	\\
+	\\
+	\implies
+	\frac{d r}{\tau_s \, d \xi}(\xi) &= - \tau_s^{-1} r(\xi) + \tau_s^{-1} o(\xi),
+	\\
+	\\
+	\implies
+	\frac{dr}{d\xi}(\xi) &= - r(\xi) + o(\xi).
+\end{align*}    
+Letting $\dot{\left[ \hspace{5mm} \right]}$ denote differentiation w.r.t. dimensionless time $\xi$, we arrive at 
+\begin{align}
+\label{eq:analysis:comparison_sc_vs_pcf_vs_gj:pcf_r_def}
+\dot{r}(\xi) \overset{\Delta}{=} - r(\xi) + o(\xi). 
+\end{align}
+
+The network estimate is defined as 
+\begin{align}
+\label{eq:analysis:comparison_sc_vs_pcf_vs_gj:pcf_xhat_def}
+\hat{x}(\xi) \overset{\Delta}{=} D r(\xi),
+\end{align}
+which gives rise to the network estimation error
+\begin{align}
+\label{eq:analysis:comparison_sc_vs_pcf_vs_gj:pcf_error_def}
+e(\xi) \overset{\Delta}{=} x(\xi) - \hat{x}(\xi).
+\end{align}
+
+The network chooses spike times $\xi_j^k$ to greedily optimize the objective function
+\begin{align*}
+\mathcal{L}(\xi) = ||x(\xi + d\xi) - \hat{x}(\xi + d\xi)||^2.
+\end{align*}
+The PCF uses regularization on the rate $r(\xi)$ for the sake of biological plausibility. At present we ignore this regularization and note that they can only increase the network estimation error $e$, the sole network objective.
+Using an identical approach to the derivation of the self-coupled network in section (\ref{section:derivation:basic_model}), we arrive at 
+\begin{align*}
+d_j^T 
+\left(
+	x - \hat{x}
+\right)
+&= 
+\frac{d_j^T d_j}{2}
+\end{align*}
+where $d_j$ is the $j^{th}$ column of $D$. We define membrane voltage to get the spiking condition:
+\begin{align}
+\label{eq:analysis:comparison_sc_vs_pcf_vs_gj:pcf_voltage_def}
+v_j &\overset{\Delta}{=} d_j^T (x - \hat{x}) 
+\notag
+\\
+\\
+\notag
+\implies
+d_j^T e &= v_{th}, 
+\end{align}
+
+where $v^{th} = \frac{d_j^T d_j}{2}$.
+
+Deriving the dynamics, the preceding equation defines voltage, which in matrix form is given by
+\begin{align*}
+V &= D^T 
+\left(
+	x - \hat{x}
+\right)
+%
+\\
+\\
+%
+\implies
+\dot{V}
+&= 
+D^T \dot{x} - D^T \dot{\hat{x}}
+&
+\\
+\\
+%
+&= D^T 
+\left(
+	A x + B c
+\right)
+ - D^T 
+ \left(
+ D \dot{r}
+ \right)
+ %
+ \\
+ \\
+ %
+ &= 
+ D^T A x
+ + D^T B c
+ - D^T D
+\left(
+	-r + o 
+\right) 
+ .
+\end{align*}
+The PCF makes the assumption that when the network performs correctly, $x = \hat{x}$. We later quantify the estimation error introduced by this assumption and correct it to form the gap-junction model. For now make the assumed substitution $x = \hat{x} = Dr$. 
+
+\begin{align*}
+\dot{V} &= D^T A \left(D r\right) + D^T B c + D^T D r - D^T D o
+%
+\\
+\\
+%
+&= 
+D^T
+\left(
+	A + I 
+\right)
+ D r
++
+D^T B c 
+- D^T D o. 
+\end{align*}
+
+The model is finalized by the addition of a voltage leakage term to ensure stability, giving the final dynamics equation
+
+\begin{align}
+\label{eq:analysis:comparison_sc_vs_pcf_vs_gj:psc_voltage_dynamics}
+\dot{V} = -v
++ D^T 
+\left(
+A + I
+\right)
+D r
++ 
+D^T B c
+- D^T D o.
+\end{align}
+
+Equation (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:psc_voltage_dynamics}) scales the spike train $o_j$ by $d_j^T d_j$. Thus the spiking behavior is described by
+\begin{align}
+\label{eq:analysis:comparison_sc_vs_pcf_vs_gj:psc_spiking_behavior}
+    &v_{th} = \frac{ d_j^T d_j }{2} \notag \\
+    \notag \\
+    &\text{if  } v_j > v^{th}_j,\notag \\
+    \\
+    &\text{then  } v_j^{'} = v_j - d_j^T d_j \int \delta(\tau)  \, d\tau ,\notag \\
+    \notag \\ 
+    &\text{and  } r_j^{'} = r_j + d_j \int \delta(\tau)  \, d\tau \notag.
+\end{align}
+Equations (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:psc_voltage_dynamics}) and (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:psc_spiking_behavior}) specify the PCF model we compare against. 
+
+% Simulate PCF model here, display error vs time for long-term evolution, highlight this divergence
+
+
+\item \textbf{\textit{The Gap-Junction Correction:}} Here we correct the assumption that $\hat{x} = x$ made in the PCF model. We restart the previous derivation from this point and derive more a accurate form of equation (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:psc_voltage_dynamics}) termed the gap-junction model. We also explicitly derive the error made by this assumption and show that this error is accounted for by the gap-junction model. 
+\end{itemize}
+
+
+
+
+\end{enumerate}
