@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.6.29) (preloaded format=pdflatex 2020.7.19)  29 JUL 2020 15:11
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.6.29) (preloaded format=pdflatex 2020.7.19)  31 JUL 2020 10:28
 entering extended mode
 **./main.tex
 (main.tex
@@ -290,7 +290,7 @@ LaTeX Warning: Label `eq:simple_voltage_dynamics_constant_driving' multiply def
 ined.
 
 ) (tex_files/7_25_Analysis_Basic_Constant_Dynamical_System.aux)
-(tex_files/7_29_Aanalysis_Comparison_w_PCF.aux))
+(tex_files/7_29_Analysis_Comparison_w_PCF.aux))
 \openout1 = `main.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 18.
@@ -558,9 +558,9 @@ LaTeX Warning: Float too large for page by 41.39769pt on input line 2229.
 
 ) [25] [26 <./figures/rmse_sp_vs_s_const_driving.png> <./figures/rmse_sp_vs_phi
 _s_const_driving.png>]
-\openout2 = `tex_files/7_29_Aanalysis_Comparison_w_PCF.aux'.
+\openout2 = `tex_files/7_29_Analysis_Comparison_w_PCF.aux'.
 
- (tex_files/7_29_Aanalysis_Comparison_w_PCF.tex
+ (tex_files/7_29_Analysis_Comparison_w_PCF.tex
 Underfull \hbox (badness 10000) in paragraph at lines 8--12
 
  []
@@ -574,14 +574,21 @@ Underfull \hbox (badness 10000) in paragraph at lines 14--17
 
 
 
-] [28]) [29]
+] [28]
+Underfull \hbox (badness 10000) in paragraph at lines 176--177
+
+ []
+
+[29]) [30
+
+]
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 46.
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 46.
  (main.aux (tex_files/7_18_Overview.aux)
 (tex_files/7_18_Basic_Derivation_Simulation.aux)
 (tex_files/7_19_Analysis_Basic_Constant_Spike_Rate.aux)
 (tex_files/7_25_Analysis_Basic_Constant_Dynamical_System.aux)
-(tex_files/7_29_Aanalysis_Comparison_w_PCF.aux))
+(tex_files/7_29_Analysis_Comparison_w_PCF.aux))
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 46.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 46.
 Package rerunfilecheck Info: File `main.out' has not changed.
@@ -593,10 +600,10 @@ LaTeX Warning: There were multiply-defined labels.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 46.
  ) 
 Here is how much of TeX's memory you used:
- 8093 strings out of 480790
- 129054 string characters out of 2907055
- 398771 words of memory out of 3000000
- 23824 multiletter control sequences out of 15000+200000
+ 8098 strings out of 480790
+ 129205 string characters out of 2907055
+ 398987 words of memory out of 3000000
+ 23826 multiletter control sequences out of 15000+200000
  541553 words of font info for 59 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  38i,14n,44p,1287b,539s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -616,9 +623,9 @@ r7.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/P
 rogram Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Program Files/
 MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Program Files/MiKTeX/fonts/
 type1/public/amsfonts/cm/cmti10.pfb>
-Output written on main.pdf (29 pages, 1394080 bytes).
+Output written on main.pdf (30 pages, 1399399 bytes).
 PDF statistics:
- 411 PDF objects out of 1000 (max. 8388607)
- 100 named destinations out of 1000 (max. 500000)
+ 425 PDF objects out of 1000 (max. 8388607)
+ 103 named destinations out of 1000 (max. 500000)
  91 words of extra memory for PDF output out of 10000 (max. 10000000)
 

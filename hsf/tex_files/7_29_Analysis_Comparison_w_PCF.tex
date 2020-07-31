@@ -145,7 +145,7 @@ D^T B c
 The model is finalized by the addition of a voltage leakage term to ensure stability, giving the final dynamics equation
 
 \begin{align}
-\label{eq:analysis:comparison_sc_vs_pcf_vs_gj:psc_voltage_dynamics}
+\label{eq:analysis:comparison_sc_vs_pcf_vs_gj:pcf_voltage_dynamics}
 \dot{V} = -v
 + D^T 
 \left(
@@ -157,9 +157,9 @@ D^T B c
 - D^T D o.
 \end{align}
 
-Equation (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:psc_voltage_dynamics}) scales the spike train $o_j$ by $d_j^T d_j$. Thus the spiking behavior is described by
+Equation (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:pcf_voltage_dynamics}) scales the spike train $o_j$ by $d_j^T d_j$. Thus the spiking behavior is described by
 \begin{align}
-\label{eq:analysis:comparison_sc_vs_pcf_vs_gj:psc_spiking_behavior}
+\label{eq:analysis:comparison_sc_vs_pcf_vs_gj:pcf_spiking_behavior}
     &v_{th} = \frac{ d_j^T d_j }{2} \notag \\
     \notag \\
     &\text{if  } v_j > v^{th}_j,\notag \\
@@ -168,15 +168,131 @@ Equation (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:psc_voltage_dynamics}) sca
     \notag \\ 
     &\text{and  } r_j^{'} = r_j + d_j \int \delta(\tau)  \, d\tau \notag.
 \end{align}
-Equations (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:psc_voltage_dynamics}) and (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:psc_spiking_behavior}) specify the PCF model we compare against. 
+Equations (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:pcf_voltage_dynamics}) and (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:pcf_spiking_behavior}) specify the PCF model we compare against. 
 
 % Simulate PCF model here, display error vs time for long-term evolution, highlight this divergence
 
 
-\item \textbf{\textit{The Gap-Junction Correction:}} Here we correct the assumption that $\hat{x} = x$ made in the PCF model. We restart the previous derivation from this point and derive more a accurate form of equation (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:psc_voltage_dynamics}) termed the gap-junction model. We also explicitly derive the error made by this assumption and show that this error is accounted for by the gap-junction model. 
+\item \textbf{\textit{The Gap-Junction Correction:}} Here we correct the assumption that $\hat{x} = x$ made in the PCF model. We restart the previous derivation from this point and derive more a accurate form of equation (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:pcf_voltage_dynamics}) termed the gap-junction model. We also explicitly derive the error made by this assumption and show that this error is accounted for by the gap-junction model. \\
+
+The derivation is identical as the PCF until we derive the voltage dynamics.
+
+\begin{align*}
+\dot{V} &= 
+D^T A x
++
+D^T B c
++ D^T D r
+- D^T D o.
+\end{align*}
+Instead of assuming $x = \hat{x}$, we apply the definition of voltage, equation (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:pcf_voltage_def}) in matrix form.
+\begin{align*}
+v_j &= d_j^T e 
+%
+\\
+\\
+%
+\implies 
+V &= D^T e
+%
+\\
+\\
+%
+&= 
+D^T 
+\left(
+x - \hat{x}
+\right)
+%
+\\
+\\
+%
+\implies
+x 
+&=
+D^{T \dagger} V  + \hat{x}
+%
+\\
+\\
+%
+&=
+D^{T \dagger} V + D r,
+\end{align*}
+where $D^{T \dagger}$ is the left Moore-Penrose pseudo-inverse of $D^T$.
+Substitute this for $x$ in $\dot{V}$ above to get
+\begin{align}
+\label{eq:analysis:comparison_sc_vs_pcf_vs_gj:gj_voltage_dynamics}
+\dot{V} &= 
+D^T A
+\left(
+	D^{T \dagger} V + D r
+\right)
++ D^T D r
++
+D^T B c
+- D^T D o 
+\notag
+% 
+\\ \notag
+\\ 
+%
+\implies
+\dot{V}
+&= 
+D^T A
+D^{T \dagger} V 
++
+D^T
+\left(
+	A + I 
+\right)
+D r
++ 
+D^T B c
+- D^T D o.
+\end{align}
+
+Equation (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:gj_voltage_dynamics}) in conjunction with an identical spiking rule from PCF, equation (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:pcf_spiking_behavior}) specifies the gap junction model.
+\clearpage
+
+The PCF and gap-junction models differ only in their voltage dynamics equations, (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:pcf_voltage_dynamics}) and (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:gj_voltage_dynamics}) respectively. Suppose we use both models to simulate a target dynamical system. Denote the estimate of the PCF network as $\hat{x}_{pcf}$, and the estimate of the gap-junction network as $\hat{x}_{gj}$. We wish to derive the difference between these estimates denoted by $\chi$. 
+\begin{align}
+	\label{eq:analysis:comparison_sc_vs_pcf_vs_gj:pcf_vs_gj_estimation_error_def}
+	\chi \hspace{2mm} \overset{\Delta}{=} \hspace{2mm} \hat{x}_{pcf} - \hat{x}_{gj}.
+\end{align}
+
+To compute $\chi$, subtract the right hand sides of equation (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:gj_voltage_dynamics}) from (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:pcf_voltage_dynamics}) to get
+
+\begin{align*}
+\dot{V}_{pcf} - \dot{V}_{gj} 
+&=
+-V_{pcf} - D^T A
+D^{T \dagger} V_{gj}
+\end{align*}
+
 \end{itemize}
 
 
 
 
+
+
+
+
+
+
 \end{enumerate}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
