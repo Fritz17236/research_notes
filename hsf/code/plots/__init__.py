@@ -5,7 +5,8 @@ Plots for HSF Research
 
 # Add Base Directory for HSFNets and utils packages here. 
 import sys
-sys.path.append("../../../../Misc-Research-Code")
+sys.path.append("../../../../../Misc-Research-Code")
+sys.path.append(r"C:\Users\fritz\Desktop\git_repos\Misc-Research-Code")
 import os
 
 
@@ -136,29 +137,27 @@ def pcf_phi(unit_norm_d, ks):
                     np.log(logarg2)
                     )**-1
         return phis
-                
-        
+                       
 def per_spike_rmse_numerical(data, idx):
     ''' given data from a network sim, compute the average per-spike rmse of neuron indexed by idx'''
     num_spikes = data['spike_nums'][idx]
     spikes = data['O'][idx,:num_spikes]
     
     if num_spikes < 6 :
+        print('only {0} spikes occurred'.format(num_spikes))
         return np.nan, np.nan
     
     rmses = []
     
-    start_spike = 5 
-    
+    start_spike = 5
     for trial in np.arange(start_spike, num_spikes - 1):
-        left_idx = np.argwhere(spikes[trial] ==  data['t'])[0][0]
-        right_idx = np.argwhere(spikes[trial + 1] ==  data['t'])[0][0]
+        left_idx = np.argwhere(spikes[trial] < data['t'][:])[0][0]
+        right_idx = np.argwhere(spikes[trial + 1] <  data['t'][:])[0][0]
     
         delta_t = data['t'][1] - data['t'][0]
     
 
-        e = data['x_hat'][idx,left_idx:right_idx] - data['x_true'][idx,left_idx:right_idx]
-    
+        e = data['x_hat'][0,left_idx:right_idx] - data['x_true'][0,left_idx:right_idx]
     
         se = np.square(e)
         mse =  delta_t * np.sum(se)  / (data['t'][right_idx]-data['t'][left_idx])
@@ -214,8 +213,6 @@ def check_dir(name):
 
 
 ## Plotting Functions
-
-
 
 def plot_basic_model(show_plots=True,N = 4, k = 10, T = 10, dt = 1e-5):
     
@@ -642,6 +639,7 @@ def plot_pcf_gj_sc_comparison(show_plots=True,N = 32, T = 1000, dt = 1e-3):
         x0 = np.asarray([.5, 0])
         D = gen_decoder(A.shape[0], N, mode = '2d cosine')
         sin_func = lambda t :  np.asarray([1, 0])
+        
         lds = sat.LinearDynamicalSystem(x0, A, B, u = sin_func , T = T, dt = dt)
         
         #sc_net = SelfCoupledNet(T=T, dt=dt, N=N, D=D, lds=lds)
@@ -672,15 +670,148 @@ def plot_pcf_gj_sc_comparison(show_plots=True,N = 32, T = 1000, dt = 1e-3):
             plt.ylabel('Decoded State')
             plt.savefig(this_dir + '/' + 'const_dynamics_network_decode_' + model_name + '.png',bbox_inches='tight')           
     
+    def plot_pcf_gj_sc_constant_stim_decode():
+        A =  - np.eye(2)
+        B = np.eye(2)
+        x0 = np.asarray([.5, 0])
+        D = gen_decoder(A.shape[0], N, mode = '2d cosine')
+        sin_func = lambda t :  np.asarray([1, 0])
+        
+        lds = sat.LinearDynamicalSystem(x0, A, B, u = sin_func , T = T, dt = dt)
+        
+        sc_net = SelfCoupledNet(T=T, dt=dt, N=N, D=D, lds=lds)
+        gj_net = GapJunctionDeneveNet(T=T, dt=dt, N=N, D=D, lds=lds)
+        pcf_net = ClassicDeneveNet(T=T, dt=dt, N=N, D=D, lds=lds, lam_v=1)
+        
+        sc_data = sc_net.run_sim() 
+        gj_data = gj_net.run_sim()
+        pcf_data= pcf_net.run_sim()
+            
+        models = [
+          (sc_data, 'Self-Coupled'),
+           (gj_data, 'Gap-Junction'),
+            (pcf_data, 'PCF')
+        ]
+        
+        plt.figure()
+        for data, model_name in models:
+                 
+            plot_step = 10
+        
+            plt.plot(data['t'][0:-1:plot_step], data['x_hat'][0,0:-1:plot_step],label=model_name + '  Network Estimate (Dimension 0)' )
+            plt.title('Estimation of Network Decode ' + model_name)
+            plt.legend()
+            plt.xlabel(r'Dimensionless Time $\tau_s$')
+            plt.ylabel('Decoded State')
+            plt.savefig(this_dir + '/' + 'const_dynamics_network_decode_' + model_name + '.png',bbox_inches='tight')           
+    
+    
+    def plot_pcf_gj_sc_per_spike_rmse(num_sim_points):
+        def rmse_per_spike_pcf(phi):
+            d1 = 2 * (1 - np.exp(-1/phi)) / (1 + np.exp(-1/phi))
+            t1 =  phi * 2*d1(1 + 1 / (2 * d1) ) * (1 - np.exp(-1/phi)) 
+            t2 =  phi * (d1**2 / 2) * (1 + 1/d1 + (.25) * d1**-2 ) * (1 - np.exp(-2 / phi))
+            
+            return np.sqrt(1 - t1 + t2)
+        
+        
+        print('\t\tPlotting Rate Versus per-spike RMSE\n')
+        A =  - np.eye(2)
+        B = np.eye(2)
+        x0 = np.asarray([.5, 0])
+        
+        ks = np.logspace(-3, 0,num=num_sim_points)
+        ks_continuous = np.logspace(-3, 0, num = 1000 )
+        
+        
+        
+        phis = pcf_phi(np.asarray([1, 0]), ks_continuous)
+        rmses = rmse_per_spike_pcf(phis)
+        plt.figure()
+        plt.loglog(phis, rmses)
+        plt.show()  
+        return
+        pcf_rates = np.zeros(ks.shape)
+        pcf_rmses_numerical = np.zeros(ks.shape)
+        pcf_rmses_derived = np.zeros(ks.shape)
+
+                
+        gj_rates = np.zeros(ks.shape)
+        gj_rmses = np.zeros(ks.shape)
+        
+        sc_rates = np.zeros(ks.shape)
+        sc_rmses = np.zeros(ks.shape)
+        
+        for i, k in enumerate(ks):
+            print('{0} / {1}'.format(i+1, len(ks)))
+            sin_func = lambda t :  np.asarray([1, 0])
+            lds = sat.LinearDynamicalSystem(x0, A, B, u = sin_func , T = T, dt = dt)
+            D = k * gen_decoder(A.shape[0], N, mode = '2d cosine')
+            
+            sc_net = SelfCoupledNet(T=T, dt=dt, N=N, D=D, lds=lds)
+            gj_net = GapJunctionDeneveNet(T=T, dt=dt, N=N, D=D, lds=lds)
+            pcf_net = ClassicDeneveNet(T=T, dt=dt, N=N, D=D, lds=lds, lam_v=1)
+            
+            sc_data = sc_net.run_sim() 
+            gj_data = gj_net.run_sim()
+            pcf_data= pcf_net.run_sim()
+            
+            pcf_jmax =np.argmax(pcf_data['spike_nums'])
+            gj_jmax = np.argmax(gj_data['spike_nums'])
+            sc_jmax = 0
+            
+            pcf_rates[i] = pcf_data['spike_nums'][pcf_jmax] / pcf_data['t'][-1]
+            #gj_rates[i] = gj_data['spike_nums'][gj_jmax] / gj_data['t'][-1]
+            #sc_rates[i] = sc_data['spike_nums'][sc_jmax] / gj_data['t'][-1]
+            
+            pcf_rmses_numerical[i] = per_spike_rmse_numerical(pcf_data, pcf_jmax)[0]
+            pcf_rmses_derived[i] = rmse_per_spike_pcf(pcf_rates[i]) 
+            #gj_rmses[i] =  per_spike_rmse_numerical(gj_data, gj_jmax)[0]
+            #sc_rmses[i] = per_spike_rmse_numerical(sc_data, gj_jmax)[0]
+            
+        
+            
+        models = [
+       #     (sc_data, 'Self-Coupled'),
+       #     (gj_data, 'Gap-Junction'),
+            (pcf_data, 'PCF')
+        ]
+                
+        rmses_derived = {
+                'PCF' : pcf_rmses_derived           
+            }
+        
+        rate_measurements = {
+            'PCF' : pcf_rates,
+            #'Gap-Junction' : gj_rates,    
+            #'Self-Coupled' : sc_rates        
+            }
+        
+        rmses_numerical = {
+            'PCF' : pcf_rmses_numerical,
+            #'Gap-Junction' : gj_rmses,    
+            #'Self-Coupled' : sc_rmses      
+            }
+        
+        plt.figure()
+        for data, model_name in models:
+            plt.loglog(rate_measurements[model_name], rmses_derived[model_name], label=model_name + ' Derived Expressions')
+            plt.loglog(rate_measurements[model_name], rmses_numerical[model_name], 'x', label=model_name + ' Numerical Simulation')
+        plt.ylabel(r'per-Spike RMSE')
+        plt.xlabel(r'Neuron Firing Rate $\phi$')
+        plt.title('per-Spike RMSE vs Neuron Firing Rate')
+        plt.legend()
+        #plt.savefig(this_dir + '/' + 'const_dynamics_' + model_name + '_rate_vs_d.png', bbox_inches='tight')
+        
     name = 'pcf_gj_sc_comparison'
     this_dir =  check_dir(name)
     
     #plot_demos() 
-    plot_pcf_gj_long_term_estimates_explicit() 
-    #plot_pcf_gj_sc_rates(20)
-        
+    #plot_pcf_gj_long_term_estimates_explicit() 
+    #plot_pcf_gj_sc_rates(10)
+    plot_pcf_gj_sc_constant_stim_decode()
     
-    
+    #plot_pcf_gj_sc_per_spike_rmse(20) 
     if show_plots:
         plt.show()
         
