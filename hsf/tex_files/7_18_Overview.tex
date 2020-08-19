@@ -8,7 +8,7 @@
 \begin{itemize}
     \item A Linear Dynamical System  $\frac{dx}{dt} = A x(t) + B c(t)$,  $x \in \mathbf{R}^d$
     
-    \item A Decoder Matrix $D \in \mathbf{R}^{d\hspace{1mm} x \hspace{1mm}N}$ specifying The tuning curve of N neurons in d-dimensional space,
+    \item A Decoder Matrix $D \in \mathbf{R}^{d\hspace{1mm} x \hspace{1mm}N}$ specifying the preferred directions of N neurons in d-dimensional space,
     
 \end{itemize}
 synthesize a spiking neural network that implements the linear dynamical system.   
@@ -18,17 +18,16 @@ synthesize a spiking neural network that implements the linear dynamical system.
 \textbf{\textit{Features}}
 \\
 \begin{enumerate}
-    \item \textbf{\textit{Long-Term Network Accuracy}} The Deneve network assumes $\hat{x}=x$. We show this assumption produces estimation error between the network and its target system that increases with time. By avoiding this assumption, the self-coupled network maintains numerical accuracy over time. 
+    \item \textbf{\textit{Long-Term Network Accuracy}} The Deneve network assumes $\hat{x}=x$. We show this assumption produces estimation error between the network and its target system that increases with time. By avoiding this assumption, the self-coupled network remains accurate over time. 
     
-    \item \textbf{\textit{Tuning Curve Rotation}} To most efficiently use N neurons, we use orthogonal bases to choose tuning cures. The decoder and dynamics matrices D, A are rotated to a common orthonormal basis in d-dimensional space via singular value decomposition (SVD).
-
-    The rotation eliminates off-diagonal elements of the network connectivity matrices.  This decoupling prevents numerical instability when spikes simultaneously occur.  Multiple neurons may now spike in the same simulation time step whereas Deneve networks forbid simultaneous spiking.  
+    \item \textbf{\textit{Tuning Curve Rotation}} To most efficiently use neurons, we use orthogonal coding directions via SVD. The dynamics matrix $A$ is diagonalized by an orthonormal basis $\mathcal{U}$ in d-dimensional space, while the decoder matrix $D$ is chosen such that $\mathcal{U}$ gives its left singular vectors. This choice of coding directions eliminates the need for coupling. 
     
-    Two neurons per dimension are required since voltage thresholds are strictly positive.
+ 	    
+	At least two neurons per dimension (2d in total) are required since voltage thresholds are strictly positive.
     N-neuron ensembles can thus represent systems with $\frac{N}{2}$ dimensions or less. 
     
-    \item \textbf{\textit{Post-synaptic Spike Dropping}} At each synapse, neurotransmitter release due to an action potential is probabilistic.  We incorporate probabilistic spike transmission by stochastic thinning of the post-synaptic potential (PSP) at every synaptic connection. The pre-synaptic neuron's membrane potential is still reset by an action potential. 
+    \item \textbf{\textit{Post-synaptic Spike Dropping}} At each synapse, neurotransmitter release due to an action potential is probabilistic.  We incorporate probabilistic spike transmission by thinning at every synaptic connection. The pre-synaptic neuron's membrane potential is still deterministically reset by an action potential. 
     
-    \item \textbf{\textit{Dimensionless Time}} We describe both the network and target system in dimensionless time. Time is normalized by the neuron's synaptic time constant, $\tau_s$. This dimensionless representation ensures consistent numerical simulation independent of simulation timestep. Furthermore, the PSP decay rate is implicitly specified as 1, reducing the required simulation parameters.     
+    \item \textbf{\textit{Dimensionless Time}} We describe both the network and target system in dimensionless time. Time is normalized by the synapses' time constant, $\tau_s$. This dimensionless representation ensures consistent numerical simulation independent of simulation timestep. Furthermore, $\tau_s$ is implicitly specified as 1, reducing the model's parameters by one.     
 \end{enumerate}
 

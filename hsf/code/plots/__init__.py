@@ -167,19 +167,24 @@ def per_spike_rmse_numerical(data, idx):
 def run_sim(N, p=1, T = 20,  k = 1, dt = 1e-5, stim='const', D_scale = 1, D_type='none'):
 
     A =  - np.eye(2)
+    B = np.eye(2)
+    x0 = np.asarray([.5, 0])
+    _, uA = np.linalg.eig(A)
+    d = A.shape[0]
     mode = '2d cosine'
     if D_type=='none': 
         D = D_scale * np.eye(N)[0:A.shape[0],:]
     elif D_type=='2d cosine':
         D = gen_decoder(A.shape[0], N, mode=mode)
+    elif D_type=='simple':
+        D = D_scale * uA @ np.hstack((
+            np.eye(d),
+            np.zeros((d, N - d))
+            ))
     else:
         D = gen_decoder(A.shape[0], N)
+    print('Using {} decoder type.\n'.format(D_type))
     
-    B = np.eye(2)
-    
-    x0 = np.asarray([.5, 0])
-    
-    _, uA = np.linalg.eig(A)
     
     if stim == 'const':
         sin_func = lambda t :  k * uA[:,0]
@@ -219,7 +224,7 @@ def plot_basic_model(show_plots=True,N = 4, k = 10, T = 10, dt = 1e-5):
     name = 'basic_plots'
     this_dir =  check_dir(name)
     
-    data = run_sim(N, 1, k = k, T =  T, dt = dt, D_type='2d cosine', stim='sinusoid')
+    data = run_sim(N, 1, k = k, T =  T, dt = dt, D_type='simple', stim='sinusoid')
     
     plot_step = 10
     
@@ -270,6 +275,14 @@ def plot_basic_model(show_plots=True,N = 4, k = 10, T = 10, dt = 1e-5):
         plt.show()
 
 def plot_const_driving(show_plots=True,N = 4, T = 10, dt = 1e-5):
+      
+    def run_plots():
+        plot_rate_vs_k()
+        #plot_xhat_estimate_explicit()
+        #plot_per_spike_rmse_vs_k_phi()
+        
+        if show_plots:
+            plt.show()
       
     def plot_rate_vs_k():
         print('\t\tPlotting Rate vs Drive Strength k\n')
@@ -362,26 +375,32 @@ def plot_const_driving(show_plots=True,N = 4, T = 10, dt = 1e-5):
     
     print('\tPlotting Constant Driving Strength\n')
     
-    plot_rate_vs_k()
-    plot_xhat_estimate_explicit()
-    plot_per_spike_rmse_vs_k_phi()
     
-    if show_plots:
-        plt.show()
+    run_plots()
+    
          
 def plot_const_dynamical_system(show_plots=True,N = 4, T = 10, dt = 1e-5):
    
+    def run_plots():
+        plot_rate_vs_s()
+        #plot_xhat_estimate_explicit()
+        #plot_per_spike_rmse_vs_phi_s()
+   
     def plot_rate_vs_s():
         print('\t\tPlotting Rate Versus s\n')
-        ss = np.logspace(-1, 1, num=50)
+        ss = np.logspace(-1, 1, num=3)
         ss_continuous = np.logspace(-1, 1, num=1000)
         rates = []
-        
+        plt.figure()
         for i, s in enumerate(ss):
             print('{0} / {1}'.format(i+1, len(ss)))
-            data = run_sim(N, 1, k = 1, T = T, D_scale = s, dt = dt)
+            data = run_sim(N, 1, k = 1, T = T, D_scale = s, D_type='simple', dt = dt)
             rates.append( data['spike_nums'][0]   /  data['t'][-1]  )
+            print(data['spike_nums'])
             
+            plt.plot(data['t'], data['x_hat'][0,:],label=s)
+            plt.legend()
+        plt.show()
         rates = np.asarray(rates)
         
         plt.figure()
@@ -398,7 +417,7 @@ def plot_const_dynamical_system(show_plots=True,N = 4, T = 10, dt = 1e-5):
             eq_pred_height = (
                 1 + 1 / 
                 (
-                        2 * s
+                        2 
                 )
             )
             return eq_pred_height * np.exp(- np.mod(t, phi_s(s)**-1))
@@ -470,16 +489,33 @@ def plot_const_dynamical_system(show_plots=True,N = 4, T = 10, dt = 1e-5):
     
     
     print('\tPlotting Constant Dynamical System\n')
+    run_plots()
     
-    plot_rate_vs_s()
-    plot_xhat_estimate_explicit()
-    plot_per_spike_rmse_vs_phi_s()
 
     if show_plots:
             plt.show()
     
 def plot_pcf_gj_sc_comparison(show_plots=True,N = 32, T = 1000, dt = 1e-3):   
+     
+    def run_plots(num_sim_points = 10):   
+        #plot_demos() 
+        #plot_pcf_gj_long_term_estimates_explicit() 
+        #plot_pcf_gj_sc_rates(num_sim_points)
+        #plot_pcf_gj_sc_constant_stim_decode()
+        #plot_pcf_gj_membrane_trajectories()
+        plot_pcf_gj_sc_per_spike_rmse(num_sim_points)
         
+        
+    def pcf_estimate_explicit(d, t):
+            phi = pcf_phi(d, 1) 
+            eq_pred_height = (
+                1 + 1 / 
+                (
+                        2 * d[0]
+                )
+            )
+            return eq_pred_height * np.exp(- np.mod(t, phi**-1) )
+
     def plot_demos(): 
         drive_freq = .25
         drive_amp  = 10 
@@ -544,7 +580,7 @@ def plot_pcf_gj_sc_comparison(show_plots=True,N = 32, T = 1000, dt = 1e-3):
             
             plt.figure()
             #cbar_ticks = np.round(np.linspace( start = np.min(data['V']), stop = .5,  num = 8, endpoint = True), decimals=1)
-            plt.imshow(data['V'],extent=[0,data['t'][-1], 0,3],vmax=np.max(data['V']), vmin=np.min(data['V']))
+            plt.imshow(data['V'],vmax=np.max(data['V']), vmin=np.min(data['V']))
             plt.xlabel(r"Dimensionless Units of $\tau$")
             plt.axis('auto')
             #cbar = plt.colorbar(ticks=cbar_ticks)
@@ -624,16 +660,7 @@ def plot_pcf_gj_sc_comparison(show_plots=True,N = 32, T = 1000, dt = 1e-3):
        
     def plot_pcf_gj_long_term_estimates_explicit():  
         
-        def pcf_estimate_explicit(d, t):
-            phi = pcf_phi(D[:,0], 1) 
-            eq_pred_height = (
-                1 + 1 / 
-                (
-                        2 * d[0]
-                )
-            )
-            return eq_pred_height * np.exp(- np.mod(t, phi**-1) )
-        
+                
         A =  - np.eye(2)
         B = np.eye(2)
         x0 = np.asarray([.5, 0])
@@ -673,8 +700,8 @@ def plot_pcf_gj_sc_comparison(show_plots=True,N = 32, T = 1000, dt = 1e-3):
     def plot_pcf_gj_sc_constant_stim_decode():
         A =  - np.eye(2)
         B = np.eye(2)
-        x0 = np.asarray([.5, 0])
         D = gen_decoder(A.shape[0], N, mode = '2d cosine')
+        x0 = np.asarray([.5, 0])
         sin_func = lambda t :  np.asarray([1, 0])
         
         lds = sat.LinearDynamicalSystem(x0, A, B, u = sin_func , T = T, dt = dt)
@@ -682,34 +709,85 @@ def plot_pcf_gj_sc_comparison(show_plots=True,N = 32, T = 1000, dt = 1e-3):
         sc_net = SelfCoupledNet(T=T, dt=dt, N=N, D=D, lds=lds)
         gj_net = GapJunctionDeneveNet(T=T, dt=dt, N=N, D=D, lds=lds)
         pcf_net = ClassicDeneveNet(T=T, dt=dt, N=N, D=D, lds=lds, lam_v=1)
-        
+
         sc_data = sc_net.run_sim() 
         gj_data = gj_net.run_sim()
         pcf_data= pcf_net.run_sim()
             
+        linestyles = {
+            'Self-Coupled' : '-',
+            'Gap-Junction' : '--',
+            'PCF' : '-'
+            }
+            
         models = [
           (sc_data, 'Self-Coupled'),
-           (gj_data, 'Gap-Junction'),
-            (pcf_data, 'PCF')
+          (pcf_data, 'PCF'),
+          (gj_data, 'Gap-Junction')
+            
         ]
         
         plt.figure()
-        for data, model_name in models:
-                 
+        for data, model_name in models: 
             plot_step = 10
         
-            plt.plot(data['t'][0:-1:plot_step], data['x_hat'][0,0:-1:plot_step],label=model_name + '  Network Estimate (Dimension 0)' )
-            plt.title('Estimation of Network Decode ' + model_name)
-            plt.legend()
-            plt.xlabel(r'Dimensionless Time $\tau_s$')
-            plt.ylabel('Decoded State')
-            plt.savefig(this_dir + '/' + 'const_dynamics_network_decode_' + model_name + '.png',bbox_inches='tight')           
+            plt.plot(
+                data['t'][0:-1:plot_step],
+                data['x_hat'][0,0:-1:plot_step],
+                linestyles[model_name],
+                linewidth = 2,
+                label=model_name + '  Network Estimate (Dimension 0)' 
+            )
+        plt.title('Network Estimate Comparison')
+        plt.legend()
+        plt.xlabel(r'Dimensionless Time $\tau_s$')
+        plt.ylabel('Decoded State')
+        plt.savefig(this_dir + '/' + 'const_dynamics_network_decode_.png',bbox_inches='tight')           
     
+    
+    def plot_pcf_gj_membrane_trajectories():
+        
+        def v(d,t):
+            return d[0] - np.exp(-t) * (d[0] + .5 * d[0]**2)
+        
+        A =  - np.eye(2)
+        B = np.eye(2)
+        D =  gen_decoder(A.shape[0], N, mode = '2d cosine')
+        x0 = np.asarray([pcf_estimate_explicit(D[:,0], 0), 0])
+        sin_func = lambda t :  np.asarray([1, 0])
+        
+        lds = sat.LinearDynamicalSystem(x0, A, B, u = sin_func , T = T, dt = dt)
+        
+        gj_net = GapJunctionDeneveNet(T=T, dt=dt, N=N, D=D, lds=lds)
+        pcf_net = ClassicDeneveNet(T=T, dt=dt, N=N, D=D, lds=lds, lam_v=1)
+        
+         
+        
+        pcf_data= pcf_net.run_sim()
+        gj_data = gj_net.run_sim()
+        
+        j_max = np.argmax(pcf_data['spike_nums'])
+        
+        plt.figure()
+        plot_step = 100
+        ts = pcf_data['t'][0:-1:plot_step]
+        plt.plot(ts, pcf_data['V'][j_max,0:-1:plot_step],label='PCF',linewidth=4)
+        
+        for i in [j_max]: #range(4):
+            plt.plot(ts, gj_data['V'][i,0:-1:plot_step],'--',linewidth=4,label='gap-junction')
+        plt.plot(ts, v(D[:,j_max], ts - gj_data['O'][j_max,0]), label='Derived interspike trajectory')
+        plt.title('PCF and gap-junction membrane potentials')
+        plt.legend()
+        plt.xlabel(r'Dimensionless Time $\tau_s$')
+        plt.ylabel('Membrane Potential of Spiking Neuron')
+        plt.savefig(this_dir + '/' + 'const_dynamics_voltage_trajectory_gj_vs_pcf.png',bbox_inches='tight')
+                   
+
     
     def plot_pcf_gj_sc_per_spike_rmse(num_sim_points):
         def rmse_per_spike_pcf(phi):
             d1 = 2 * (1 - np.exp(-1/phi)) / (1 + np.exp(-1/phi))
-            t1 =  phi * 2*d1(1 + 1 / (2 * d1) ) * (1 - np.exp(-1/phi)) 
+            t1 =  phi * 2*d1*(1 + 1 / (2 * d1) ) * (1 - np.exp(-1/phi)) 
             t2 =  phi * (d1**2 / 2) * (1 + 1/d1 + (.25) * d1**-2 ) * (1 - np.exp(-2 / phi))
             
             return np.sqrt(1 - t1 + t2)
@@ -727,10 +805,7 @@ def plot_pcf_gj_sc_comparison(show_plots=True,N = 32, T = 1000, dt = 1e-3):
         
         phis = pcf_phi(np.asarray([1, 0]), ks_continuous)
         rmses = rmse_per_spike_pcf(phis)
-        plt.figure()
-        plt.loglog(phis, rmses)
-        plt.show()  
-        return
+       
         pcf_rates = np.zeros(ks.shape)
         pcf_rmses_numerical = np.zeros(ks.shape)
         pcf_rmses_derived = np.zeros(ks.shape)
@@ -801,15 +876,14 @@ def plot_pcf_gj_sc_comparison(show_plots=True,N = 32, T = 1000, dt = 1e-3):
         plt.xlabel(r'Neuron Firing Rate $\phi$')
         plt.title('per-Spike RMSE vs Neuron Firing Rate')
         plt.legend()
-        #plt.savefig(this_dir + '/' + 'const_dynamics_' + model_name + '_rate_vs_d.png', bbox_inches='tight')
+        plt.savefig(this_dir + '/' + 'const_dynamics_' + model_name + '_rate_vs_d.png', bbox_inches='tight')
         
     name = 'pcf_gj_sc_comparison'
     this_dir =  check_dir(name)
     
-    #plot_demos() 
-    #plot_pcf_gj_long_term_estimates_explicit() 
-    #plot_pcf_gj_sc_rates(10)
-    plot_pcf_gj_sc_constant_stim_decode()
+    
+    run_plots()
+    
     
     #plot_pcf_gj_sc_per_spike_rmse(20) 
     if show_plots:

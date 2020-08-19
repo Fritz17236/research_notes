@@ -1,0 +1,768 @@
+\section{Analysis: PCF  and Gap-Junction Response to Constant Stimulus}
+
+ We compare the network estimate of all three models (PCF, gap-junction, and self-coupled) for the case of a constant driving stimulus. 
+ 
+ Let all 3 models have the same parameters as given by equation (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:pcf_demo_sim_params}) with the exception that 
+
+\begin{align*}
+	c(\xi) &= c = 
+	\begin{bmatrix}
+		1 \\ 0	
+	\end{bmatrix}, 
+\end{align*}
+and
+$x(0) = \begin{bmatrix} \frac{1}{2} & 0 \end{bmatrix}$. 
+ 
+\begin{enumerate}
+ 
+\item \textbf{\textit{PCF Network Response to Constant Stimulus:}}
+
+From equation (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:pcf_voltage_dynamics}), the PCF dynamics become
+\begin{align*}
+	\dot{V}_{pcf}
+	&=
+	- V_{pcf}
+	+
+	D^T 
+	\left(
+		-I + I
+	\right)
+	D^T r
+	+
+	D^T 
+	\begin{bmatrix}
+		1 \\ 0
+	\end{bmatrix}
+	-
+	D^T D o
+	%
+	\\
+	\\
+	%
+	&= 
+	-V_{pcf}
+	+ 
+	D^T 
+	\begin{bmatrix}
+		1 \\ 0
+	\end{bmatrix}
+	-
+	D^T D o.
+\end{align*}
+All voltages are initially 0. From equation (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:pcf_spiking_behavior}) the thresholds are identically $\frac{1}{2}$. Until the first spike, neuron $j$'s voltage integrates the quantity $d_j^T 	\begin{bmatrix}	1 \\ 0	\end{bmatrix}$. Denote the neuron $j$ whose tuning curve $d_j$ is closest in angle to $c$ by 
+
+\begin{align*}
+	j_{max} \overset{\Delta}{=}
+	 \underset{
+	 	i \in 
+	 	\left[
+	 		1, \ldots, N
+	 	\right]
+	 }
+	 {argmax}
+	 \hspace{4mm}
+	 	d_j^T c.
+\end{align*}
+Neuron $j_{max}$ will receive the highest driving force and will therefore reach its threshold  before any other neuron. It will then be reset by $1$ to $- \frac{1}{2}$. Each other neuron $k$ will also be reset (decremented) by $d_k^T d_{j_{max}}$, proportional to their angle relative to both neuron $j_{max}$ and the driving strength $c$. This sequence will repeat periodically so that only neuron $j_{max}$ fires at a constant rate. 
+
+We write the PCF network as the one-dimensional equation
+
+\begin{align*}
+	v_{pcf} &= 
+	- v_{pcf}
+	+ d_{j_{max}}^T c 
+	- o_{j_{max}}.
+\end{align*}
+
+This is a form of the leaky integrate-and-fire (LIF) model, with drive term $d_j^T c(\xi)$. The neuron is driven by inner product $d_{j_{max}}^T c$. Note from equation (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:pcf_spiking_behavior}) that the threshold voltage varies with $||d_{j_{max}}||^2$.  For clarity, we drop the subscripts $j$, $j_{max}$ in the following equations. It is understood that we are referring to the solely spiking neuron $j_{max}$.
+With initial condition $v_{pcf}(0) = - \frac{||d||^2}{2}$, the neuron's trajectory is integrated as 
+\begin{align}
+\label{eq:analysis:comparison_sc_vs_pcf_vs_gj:const_stim:pcf_voltage_trajectory}
+	v_{pcf}(\xi)
+	&= 
+	d^T c - e^{-\xi} 
+	\left(
+		d^T c + \frac{||d||^2}{2}
+	\right). 
+\end{align}
+
+The neuron spikes when it reaches the threshold $v_{pcf} = ||d||^2$. To compare with the self-coupled network, we note that the singular value associated with neuron $j$ of the decoder matrix $S = ||d||^2$.
+
+From the preceding equation with voltage at  threshold $\frac{||d||^2}{2}$,
+\begin{align*}
+	\frac{||d||^2}{2}
+	&= 
+	d^T c - e^{-\xi_{spike}} 
+	\left(
+		d^T c + \frac{||d||^2}{2}
+	\right)
+	%
+	\\
+	\\
+	%
+	\implies
+	e^{-\xi_{spike}}
+	&= 
+		\frac
+	{
+		d^T c - \frac{||d||^2}{2}
+	}
+	{
+		d^T c + \frac{||d||^2}{2}
+	}
+	%
+	\\
+	\\
+	%
+	\implies
+	\xi_{spike}
+	&= 
+	ln
+	\left(
+		d^T c + \frac{||d||^2}{2}
+	\right)
+	-
+	ln
+	\left(
+		d^T c - \frac{||d||^2}{2}
+	\right)		
+\end{align*}
+This leads to a firing rate 
+
+\begin{align}
+\label{eq:analysis:comparison_sc_vs_pcf_vs_gj:const_dynamics:pcf_spike_rate}
+	\phi_{pcf}
+	\left(
+		d
+	\right)
+	 =
+	 \frac
+	 {
+	 	1
+	 }
+	 {
+		ln
+		\left(
+			d^T c + \frac{||d||^2}{2}
+		\right)
+		-
+		ln
+		\left(
+			d^T c - \frac{||d||^2}{2}
+		\right)		
+	}
+\end{align}
+
+
+A self-coupled neuron spike adds $U_1$ to its network estimate. Using an identical analysis to this case as done in section (\ref{section:analysis:rmse_vs_spike_rate_constant_dynamics}), we substitute $d$ for $U_1$ to arrive at the steady state network estimate of the PCF network:
+
+\begin{align}	\label{eq:analysis:comparison_sc_vs_pcf_vs_gj:const_dynamics:pcf_network_estimate_steady_state}
+\hat{x}_{pcf}(\xi)
+&= 
+\left(
+1 + 
+\frac
+{
+	1
+}
+{
+	2 \, d^T c
+}
+\right)
+e^
+{
+	- \hspace{2mm}
+	\left(
+		\xi - \xi_1^1
+	\right)
+	\mod
+	{
+		\frac
+		{
+			1
+		}
+		{
+			\phi
+		}
+	}
+}
+\, \, d.
+\end{align}
+
+\item \textbf{\textit{Gap-Junction Network Response to Constant Stimulus:}} Here we derive the decoded estimate of a gap-junction network driven by a constant stimulus, $c(\xi) = \begin{bmatrix}
+1 & 0
+\end{bmatrix}
+$. All other parameters are identical to those in equation (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:pcf_demo_sim_params}).
+
+From the dynamics equation (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:gj_voltage_dynamics}) gap-junction voltages are continuously coupled to one another via $D^T A D^{T \dagger}$. We thus need to solve the entire system between spikes rather than reducing it to a single dimension. Let $\tilde{[]}$ denote the Laplace transform of a variable. Assume neuron j has just spiked so that 
+
+\begin{align*}
+V(0) = -\frac{1}{2}
+\begin{bmatrix}
+d_1 ^T d_j
+\\
+\vdots
+\\
+d_j^T d_j
+\\
+\vdots
+\\
+d_N^T d_j
+\end{bmatrix}.
+\end{align*}
+
+Since $c(\xi) = \begin{bmatrix}
+1 \\ 0
+\end{bmatrix}$, $B = I$, and $o(\xi) = 0$ between spikes, we have
+
+$$
+	\dot{V} 
+	=
+	D^T A D^{T \dagger} V
+	+ 
+	D^T 
+	\left(
+		A + I
+	\right)
+	D r
+	+
+	d_1,
+$$
+where $d_1$ is the first column of $D$. 
+Apply the one-sided Laplace Transform to both sides and use the Laplace derivative property:
+\begin{align*}
+	s \tilde{V} - V(0)
+	&=
+	D^T A D^{T \dagger} \tilde{V}
+	+
+	D^T 
+	\left(
+		A + I
+	\right)o
+	D \tilde{r}
+	+
+	\mathcal{L}\left[d_1\right]
+	%
+	\\
+	\\
+	%
+	\implies
+	\left(
+	s \, I - D^T A D^{T \dagger} 
+	\right)
+	\tilde{V}
+	&=
+	V(0)
+	+
+		D^T 
+	\left(
+		A + I
+	\right)
+	D \tilde{r}
+	+
+	\tilde{d_1}	
+	%
+	\\
+	\\
+	%
+	\implies 
+	\tilde{V}
+	&= 
+	\left(
+	s \, I - D^T A D^{T \dagger} 
+	\right)^{-1}
+	\left[
+		V(0)
+		+
+		D^T 
+		\left(
+			A + I
+		\right)
+		D \tilde{r}
+		+
+		\tilde{d_1}	
+	\right]
+	%
+	\\
+	\\
+	%
+	&= 
+	\left(
+		sI - D^T A D^{T \dagger}
+	\right)^{-1}
+	V(0)
+	+ 
+		\left(
+		sI - D^T A D^{T \dagger}
+	\right)^{-1}
+	D^T 
+	\left(
+		A + I
+	\right)	
+	D \tilde{r}
+	+
+	\tilde(d_1).
+\end{align*}
+
+Now apply the inverse Laplace transform. Note that by definition of matrix exponential, 
+
+$$
+	\mathcal{L}^{-1} 
+	\left(
+		sI - D^T A D^{T \dagger}
+	\right)^{-1}
+	= e^{\xi D^T A D^{T \dagger}}.
+$$
+Therefore, 
+\begin{multline}
+\label{eq:analysis:comparison_sc_vs_pcf_vs_gj:gj_voltage_intermittent_laplace_transformed}
+	V(\xi)
+	=
+	e^{\xi D^T A D^{T \dagger}} V(0)
+	+
+	\mathcal{L}^{-1}
+	\left[
+		\left(
+			sI - D^T A D^{T \dagger}
+		\right)^{-1}
+		D^T B \tilde{c}
+	\right]
+	\\
+		+ 
+	\mathcal{L}^{-1}
+	\left[
+		\left(
+			sI - D^T A D^{T \dagger}
+		\right)^{-1}
+		D^T 
+		\left(
+			A + I
+		\right)	
+		D \tilde{r}
+	\right].
+\end{multline}
+\\
+To simplify the second term of equation (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:gj_voltage_intermittent_laplace_transformed}), use the convolution-product property of the Laplace transform to get
+\\
+$$
+	\mathcal{L}^{-1}
+	\left[
+		\left(
+			sI - D^T A D^{T \dagger}
+		\right)^{-1}
+		D^T B \tilde{c}
+	\right]
+	=
+	\mathcal{L}^{-1}
+	\left[
+			\left(
+			sI - D^T A D^{T \dagger}
+		\right)^{-1}		
+	\right]
+	\,	* \, 
+		\mathcal{L}^{-1}
+	\left[
+			D^T B \tilde{c}
+	\right].
+$$
+\\
+Note $c(\xi) = \begin{bmatrix}
+1 \\ 0
+\end{bmatrix}$, and $B = I$. Therefore,
+\\
+$$
+		\mathcal{L}^{-1}
+	\left[
+			D^T B \tilde{c}
+	\right] = D^T B c = d_1,
+$$\\
+where $d_1$ is the first column of $D$.
+The entire second term in  $V(\xi)$ above becomes
+
+$$
+	\mathcal{L}^{-1}
+	\left[
+		\left(
+			sI - D^T A D^{T \dagger}
+		\right)^{-1}
+		D^T B \tilde{c}
+	\right]
+	=
+	e^{\xi D^T A D^{T \dagger}} * d_1.
+$$
+\\
+Evaluating the convolution, bring $d_1$ outside the integral, a linear operator:
+$$
+	e^{\xi D^T A D^{T \dagger}} * d_1 (\xi)
+	=
+	\int_{\tau=-\infty}^{\infty}
+		e^{
+		\left(
+			\xi - \tau
+		\right)
+		 D^T A D^{T \dagger}} 
+	\, d\tau
+	 \, d_1.
+$$
+\\
+The state $V(\xi)$ depends only on the past up to $V(0)$ so that $0 < \xi - \tau \leq  \xi$: 
+\\
+$$
+	e^{\xi D^T A D^{T \dagger}} * d_1 (\xi)
+	=
+	\int_{\tau=0}^{\xi}
+		e^{
+		\left(
+			\xi - \tau
+		\right)
+		 D^T A D^{T \dagger}}  
+	\, d\tau
+	\, d_1.
+$$
+\\
+The integral of the matrix exponential $\int_{t=0}^{T} \, e^{tX} \, dt= X^{-1} \left(e^{Tx} - I \right)$. Thus,
+\\
+\begin{equation}
+\label{eq:analysis:comparison_sc_vs_pcf_vs_gj:gj_voltage_intermittent_laplace_transformed_term_2}
+	\mathcal{L}^{-1}
+	\left[
+		\left(
+			sI - D^T A D^{T \dagger}
+		\right)^{-1}
+		D^T B \tilde{c}
+	\right]
+=
+\left(
+	D^T A D^{T \dagger}
+\right)^{-1}
+\left(
+	e^{\xi D^T A D^{T \dagger}} - I
+\right)
+d.
+\end{equation}
+
+Note the notation $d = D^T B c$. 
+Looking at the final term of equation (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:gj_voltage_intermittent_laplace_transformed}), assume the network estimate is periodic with period $\frac{1}{\phi}$, where $\phi$ is the unknown spike rate. Between spikes, the dynamics of $r(\xi)$ are known from equation (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:pcf_r_def}) solved as
+$$
+	r(\xi) = e^{-\xi I} r(0), \hspace{4mm} 0 < \xi \leq  \frac{1}{\phi}.
+$$
+Hence, 
+\begin{align*}
+	\mathcal{L}^{-1}
+	\left[
+		\left(
+			sI - D^T A D^{T \dagger}
+		\right)^{-1}
+		D^T 
+		\left(
+			A + I
+		\right)	
+		D \tilde{r}
+	\right]
+	&= 
+	\mathcal{L}^{-1}
+	\left[
+		\left(
+			sI - D^T A D^{T \dagger}
+		\right)^{-1}		
+	\right]
+	\, 
+	*	
+	\,
+	\mathcal{L}^{-1}
+	\left[
+		D^T 
+		\left(
+			A + I
+		\right)	
+		D \tilde{r}
+	\right]
+	%
+	\\
+	\\
+	%
+	&=
+	e^{\xi D^T A D^{T \dagger}}
+	\, 
+	*	
+	\,
+		D^T 
+		\left(
+			A + I
+		\right)	
+		D \, 
+		e^{-\xi \, I} \, r(0)		
+	%
+	\\
+	\\
+	%
+	&= 	e^{\xi D^T A D^{T \dagger}}
+	\, 
+	*	
+	\,
+	\left(
+		D^T A D e^{-\xi \, I} \, r(0)
+		+
+		D^T D e^{-\xi \, I} \, r(0)
+	\right)	
+	%
+	\\
+	\\
+	%
+	&=
+	e^{\xi D^T A D^{T \dagger}}
+	\, 	*  \,
+	D^T A D e^{-\xi \, I} \, r(0)	
+	+
+	e^{\xi D^T A D^{T \dagger}}
+	\, 	*  \,
+	D^T D e^{-\xi \, I} \, r(0).	
+\end{align*}
+
+The two convolutions are nearly identical so we solve the simpler of the two:
+\\
+$$
+	e^{\xi D^T A D^{T \dagger}}
+	\, 	*  \,
+	D^T D e^{-\xi \, I} \, r(0)
+	= 
+	\int_{\tau=0}^{\xi} \,
+		e^{ \left(\xi-\tau\right) D^T A D^{T \dagger}}
+		D^T D e^{-\tau \, I} \, r(0)
+		\, d\tau.
+$$
+
+Note that $e^{-\tau \, I}$ simplifies as 
+\begin{align*}
+e^{-\tau \, I}
+&=
+\sum_{k=0}^{\infty}
+\frac{\left(-\tau I\right)^{k}}{k!}
+%
+\\
+\\
+%
+&=
+\left(
+	\sum_{k=0}^{\infty}
+	\frac{(-\tau^{k})}{k!}
+\right) I
+%
+\\
+\\
+%
+&= e^{-\tau} I.
+\end{align*}
+The scalar and identity matrix can both move to the beginning of the integral and reformed into a matrix:
+\begin{align*}
+	\int_{\tau=0}^{\xi} \,
+		e^{ \left(\xi-\tau\right) D^T A D^{T \dagger}}
+		D^T D e^{-\tau \, I} \, r(0)
+	\, d\tau
+	&= 
+	\int_{\tau=0}^{\xi} \,
+		e^{-\tau \, I}
+		e^{ \left(\xi-\tau\right) D^T A D^{T \dagger}}
+		D^T D \, r(0)
+	\, d\tau
+	%
+	\\
+	\\
+	%
+	&=
+	e^{\xi D^T A D^{T \dagger}}
+	\int_{\tau=0}^{\xi} \,
+		e^
+		{
+			-\tau \, \left( I + D^T A D^{T \dagger} \right)
+		}
+	\, d\tau
+	\, \,
+	D^T D \, r(0)
+	%
+	\\
+	\\
+	%
+	&=
+	e^{\xi D^T A D^{T \dagger}}
+	\left( I + D^T A D^{T \dagger} \right)^{-1}
+	\left(
+		e^{\xi \left( I + D^T A D^{T \dagger} \right)} - I
+	\right)
+	D^T D \, r(0).
+\end{align*}
+
+From this expression it follows that 
+\\
+$$
+	e^{\xi D^T A D^{T \dagger}}
+	\, 
+	*	
+	\,
+		D^T 
+		\left(
+			A + I
+		\right)	
+		D \, 
+		e^{-\xi \, I} \, r(0)
+	=
+		e^{\xi D^T A D^{T \dagger}}
+	\left( I + D^T A D^{T \dagger} \right)^{-1}
+	\left(
+		e^{\xi \left( I + D^T A D^{T \dagger} \right)} - I
+	\right)
+	D^T(A + I)D \, r(0).	
+$$
+\\
+Hence, 
+
+\begin{align}
+\label{eq:analysis:comparison_sc_vs_pcf_vs_gj:gj_voltage_intermittent_laplace_transformed_term_1}
+\mathcal{L}^{-1}
+	\left[
+		\left(
+			sI - D^T A D^{T \dagger}
+		\right)^{-1}
+		D^T 
+		\left(
+			A + I
+		\right)	
+		D \tilde{r}
+	\right]
+	=
+	e^{\xi D^T A D^{T \dagger}}
+	\left( I + D^T A D^{T \dagger} \right)^{-1}
+	\left(
+		e^{\xi \left( I + D^T A D^{T \dagger} \right)} - I
+	\right)
+	D^T(A + I)D \, r(0).	
+\end{align}
+
+Using equations (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:gj_voltage_intermittent_laplace_transformed_term_2}) and (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:gj_voltage_intermittent_laplace_transformed_term_1}), the voltage trajectory equation (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:gj_voltage_intermittent_laplace_transformed}) becomes 
+\begin{align}
+	\label{eq:analysis:comparison_sc_vs_pcf_vs_gj:gj_voltage_solved_full}
+	V(\xi)
+	= \notag \\ \notag
+	& e^{\xi D^T A D^{T \dagger}} V(0)
+	\\ \notag
+	\\ &+ 
+	\left(
+		D^T A D^{T \dagger}
+	\right)^{-1}
+	\left(
+		e^{\xi D^T A D^{T \dagger}} - I
+	\right)
+	d
+	\\ \notag
+	\\&+ \notag
+	e^{\xi D^T A D^{T \dagger}}
+	\left( I + D^T A D^{T \dagger} \right)^{-1}
+	\left(
+		e^{\xi \left( I + D^T A D^{T \dagger} \right)} - I
+	\right)
+	D^T(A + I)D \, r(0).
+\end{align}
+\\
+In the case $A = -I$, equation (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:gj_voltage_solved_full}) simplifies considerably:
+
+\begin{align}	
+\label{eq:analysis:comparison_sc_vs_pcf_vs_gj:gj_voltage_solved_simple}
+	V(\xi)
+	&=
+	 e^{-\xi D^T D^{T \dagger}} V(0)
+	+
+	\left(
+		D^T D^{T \dagger}
+	\right)^{-1}
+	\left(
+		I - e^{-\xi D^T D^{T \dagger}}
+	\right)
+	d.
+\end{align}
+
+Simplify the matrix $D^T D^{T \dagger}$ via its SVD:
+
+\begin{align*}
+	D^T
+	&=
+	V \begin{bmatrix} S \\ 0\end{bmatrix} \mathcal{U}^T,
+	%
+	\\
+	\\
+	%
+	\implies
+	D^{T \dagger}
+	&= 
+	\mathcal{U} \begin{bmatrix} S & 0\end{bmatrix} V^T
+	%
+	\\
+	\\
+	%
+	\implies 
+	D^T D^{T \dagger} 
+	&=
+	V \begin{bmatrix} S \\ 0\end{bmatrix} \mathcal{U}^T \mathcal{U} \begin{bmatrix} S & 0\end{bmatrix} V^T
+	\\
+	\\
+	&=
+	V \begin{bmatrix} S \\ 0\end{bmatrix} \begin{bmatrix} S & 0\end{bmatrix} V^T
+	\\
+	\\
+	&= V \begin{bmatrix} I_{d} & 0 \\ 0 & 0 \end{bmatrix}  V^T
+	\\
+	\\
+	&= \begin{bmatrix} I_{d} & 0 \\ 0 & 0 \end{bmatrix} \in \mathbf{R}^{N \text{ x } N},
+\end{align*}
+where $I_{d}$ denotes the d-dimensional identity matrix. Equation (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:gj_voltage_solved_simple}) becomes
+\\
+$$
+	V(\xi)
+	=
+	 e^{-\xi I_d } V(0)
+	+
+	\begin{bmatrix} I_{d} & 0 \\ 0 & 0 \end{bmatrix}^{-1}
+	\left(
+		I - e^{-\xi I_d}
+	\right)
+	d.
+$$
+The matrix $\begin{bmatrix} I_{d} & 0 \\ 0 & 0 \end{bmatrix}$ is not invertible. Consider instead only the first $d$ equations of the preceding system. 
+
+$$
+	V_j(\xi)
+	=
+	 e^{-\xi} V_j(0)
+	+
+	\left(
+		1 - e^{-\xi}
+	\right)
+	d_j , \hspace{4mm} j = 1, \ldots, d.
+$$
+Note that $d_j = d^T c$, and consider neuron $j_{max} = j$ the first to reach the spike threshold. Recall its initial condition $v(0) = -\frac{||d||^2}{2}$ to arrive at
+$$
+	V(\xi)
+	=
+	 - e^{-\xi} \frac{||d||^2}{2}
+	+
+	\left(
+		1 - e^{-\xi}
+	\right)
+	d^T c
+$$
+Compare with the corresponding PCF trajectory, equation (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:const_stim:pcf_voltage_trajectory}). The preceding equation rearranges to
+$$
+	V(\xi) = 
+	d^T c 
+	- e^{-\xi}
+	\left(
+		d^T c  + \frac{||d||^2}{2}
+	\right),
+$$
+
+which is identical to equation (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:const_stim:pcf_voltage_trajectory}). Since only one neuron spikes, $r(\xi)$ and thus $\hat{x}(\xi)$ are identical for both PCF and gap-junction networks. 
+The preceding, somewhat painful analysis shows that if the PCF and gap-junction models begin on their steady-state trajectories with the same initial conditions, their network estimates are identical in time. The statement is limited to the case of a constant driving stimulus. It does not, for example, show which network reaches the steady state trajectory first.
+
+
+
+
+\end{enumerate}

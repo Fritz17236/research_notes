@@ -3,7 +3,7 @@
 
 
 
-We analyse the network described by equations (\ref{eq:rotated_voltage_dynamics}), (\ref{eq:rho_dot}), and (\ref{eq:voltage_threshold}) for the case of a constant (in time) driving force $c(\xi) = k \mathcal{U}_j$. First we derive explicit expressions for the network estimate, then we compute the resulting RMSE for various driving strengths $k$.\\
+We analyse the network described by equations (\ref{eq:rotated_voltage_dynamics}) and (\ref{eq:rho_dot} for the case of a constant (in time) driving force $c(\xi) = k \mathcal{U}_j$. First we derive explicit expressions for the network estimate, then we compute the resulting RMSE for various driving strengths $k$.\\
 \begin{enumerate}
 \item Let 
 \begin{align*}
@@ -104,7 +104,7 @@ The network will encode the constant driving force by spiking at a fixed rate de
 \dot{\rho_1} &= -\rho_1 + \Omega_1 \\ 
 \\
 \implies 
-\dot{\hat{x}} &= - \Delta_1 \rho_1 + \Delta_1 \Omega_1\\
+\dot{\hat{x}} &= - \mathcal{U}_1 \rho_1 + \mathcal{U}_1 \Omega_1\\
 \\ 
 &= - \hat{x} + \mathcal{U}_1 \Omega_1. 
 \end{align*}

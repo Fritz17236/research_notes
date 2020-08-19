@@ -1,5 +1,6 @@
-\contentsline {section}{\numberline {1}The self-coupled SNN Model}{2}{section.1}% 
-\contentsline {section}{\numberline {2}Derivation: Basic Model}{3}{section.2}% 
-\contentsline {section}{\numberline {3}Analysis: RMSE vs Spike Rate for Constant Driving Force}{11}{section.3}% 
-\contentsline {section}{\numberline {4}Analysis: RMSE vs Spike Rate for a Fixed Dynamical System}{19}{section.4}% 
-\contentsline {section}{\numberline {5}Analysis: Comparison with Predictive Coding Framework and Gap-Junction Coupling}{27}{section.5}% 
+\contentsline {section}{\numberline {1}The self-coupled SNN Model}{2}{section.1}%
+\contentsline {section}{\numberline {2}Derivation: Basic Model}{3}{section.2}%
+\contentsline {section}{\numberline {3}Analysis: RMSE vs Spike Rate for Constant Driving Force}{10}{section.3}%
+\contentsline {section}{\numberline {4}Analysis: RMSE vs Spike Rate for a Fixed Dynamical System}{18}{section.4}%
+\contentsline {section}{\numberline {5}Derivation: The Predictive Coding Framework and Gap-Junction Network}{26}{section.5}%
+\contentsline {section}{\numberline {6}Analysis: PCF and Gap-Junction Response to Constant Stimulus}{32}{section.6}%

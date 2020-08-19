@@ -141,7 +141,7 @@ The inverse of the preceding expression gives the firing rate of the neuron,
 
 Equation (\ref{eq:analysis_const_dynamics_phi_vs_s}) describes the neuron's firing rate as a function of the decode matrix $D$'s singular values. Thus for a given target dynamical system, the decode matrix $D$ determines the neuron's firing rates. 
 
-\item From equations (\ref{eq:rho_dot}), (\ref{eq:xhat}), and (\ref{eq:delta_dec}),
+\item From equations (\ref{eq:rho_dot}) and (\ref{eq:xhat}),
 \begin{align}
 \label{eq:analysis:constant_driving_constant_dynamics_estimate_equation_implicit}
 \dot
@@ -165,7 +165,7 @@ Equation (\ref{eq:analysis_const_dynamics_phi_vs_s}) describes the neuron's firi
 {
 	x
 }
-+ \Delta \Omega
++ \mathcal{U} \Omega
 % \notag
 \\ \notag
 \\ 
@@ -183,10 +183,7 @@ Equation (\ref{eq:analysis_const_dynamics_phi_vs_s}) describes the neuron's firi
 {
 	x
 }
-+ S_1^
-{
-	-1
-}
++
 \mathcal
 {
 	U
@@ -218,9 +215,9 @@ We solve equation (\ref{eq:analysis:constant_driving_constant_dynamics_estimate_
 \end{align*}
 
 
- At this instant, the scaled vector $ S_1^{-1} \mathcal{U}_1$ is added to the network estimate,
+ At this instant, the  vector $\mathcal{U}_1$ is added to the network estimate,
  \begin{align*}
- \hat{x}( \xi_1^1) =  x(0) e^{-\xi_1^1 } + S_1^{-1}\mathcal{U}_1.
+ \hat{x}( \xi_1^1) =  x(0) e^{-\xi_1^1 } + \mathcal{U}_1.
  \end{align*}
  
 Decay again occurs until the next spike
@@ -255,10 +252,7 @@ e^
 	 {
 	 	-\xi_1^1
 	 }
-	 + S_1^
-	 {
-	 	-1
-	 }
+	 +
 	 \mathcal{U}_1
 \right)
 e^
@@ -306,10 +300,7 @@ e^
 	{
 		- \xi_1^1
 	}
-	 + S_1^
-	 {
-	 	-1
-	 }
+	 +
 	 \mathcal{U}_1 
 \right)
 e^
@@ -323,10 +314,7 @@ e^
 		\phi
 	}
 }
-+ S_1^
-{
-	-1
-}
++
 \mathcal{U}_1
 \\
 \\
@@ -348,10 +336,7 @@ e^
 		}
 	\right)
 }
-+ S_1^
-{
-	-1
-}
++
 \mathcal{U}_1
 e^
 {
@@ -363,10 +348,7 @@ e^
 		\phi
 	}
 } 
-+ S_1^
-{
-	-1
-}
++
 \mathcal{U}_1.
 \end{align*}
 
@@ -405,10 +387,7 @@ The third spike more clearly shows the recursive behavior
 			}
 		\right)
 	}
-	+ S_1^
-	{
-		-1
-	}
+	+
 	\mathcal{U}_1
 	e^
 	{
@@ -420,10 +399,7 @@ The third spike more clearly shows the recursive behavior
 			\phi
 		}
 	} 
-	+ S_1^
-	{
-		-1
-	}
+	+
 	\mathcal{U}_1.
 \right]
 e^
@@ -436,10 +412,7 @@ e^
 			\phi
 	}
 }
-+ S_1^
-{
-	-1
-}
++
 \mathcal{U}_1 
 %
 \\
@@ -463,10 +436,7 @@ e^
 		}
 	\right)
 }
-+ S_1^
-{
-	-1
-}
++
 \mathcal{U}_1
 e^
 {
@@ -478,10 +448,7 @@ e^
 		\phi
 	}
 } 
-+ S_1^
-{
-	-1
-}
++
 \mathcal{U}_1
 e^
 {
@@ -493,10 +460,7 @@ e^
 			\phi
 	}
 }
-+ S_1^
-{
-	-1
-}
++
 \mathcal{U}_1.
 \end{align*}
 Let us consider the $n^{th}$ spike sufficiently far from $\xi=0$ such that the transient term $
@@ -543,10 +507,6 @@ $ can be neglected. This leads to the expression
 {
 n-1
 }
-S_1^
-{
-	-1
-}
 \mathcal{U}_1
 e^
 {
@@ -563,10 +523,6 @@ e^
 \\
 %
 &=
-S_1^
-{
-	-1
-}
 \mathcal{U}_1
 \frac
 {
@@ -607,10 +563,6 @@ For sufficiently large $n$, this converges to
 &=
 \frac
 {
-	S_1^
-	{
-		-1
-	}
 	\mathcal{U}_1
 }
 {
@@ -638,10 +590,6 @@ Between two spikes, the dynamics are exponential decay
 &=
 \frac
 {
-S_1^
-{
-	-1
-}
 \mathcal{U}_1
 }
 {
@@ -685,10 +633,6 @@ x
 &=
 \frac
 {
-	S_1^
-	{
-		-1
-	}
 	\mathcal{U}_1
 }
 {
@@ -1014,7 +958,7 @@ e^
 }
 , 
 \end{align*}
-where the last equality uses the fact that $v_{th} = \frac{1}{2}$ from equation (\ref{eq:voltage_threshold}).  
+where the last equality uses the fact that $v_{th} = \frac{1}{2}$.  
 The network estimate is therefore
 \begin{equation}
 \label{eq:analysis:constant_driving_constant_dynamics_estimate_equation_explicit}

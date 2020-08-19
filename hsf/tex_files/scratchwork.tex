@@ -1,0 +1,522 @@
+
+Given the network driving force $c(\xi) = \begin{bmatrix}
+1 & 0
+\end{bmatrix}$, 
+we claim using an identical argument to the PCF case that only one neuron $j_{max}$ fires periodically in the gap-junction network. Namely, neuron $j_{max}$ receives a greater driving than all other neurons such that it reaches the threshold $v_{th} = \frac{1}{2}$ before any other neuron in the network. After the spike reset, it will reach the threshold first again so that the entire network reduces to periodic firing of neuron $j_{max}$. The dynamics
+
+\begin{align*}
+\dot{V}
+&= 
+D^T A
+D^{T \dagger} V 
++
+D^T
+\left(
+	A + I 
+\right)
+D r
++ 
+D^T B c
+- D^T D o,
+\end{align*}
+become the 1-d system
+
+\begin{align*}
+\dot{v}
+&= 
+\left(
+D^T A
+D^{T \dagger} V 
+\right)
+_{j_{max}}
++
+D^T
+\left(
+	-I + I 
+\right)
+D r_{j_{max}}
++ 
+D^T c_{j_{max}}
+- \frac{1}{2} o_{j_{max}}
+%
+\\
+\\
+%
+&= 
+f(\xi) v
++
+d^T c - \frac{1}{2} o,
+\end{align*}
+
+where $f(\xi)$ is a periodic function, $f(\xi) = D^T A D^{T \dagger} V(\xi)$.
+
+
+\begin{align*}
+\end{align*}
+% simulate pcf network constant driving, compare to explicit equation
+%To compute the per-spike RMSE of the PCF network,
+%\begin{align*}
+%	RMSE_{spike}^{pcf}(d) 
+%	&=
+%	\sqrt
+%	{
+%		\phi_{pcf}(d)	\int_{\tau = 0}^{\frac{1}{\phi_{pcf}(d)}}
+%		e_{pcf}^T e_{pcf} (\tau) \, d \tau
+%	},
+%\end{align*}
+%Assume the system is in steady state such that $x(\xi) = c(\xi)$. Then use $e_{pcf}(\tau) = x(\tau) - \hat{x}_{pcf}(\tau)$ to simplify the integral:
+%\begin{align*}
+%	e_{pcf}^T e_{pcf} &= 
+%	x^T x 
+%	-
+%	2 x^T \hat{x}_{pcf}
+%	+
+%	\hat{x}_{pcf}^T \hat{x}_{pcf}
+%	%
+%	\\
+%	\\
+%	%
+%	&= 
+%	c^T c
+%	- 2 c^T d 
+%		\left(	
+%			1 + 
+%			\frac {1} {2 d^T c }
+%		\right)
+%		e^{-\tau}
+%	+
+%	||d||^2 
+%	\left(
+%		1 + \frac{1} {2 d^T c}
+%	\right)^2
+%	e^{-2\tau}
+%	%
+%	\\
+%	\\
+%	%
+%	&=
+%	1
+%	- 
+%	\left(
+%		2 c^T d + 1
+%	\right)e^{-\tau}
+%	+
+%	||d||^2
+%	\left(
+%		1 
+%		+
+%		\frac{1} {c^T d}
+%		+ 
+%		\frac{1} {4 (c^T d)^2}
+%	\right)
+%	e^{-2 \tau}.
+%\end{align*}
+%Integrate the preceding expression to get
+%\begin{align*}
+%	RMSE_{spike}^{pcf}(d) 
+%	&=
+%	\sqrt
+%	{
+%		\phi_{pcf}(d)	\int_{\tau = 0}^{\frac{1}{\phi_{pcf}(d)}}
+%			1
+%		- 
+%		\left(
+%			2 c^T d + 1
+%		\right)e^{-\tau}
+%		+
+%		||d||^2
+%		\left(
+%			1 
+%			+
+%			\frac{1} {c^T d}
+%			+ 
+%			\frac{1} {4 (c^T d)^2}
+%		\right)
+%		e^{-2 \tau} \, d \tau
+%	}
+%	%
+%	\\
+%	\\
+%	%
+%	&=
+%	\sqrt{
+%		1
+%		-
+%		\phi_{pcf}
+%		\left(
+%			2 c^T d + 1
+%		\right) 
+%		\left(
+%			1 - e^
+%			{
+%				-\frac
+%				{
+%					1
+%				} 
+%				{
+%					\phi_{pcf}
+%				}
+%			}
+%		\right)
+%		+
+%		\phi_{pcf} \frac{||d||^2}{2}
+%		\left(
+%			1 + \frac{1}{c^T d} + \frac{1}{4 (c^T d)^2}
+%		\right)
+%		\left(
+%			1 - e^{-\frac{2}{\phi_{pcf}} }
+%		\right)
+%	}.
+%\end{align*}
+%We desire the RMSE as a function of spike rate. We assume that the tuning curve $d$ is sufficiently close to $c$ so that $c^T d = 
+%\begin{bmatrix}
+%1 & 0
+%\end{bmatrix}
+%\begin{bmatrix}
+%d_1 \\ d_2
+%\end{bmatrix}
+%\simeq 
+%d_1,
+%$
+%and that $||d||^2 \simeq d_1^2$. This lets us invert equation (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:const_dynamics:pcf_spike_rate})  to obtain
+%\begin{align*}
+%-\frac{1} {\phi_{pcf}}
+%&=
+%ln
+%\left(
+%	d_1 - \frac{d_1^2}{2}
+%\right)
+%-
+%ln 
+%\left(
+%	d_1 + \frac{d_1^2}{2}
+%\right)
+%%
+%\\
+%\\
+%%
+%\implies
+%e^{-\frac{1}{\phi}}
+%&= 
+%\frac
+%{
+%	d_1 - \frac{d_1^2}{2}
+%}
+%{
+%	d_1 + \frac{d_1^2}{2}
+%}
+%%
+%\\
+%\\
+%%
+%&=
+%\frac
+%{
+%	1 - \frac{d_1}{2}
+%}
+%{
+%	1 + \frac{d_1}{2}
+%}
+%%
+%\\
+%\\
+%%
+%\implies
+%e^{-\frac{1}{\phi}}
+% + 
+%\frac{d_1 e^{-\frac{1}{\phi}}
+%}{2}
+%&= 
+%1 - \frac{d_1}{2}
+%%
+%\\
+%\\
+%%
+%\implies
+%1 - e^{-\frac{1}{\phi}}
+%&= 
+%\frac{d_1}{2} 
+%\left(
+%	1 + e^{-\frac{1}{\phi}}
+%\right)
+%%
+%\\
+%\\
+%%
+%\implies
+%d_1(\phi_{pcf})
+%&= 
+%2 \,
+%\frac
+%{
+%	1 - e^{-\frac{1}{\phi}}
+%}
+%{
+%	1 + e^{-\frac{1}{\phi}} 
+%}.
+%\end{align*}
+%Use this to simplify our expression for $RMSE_{spike}^{pcf}$ above:
+%
+%\begin{align*}
+%RMSE_{spike}^{pcf}(\phi_{pcf}) 
+%	&=
+%	\sqrt{
+%		1
+%		-
+%		\phi_{pcf}
+%		\left(
+%			2 d_1 + 1
+%		\right) 
+%		\left(
+%			1 - e^
+%			{
+%				-\frac
+%				{
+%					1
+%				} 
+%				{
+%					\phi_{pcf}
+%				}
+%			}
+%		\right)
+%		+
+%		\phi_{pcf} \frac{d_1^2}{2}
+%		\left(
+%			1 + \frac{1}{d_1} + \frac{1}{4 d_1^2}
+%		\right)
+%		\left(
+%			1 - e^{-\frac{2}{\phi_{pcf}} }
+%		\right)
+%	}.
+%\end{align*}
+%
+%Note that 
+%
+%\begin{align*}
+%	e^{-\frac{1}{\phi_{pcf}}}
+%	&=
+%	\frac
+%	{
+%		d_1 - \frac{d_1^2}{2}
+%	}
+%	{
+%		d_1 + \frac{d_1^2}{2}
+%	}
+%	%
+%	\\
+%	\\
+%	%
+%	&=
+%	\frac
+%	{
+%		1 - \frac{d_1}{2}
+%	}
+%	{
+%		1 + \frac{d_1}{2}
+%	}
+%	%
+%	\\
+%	\\
+%	%
+%	\implies
+%	1 -e^{-\frac{1}{\phi_{pcf}}}
+%	&= 
+%	\frac
+%	{
+%		1 + \frac{d_1}{2} - 1 + \frac{d_1}{2}
+%	}
+%	{
+%		1 + \frac{d_1}{2}
+%	}
+%	%
+%	\\
+%	\\
+%	%
+%	&= 
+%	\frac{d_1}
+%	{1 + \frac{d_1}{2}}
+%	%
+%	\\
+%	\\
+%	%
+%	&=
+%	\frac{1}
+%	{
+%		\frac{1}{2} + \frac{1}{d_1}
+%	}.
+%\end{align*}
+%
+%Furthermore, 
+%
+%\begin{align*}
+%	e^
+%	{
+%		- 
+%		\frac{2}{\phi_{pcf}}
+%	}
+%	&= 
+%	\frac
+%	{
+%		\left(
+%			d_1 - \frac{d_1^2}{2}
+%		\right)^2
+%	}
+%	{
+%		\left(
+%			d_1 + \frac{d_1^2}{2}
+%		\right)^2
+%	}
+%	%
+%	\\
+%	\\
+%	%
+%	&=
+%	\frac
+%	{
+%		d_1^2 - d_1^3 + \frac{d_1^4}{4}
+%	}
+%	{
+%		d_1^2 + d_1^3 + \frac{d_1^4}{4}
+%	}
+%	%
+%	\\
+%	\\
+%	%
+%	&=
+%	\frac
+%	{
+%		1 - d_1 + \frac{d_1^2}{4}
+%	}
+%	{
+%		1 + d_1 + \frac{d_1^2}{4}
+%	}
+%	%
+%	\\
+%	\\
+%	%
+%	\implies
+%	1 - e^
+%	{
+%		- 
+%		\frac{2}{\phi_{pcf}}
+%	}
+%	&=
+%	\frac
+%	{
+%		1 + d_1 + \frac{d_1^2}{4}
+%		-1 + d_1 - \frac{d_1^2}{4}
+%	}
+%	{
+%		1 + d_1 + \frac{d_1^2}{4}
+%	}
+%	%
+%	\\
+%	\\
+%	%
+%	&=
+%	\frac
+%	{
+%		2 d_1
+%	}
+%	{
+%		1 + d_1 + \frac{d_1^2}{4}
+%	}
+%	%
+%	\\
+%	\\
+%	%
+%	&=
+%	\frac
+%	{
+%		2
+%	}
+%	{
+%	d_1^2
+%	\left(
+%		\frac{1}{ d_1^2}
+%		+
+%		\frac{1}{ d_1}
+%		+ 
+%		\frac{1}{4}
+%	\right)
+%	}
+%	%
+%	\\
+%	\\
+%	%
+%	&=
+%	\frac{2}
+%	{
+%		d_1^2 
+%		\left(
+%			\frac{1}{2} + \frac{1}{d_1}
+%		\right)^2
+%	}
+%\end{align*}.
+%
+%Therfore the RMSE is 
+%
+%\begin{align*}
+%RMSE_{spike}
+%&=
+%\sqrt{
+%		1 - 
+%		\phi_{pcf}
+%\frac{2 d_1 + 1}
+%	{
+%		\frac{1}{2} + \frac{1}{d_1}
+%}		
+%		+
+%		\phi_{pcf}
+%\frac
+%{		
+%		\left(
+%			1 + \frac{1}{d_1} + \frac{1}{4 d_1^2}
+%		\right)
+%}
+%{
+%		\left(
+%			\frac{1}{2} + \frac{1}{d_1}
+%		\right)^2
+%}
+%	},
+%	%
+%	\\
+%	\\
+%	%
+%	&=
+%	\sqrt{
+%		1 - 
+%		\phi_{pcf}
+%\frac
+%{
+%d_1 + \frac{1}{2} + 2 + \frac{1}{d_1}	
+%		+		
+%			1 + \frac{1}{d_1} + \frac{1}{4 d_1^2}
+%}
+%{
+%		\left(
+%			\frac{1}{2} + \frac{1}{d_1}
+%		\right)^2
+%}
+%	}
+%	%
+%	\\
+%	\\
+%	%
+%	&=
+%		\sqrt{
+%		1 - 
+%		\phi_{pcf}
+%\frac
+%{
+%d_1 + 3.5 + \frac{2}{d_1}	
+%	+ \frac{1}{4 d_1^2}
+%}
+%{
+%		\left(
+%			\frac{1}{2} + \frac{1}{d_1}
+%		\right)^2
+%}
+%	}
+%\end{align*}
