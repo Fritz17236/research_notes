@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.6.29) (preloaded format=pdflatex 2020.7.19)  19 AUG 2020 12:59
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.6.29) (preloaded format=pdflatex 2020.7.19)  3 SEP 2020 11:57
 entering extended mode
 **./main.tex
 (main.tex
@@ -276,7 +276,7 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 )
 \Hy@SectionHShift=\skip54
 )
-Package hyperref Info: Option `colorlinks' set `true' on input line 10.
+Package hyperref Info: Option `colorlinks' set `true' on input line 16.
  ("C:\Program Files\MiKTeX\tex/latex/l3backend\l3backend-pdfmode.def"
 File: l3backend-pdfmode.def 2020-06-29 L3 backend support: PDF mode
 \l__kernel_color_stack_int=\count267
@@ -294,22 +294,22 @@ ined.
 (tex_files/8_15_Analysis_PCF_GJ_response_to_const_stimulus.aux))
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
 
 ("C:\Program Files\MiKTeX\tex/context/base/mkii\supp-pdf.mkii"
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -342,7 +342,7 @@ File: color.cfg 2016/01/02 v1.6 sample color configuration
 )
 Package color Info: Driver file: pdftex.def on input line 147.
 )
-Package hyperref Info: Link coloring ON on input line 18.
+Package hyperref Info: Link coloring ON on input line 24.
 
 ("C:\Program Files\MiKTeX\tex/latex/hyperref\nameref.sty"
 Package: nameref 2019/09/16 v2.46 Cross-referencing by name of section
@@ -356,20 +356,20 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
 \c@section@level=\count274
 )
-LaTeX Info: Redefining \ref on input line 18.
-LaTeX Info: Redefining \pageref on input line 18.
-LaTeX Info: Redefining \nameref on input line 18.
+LaTeX Info: Redefining \ref on input line 24.
+LaTeX Info: Redefining \pageref on input line 24.
+LaTeX Info: Redefining \nameref on input line 24.
  (main.out) (main.out)
 \@outlinefile=\write3
 \openout3 = `main.out'.
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 21.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 27.
 
 
 ("C:\Program Files\MiKTeX\tex/latex/amsfonts\umsa.fd"
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 21.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 27.
 
 
 ("C:\Program Files\MiKTeX\tex/latex/amsfonts\umsb.fd"
@@ -415,52 +415,72 @@ Underfull \hbox (badness 10000) in paragraph at lines 14--21
 
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 70--74
+<figures/pcf_e_v_graphic.pdf, id=99, 584.80188pt x 829.14491pt>
+File: figures/pcf_e_v_graphic.pdf Graphic file (type pdf)
+<use figures/pcf_e_v_graphic.pdf>
+Package pdftex.def Info: figures/pcf_e_v_graphic.pdf  used on input line 74.
+(pdftex.def)             Requested size: 411.11642pt x 582.88986pt.
+
+
+LaTeX Warning: Float too large for page by 32.45985pt on input line 77.
+
+[4] [5 <./figures/pcf_e_v_graphic.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 92--96
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 79--80
+Underfull \hbox (badness 10000) in paragraph at lines 101--102
 
  []
 
-[4] [5] [6]
-Underfull \hbox (badness 10000) in paragraph at lines 278--281
+[6
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 165--166
 
  []
 
-<figures/network_decode.png, id=106, 956.8548pt x 574.5465pt>
+<figures/ev_rotated_classic_graph.pdf, id=128, 540.09035pt x 209.4228pt>
+File: figures/ev_rotated_classic_graph.pdf Graphic file (type pdf)
+<use figures/ev_rotated_classic_graph.pdf>
+Package pdftex.def Info: figures/ev_rotated_classic_graph.pdf  used on input li
+ne 213.
+(pdftex.def)             Requested size: 469.75502pt x 182.15802pt.
+[7] [8 <./figures/ev_rotated_classic_graph.pdf>] [9]
+<figures/network_decode.png, id=166, 956.8548pt x 574.5465pt>
 File: figures/network_decode.png Graphic file (type png)
 <use figures/network_decode.png>
-Package pdftex.def Info: figures/network_decode.png  used on input line 345.
+Package pdftex.def Info: figures/network_decode.png  used on input line 392.
 (pdftex.def)             Requested size: 352.31625pt x 211.54439pt.
-<figures/decode_error.png, id=108, 956.8548pt x 574.5465pt>
+<figures/decode_error.png, id=168, 956.8548pt x 574.5465pt>
 File: figures/decode_error.png Graphic file (type png)
 <use figures/decode_error.png>
-Package pdftex.def Info: figures/decode_error.png  used on input line 347.
+Package pdftex.def Info: figures/decode_error.png  used on input line 394.
 (pdftex.def)             Requested size: 352.31625pt x 211.54439pt.
-<figures/membrane_potential_image.png, id=109, 898.3161pt x 572.3784pt>
+<figures/membrane_potential_image.png, id=169, 898.3161pt x 572.3784pt>
 File: figures/membrane_potential_image.png Graphic file (type png)
 <use figures/membrane_potential_image.png>
 Package pdftex.def Info: figures/membrane_potential_image.png  used on input li
-ne 349.
+ne 396.
 (pdftex.def)             Requested size: 328.82707pt x 209.51463pt.
 
-LaTeX Warning: Float too large for page by 14.1734pt on input line 350.
 
-[7] [8 <./figures/network_decode.png> <./figures/decode_error.png> <./figures/m
-embrane_potential_image.png>]
+LaTeX Warning: Float too large for page by 14.1734pt on input line 397.
+
+[10] [11 <./figures/network_decode.png> <./figures/decode_error.png> <./figures
+/membrane_potential_image.png>]
 
 Package caption Warning: \captionsetup{type*=...} or \captionof
-(caption)                outside box or environment on input line 354.
+(caption)                outside box or environment on input line 401.
 See the caption package documentation for explanation.
 
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
-(caption)                particular \caption on input line 357.
+(caption)                particular \caption on input line 404.
 See the caption package documentation for explanation.
 
-) [9]
+) [12]
 \openout2 = `tex_files/7_19_Analysis_Basic_Constant_Spike_Rate.aux'.
 
  (tex_files/7_19_Analysis_Basic_Constant_Spike_Rate.tex
@@ -468,7 +488,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 6--8
 
  []
 
-[10
+[13
 
 
 
@@ -477,14 +497,14 @@ Underfull \hbox (badness 10000) in paragraph at lines 93--95
 
  []
 
-<figures/phi_vs_k_const_driving.png, id=146, 505.1673pt x 341.1144pt>
+<figures/phi_vs_k_const_driving.png, id=205, 505.1673pt x 341.1144pt>
 File: figures/phi_vs_k_const_driving.png Graphic file (type png)
 <use figures/phi_vs_k_const_driving.png>
 Package pdftex.def Info: figures/phi_vs_k_const_driving.png  used on input line
  98.
 (pdftex.def)             Requested size: 469.75502pt x 317.20706pt.
-[11] [12 <./figures/phi_vs_k_const_driving.png>]
-<figures/network_decode_long_term_estimate_const_driving.png, id=167, 959.7456p
+[14] [15 <./figures/phi_vs_k_const_driving.png>]
+<figures/network_decode_long_term_estimate_const_driving.png, id=226, 959.7456p
 t x 573.8238pt>
 File: figures/network_decode_long_term_estimate_const_driving.png Graphic file 
 (type png)
@@ -496,17 +516,17 @@ g.png  used on input line 187.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[13] [14 <./figures/network_decode_long_term_estimate_const_driving.png>]
-[15
+[16] [17 <./figures/network_decode_long_term_estimate_const_driving.png>]
+[18
 
 ]
-<figures/rmse_sp_vs_k_const_driving.png, id=203, 1011.78pt x 574.5465pt>
+<figures/rmse_sp_vs_k_const_driving.png, id=261, 1011.78pt x 574.5465pt>
 File: figures/rmse_sp_vs_k_const_driving.png Graphic file (type png)
 <use figures/rmse_sp_vs_k_const_driving.png>
 Package pdftex.def Info: figures/rmse_sp_vs_k_const_driving.png  used on input 
 line 305.
 (pdftex.def)             Requested size: 469.75502pt x 266.75807pt.
-<figures/rmse_sp_vs_phi_const_driving.png, id=204, 996.6033pt x 577.4373pt>
+<figures/rmse_sp_vs_phi_const_driving.png, id=262, 996.6033pt x 577.4373pt>
 File: figures/rmse_sp_vs_phi_const_driving.png Graphic file (type png)
 <use figures/rmse_sp_vs_phi_const_driving.png>
 Package pdftex.def Info: figures/rmse_sp_vs_phi_const_driving.png  used on inpu
@@ -519,18 +539,23 @@ LaTeX Warning: Float too large for page by 31.88017pt on input line 310.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-) [16] [17 <./figures/rmse_sp_vs_k_const_driving.png> <./figures/rmse_sp_vs_phi
+) [19] [20 <./figures/rmse_sp_vs_k_const_driving.png> <./figures/rmse_sp_vs_phi
 _const_driving.png>]
 \openout2 = `tex_files/7_25_Analysis_Basic_Constant_Dynamical_System.aux'.
 
 
-(tex_files/7_25_Analysis_Basic_Constant_Dynamical_System.tex [18
+(tex_files/7_25_Analysis_Basic_Constant_Dynamical_System.tex
+
+LaTeX Warning: Reference `eq:rotated_voltage_psc_def' on page 21 undefined on i
+nput line 29.
+
+[21
 
 
 
-] [19] [20]
+] [22] [23]
 <figures/analysis_const_dynamics_const_driving_network_decode_explicit_comparis
-on.png, id=251, 959.7456pt x 573.8238pt>
+on.png, id=308, 959.7456pt x 573.8238pt>
 File: figures/analysis_const_dynamics_const_driving_network_decode_explicit_com
 parison.png Graphic file (type png)
 <use figures/analysis_const_dynamics_const_driving_network_decode_explicit_comp
@@ -538,16 +563,15 @@ arison.png>
 Package pdftex.def Info: figures/analysis_const_dynamics_const_driving_network_
 decode_explicit_comparison.png  used on input line 1007.
 (pdftex.def)             Requested size: 469.75502pt x 280.86967pt.
-
-[21] [22 <./figures/analysis_const_dynamics_const_driving_network_decode_explic
-it_comparison.png>] [23]
-<figures/rmse_sp_vs_s_const_driving.png, id=276, 970.5861pt x 578.16pt>
+ [24] [25 <./figures/analysis_const_dynamics_const_driving_network_decode_expli
+cit_comparison.png>] [26]
+<figures/rmse_sp_vs_s_const_driving.png, id=334, 970.5861pt x 578.16pt>
 File: figures/rmse_sp_vs_s_const_driving.png Graphic file (type png)
 <use figures/rmse_sp_vs_s_const_driving.png>
 Package pdftex.def Info: figures/rmse_sp_vs_s_const_driving.png  used on input 
 line 2167.
 (pdftex.def)             Requested size: 469.75502pt x 279.82501pt.
-<figures/rmse_sp_vs_phi_s_const_driving.png, id=277, 970.5861pt x 578.8827pt>
+<figures/rmse_sp_vs_phi_s_const_driving.png, id=335, 970.5861pt x 578.8827pt>
 File: figures/rmse_sp_vs_phi_s_const_driving.png Graphic file (type png)
 <use figures/rmse_sp_vs_phi_s_const_driving.png>
 Package pdftex.def Info: figures/rmse_sp_vs_phi_s_const_driving.png  used on in
@@ -557,7 +581,7 @@ put line 2169.
 
 LaTeX Warning: Float too large for page by 41.39769pt on input line 2173.
 
-) [24] [25 <./figures/rmse_sp_vs_s_const_driving.png> <./figures/rmse_sp_vs_phi
+) [27] [28 <./figures/rmse_sp_vs_s_const_driving.png> <./figures/rmse_sp_vs_phi
 _s_const_driving.png>]
 \openout2 = `tex_files/7_29_Analysis_Comparison_w_PCF.aux'.
 
@@ -576,22 +600,22 @@ Underfull \hbox (badness 10000) in paragraph at lines 14--15
 
  []
 
-[26
+[29
 
 
 
-] [27]
+] [30]
 Underfull \hbox (badness 10000) in paragraph at lines 197--198
 
  []
 
-<figures/network_decode_PCF.png, id=316, 954.6867pt x 574.5465pt>
+<figures/network_decode_PCF.png, id=373, 954.6867pt x 574.5465pt>
 File: figures/network_decode_PCF.png Graphic file (type png)
 <use figures/network_decode_PCF.png>
 Package pdftex.def Info: figures/network_decode_PCF.png  used on input line 204
 .
 (pdftex.def)             Requested size: 469.75502pt x 282.71378pt.
-<figures/decode_error_PCF.png, id=317, 971.3088pt x 574.5465pt>
+<figures/decode_error_PCF.png, id=374, 971.3088pt x 574.5465pt>
 File: figures/decode_error_PCF.png Graphic file (type png)
 <use figures/decode_error_PCF.png>
 Package pdftex.def Info: figures/decode_error_PCF.png  used on input line 205.
@@ -599,112 +623,120 @@ Package pdftex.def Info: figures/decode_error_PCF.png  used on input line 205.
 
 LaTeX Warning: Float too large for page by 35.15823pt on input line 209.
 
-[28] [29 <./figures/network_decode_PCF.png> <./figures/decode_error_PCF.png>]
-<figures/network_decode_Gap-Junction.png, id=348, 954.6867pt x 574.5465pt>
+[31] [32 <./figures/network_decode_PCF.png> <./figures/decode_error_PCF.png>]
+<figures/network_decode_Gap-Junction.png, id=406, 954.6867pt x 574.5465pt>
 File: figures/network_decode_Gap-Junction.png Graphic file (type png)
 <use figures/network_decode_Gap-Junction.png>
 Package pdftex.def Info: figures/network_decode_Gap-Junction.png  used on input
  line 296.
 (pdftex.def)             Requested size: 469.75502pt x 282.71378pt.
-<figures/decode_error_Gap-Junction.png, id=349, 971.3088pt x 574.5465pt>
+<figures/decode_error_Gap-Junction.png, id=407, 971.3088pt x 574.5465pt>
 File: figures/decode_error_Gap-Junction.png Graphic file (type png)
 <use figures/decode_error_Gap-Junction.png>
 Package pdftex.def Info: figures/decode_error_Gap-Junction.png  used on input l
 ine 297.
 (pdftex.def)             Requested size: 469.75502pt x 277.87447pt.
 
-[30
+[33
 
-] [31 <./figures/network_decode_Gap-Junction.png> <./figures/decode_error_Gap-J
+] [34 <./figures/network_decode_Gap-Junction.png> <./figures/decode_error_Gap-J
 unction.png>])
 \openout2 = `tex_files/8_15_Analysis_PCF_GJ_response_to_const_stimulus.aux'.
 
 
-(tex_files/8_15_Analysis_PCF_GJ_response_to_const_stimulus.tex [32
+(tex_files/8_15_Analysis_PCF_GJ_response_to_const_stimulus.tex [35
 
 
 
 
-] [33]
-Underfull \hbox (badness 10000) in paragraph at lines 343--347
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 367--373
+] [36]
+Underfull \hbox (badness 10000) in paragraph at lines 393--397
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 406--410
+Underfull \hbox (badness 10000) in paragraph at lines 417--423
+
+ []
+
+[37]
+Underfull \hbox (badness 10000) in paragraph at lines 456--460
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 421--425
+Underfull \hbox (badness 10000) in paragraph at lines 471--475
 
  []
 
-[34]
-Overfull \hbox (6.80017pt too wide) detected at line 520
+
+Underfull \hbox (badness 10000) in paragraph at lines 572--574
+
+ []
+
+[38]
+Underfull \hbox (badness 10000) in paragraph at lines 645--647
+
+ []
+
+
+Overfull \hbox (15.61761pt too wide) detected at line 689
 []
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 522--524
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 595--597
+[39]
+Underfull \hbox (badness 10000) in paragraph at lines 765--768
 
  []
 
+[40] [41] [42] [43]
+<figures/const_dynamics_network_decode_comparison_sc_pcf_gj.png, id=498, 959.74
+56pt x 574.5465pt>
+File: figures/const_dynamics_network_decode_comparison_sc_pcf_gj.png Graphic fi
+le (type png)
+<use figures/const_dynamics_network_decode_comparison_sc_pcf_gj.png>
+Package pdftex.def Info: figures/const_dynamics_network_decode_comparison_sc_pc
+f_gj.png  used on input line 1141.
+(pdftex.def)             Requested size: 469.75502pt x 281.2234pt.
+<figures/per_spike_rmse_vs_phi_sc_gj_pcf.png, id=506, 970.5861pt x 577.4373pt>
+File: figures/per_spike_rmse_vs_phi_sc_gj_pcf.png Graphic file (type png)
+<use figures/per_spike_rmse_vs_phi_sc_gj_pcf.png>
+Package pdftex.def Info: figures/per_spike_rmse_vs_phi_sc_gj_pcf.png  used on i
+nput line 1150.
+(pdftex.def)             Requested size: 469.75502pt x 279.47522pt.
+) [44
 
-Overfull \hbox (11.01932pt too wide) detected at line 615
-\OML/cmm/m/it/10 e[]  \OMS/cmsy/m/n/10   \OML/cmm/m/it/10 D[] [] D e[] r\OT1/c
-mr/m/n/10 (0) = \OML/cmm/m/it/10 e[] [][] [] D[]\OT1/cmr/m/n/10 (\OML/cmm/m/it/
-10 A \OT1/cmr/m/n/10 + \OML/cmm/m/it/10 I\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 D r\
-OT1/cmr/m/n/10 (0)\OML/cmm/m/it/10 :
- []
-
-
-Overfull \hbox (40.61765pt too wide) detected at line 639
-[]
- []
-
-[35]
-Underfull \hbox (badness 10000) in paragraph at lines 715--718
-
- []
-
-[36]) [37]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 42.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 42.
- (main.aux (tex_files/7_18_Overview.aux)
-(tex_files/7_18_Basic_Derivation_Simulation.aux)
+ <./figures/const_dynamics_network_decode_comparison_sc_pcf_gj.png>] [45 <./fig
+ures/per_spike_rmse_vs_phi_sc_gj_pcf.png>]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 48.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 48.
+ (main.aux
+(tex_files/7_18_Overview.aux) (tex_files/7_18_Basic_Derivation_Simulation.aux)
 (tex_files/7_19_Analysis_Basic_Constant_Spike_Rate.aux)
 (tex_files/7_25_Analysis_Basic_Constant_Dynamical_System.aux)
 (tex_files/7_29_Analysis_Comparison_w_PCF.aux)
 (tex_files/8_15_Analysis_PCF_GJ_response_to_const_stimulus.aux))
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 42.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 42.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 48.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 48.
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 342442175EC8B12C1F114468903AC91B;499.
+(rerunfilecheck)             Checksum: C695FF6A5870DF1676095CD4A461DD1F;1025.
+
+
+LaTeX Warning: There were undefined references.
 
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 42.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 48.
  ) 
 Here is how much of TeX's memory you used:
- 8162 strings out of 480790
- 131818 string characters out of 2907055
- 401650 words of memory out of 3000000
- 23860 multiletter control sequences out of 15000+200000
- 541553 words of font info for 59 fonts, out of 3000000 for 9000
+ 8224 strings out of 480790
+ 133822 string characters out of 2907055
+ 403627 words of memory out of 3000000
+ 23901 multiletter control sequences out of 15000+200000
+ 541860 words of font info for 60 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 38i,15n,44p,1287b,488s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 38i,15n,44p,1287b,495s stack positions out of 5000i,500n,10000p,200000b,50000s
  <C:\Users\fritz\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm
 1000.pk><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/
 Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Program File
@@ -721,9 +753,9 @@ r7.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/P
 rogram Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Program Files/
 MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Program Files/MiKTeX/fonts/
 type1/public/amsfonts/cm/cmti10.pfb>
-Output written on main.pdf (37 pages, 2700752 bytes).
+Output written on main.pdf (45 pages, 2915175 bytes).
 PDF statistics:
- 511 PDF objects out of 1000 (max. 8388607)
- 122 named destinations out of 1000 (max. 500000)
- 119 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 612 PDF objects out of 1000 (max. 8388607)
+ 139 named destinations out of 1000 (max. 500000)
+ 179 words of extra memory for PDF output out of 10000 (max. 10000000)
 

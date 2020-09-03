@@ -215,9 +215,9 @@ We solve equation (\ref{eq:analysis:constant_driving_constant_dynamics_estimate_
 \end{align*}
 
 
- At this instant, the  vector $\mathcal{U}_1$ is added to the network estimate,
+ At this instant, the  vector $S^{-1}_1 \mathcal{U}_1$ is added to the network estimate,
  \begin{align*}
- \hat{x}( \xi_1^1) =  x(0) e^{-\xi_1^1 } + \mathcal{U}_1.
+ \hat{x}( \xi_1^1) =  x(0) e^{-\xi_1^1 } + S^{-1}_1\mathcal{U}_1.
  \end{align*}
  
 Decay again occurs until the next spike
@@ -253,7 +253,7 @@ e^
 	 	-\xi_1^1
 	 }
 	 +
-	 \mathcal{U}_1
+	 S^{-1}_1 \mathcal{U}_1
 \right)
 e^
 {
@@ -301,7 +301,7 @@ e^
 		- \xi_1^1
 	}
 	 +
-	 \mathcal{U}_1 
+	 S^{-1}_1 \mathcal{U}_1 
 \right)
 e^
 {
@@ -315,7 +315,7 @@ e^
 	}
 }
 +
-\mathcal{U}_1
+S^{-1}_1 \mathcal{U}_1
 \\
 \\
 &=
@@ -337,7 +337,7 @@ e^
 	\right)
 }
 +
-\mathcal{U}_1
+S^{-1}_1 \mathcal{U}_1
 e^
 {
 	-\frac
@@ -349,7 +349,7 @@ e^
 	}
 } 
 +
-\mathcal{U}_1.
+ S^{-1}_1 \mathcal{U}_1.
 \end{align*}
 
 The third spike more clearly shows the recursive behavior
@@ -388,7 +388,7 @@ The third spike more clearly shows the recursive behavior
 		\right)
 	}
 	+
-	\mathcal{U}_1
+	S^{-1}_1 \mathcal{U}_1
 	e^
 	{
 		-\frac
@@ -400,7 +400,7 @@ The third spike more clearly shows the recursive behavior
 		}
 	} 
 	+
-	\mathcal{U}_1.
+	S^{-1}_1 \mathcal{U}_1.
 \right]
 e^
 {
@@ -413,7 +413,7 @@ e^
 	}
 }
 +
-\mathcal{U}_1 
+S^{-1}_1 \mathcal{U}_1 
 %
 \\
 \\
@@ -437,7 +437,7 @@ e^
 	\right)
 }
 +
-\mathcal{U}_1
+S^{-1}_1 \mathcal{U}_1
 e^
 {
 	-\frac
@@ -449,7 +449,7 @@ e^
 	}
 } 
 +
-\mathcal{U}_1
+S^{-1}_1 \mathcal{U}_1
 e^
 {
 	-\frac
@@ -461,7 +461,7 @@ e^
 	}
 }
 +
-\mathcal{U}_1.
+S^{-1}_1 \mathcal{U}_1.
 \end{align*}
 Let us consider the $n^{th}$ spike sufficiently far from $\xi=0$ such that the transient term $
 x
@@ -507,7 +507,7 @@ $ can be neglected. This leads to the expression
 {
 n-1
 }
-\mathcal{U}_1
+S^{-1}_1 \mathcal{U}_1
 e^
 {
 	- \frac
@@ -523,7 +523,7 @@ e^
 \\
 %
 &=
-\mathcal{U}_1
+S^{-1}_1 \mathcal{U}_1
 \frac
 {
 	1 - e^
@@ -563,7 +563,7 @@ For sufficiently large $n$, this converges to
 &=
 \frac
 {
-	\mathcal{U}_1
+	S^{-1}_1 \mathcal{U}_1
 }
 {
 	1 - e^
@@ -590,7 +590,7 @@ Between two spikes, the dynamics are exponential decay
 &=
 \frac
 {
-\mathcal{U}_1
+S^{-1}_1 \mathcal{U}_1
 }
 {
 	1 - e^
@@ -633,7 +633,7 @@ x
 &=
 \frac
 {
-	\mathcal{U}_1
+	S^{-1}_1 \mathcal{U}_1
 }
 {
 	1 - e^

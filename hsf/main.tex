@@ -2,6 +2,12 @@
 \usepackage[utf8]{inputenc}
 \usepackage{fullpage,enumitem,amsmath,amssymb,graphicx, caption, hyperref}
 
+\newcommand\labelAndRemember[2]
+  {\expandafter\gdef\csname labeled:#1\endcsname{#2}%
+   \label{#1}#2}
+\newcommand\recallLabel[1]
+   {\csname labeled:#1\endcsname\tag{\ref{#1}}}
+
 \hypersetup{
     colorlinks=true,
     linkcolor=blue,

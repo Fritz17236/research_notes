@@ -13,9 +13,7 @@
 and
 $x(0) = \begin{bmatrix} \frac{1}{2} & 0 \end{bmatrix}$. 
  
-\begin{enumerate}
- 
-\item \textbf{\textit{PCF Network Response to Constant Stimulus:}}
+ \subsection{PCF Network Response to Constant Stimulus:}
 
 From equation (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:pcf_voltage_dynamics}), the PCF dynamics become
 \begin{align*}
@@ -153,22 +151,74 @@ This leads to a firing rate
 	}
 \end{align}
 
+Deriving the network estimate, suppose it begins at $x(0)$. The trajectory until the first spike at time $\xi_1$ is
+$$
+\hat{x}(\xi) = x(0) e^{-\xi}, \hspace{4mm} 0 \leq \xi < \xi_1.
+$$
 
-A self-coupled neuron spike adds $U_1$ to its network estimate. Using an identical analysis to this case as done in section (\ref{section:analysis:rmse_vs_spike_rate_constant_dynamics}), we substitute $d$ for $U_1$ to arrive at the steady state network estimate of the PCF network:
-
-\begin{align}	\label{eq:analysis:comparison_sc_vs_pcf_vs_gj:const_dynamics:pcf_network_estimate_steady_state}
-\hat{x}_{pcf}(\xi)
-&= 
+The spike adds $d$ to the readout followed by exponential decay:
+$$
+\hat{x}(\xi) =
 \left(
-1 + 
+	x(0) e^{-\xi_1}
+    +
+	d
+\right)
+ e^{-(\xi-\xi_1)} , \hspace{4mm} 0 \leq \xi-\xi_1 < \frac{1}{\phi}.
+$$
+Until the third spike the readout is
+$$
+\hat{x}(\xi) =
+\left(
+	x(0) e^{-\xi_1} e^{-\frac{1}{\phi} }
+    +
+	d e^{-\frac{1}{\phi}}
+	+ d
+\right)
+ e^{-(\xi - \frac{1}{\phi} - \xi_1)}
+	 , \hspace{4mm} \frac{1}{\phi} \leq \xi-\xi_1 < \frac{2}{\phi}.
+$$
+The recursive pattern is visible after the third spike
+$$
+\hat{x}(\xi) =
+\left(
+	x(0) e^{-\xi_1} e^{-\frac{2}{\phi} }
+    +
+	d e^{-\frac{2}{\phi}}
+	+ d e^{-\frac{1}{\phi}}
+	+d
+\right)
+ e^{-(\xi - \frac{2}{\phi} - \xi_1)}
+	 , \hspace{4mm} \frac{2}{\phi} \leq \xi-\xi_1 < \frac{3}{\phi}.
+$$
+
+Consider the $n^{th}$ term for $n$ big enough so that the $x(0)$ term is approximately $0$. The readout at spike time $\xi_n$ is given by the sum
+$$
+\hat{x}(\xi_n) =  d \sum_{l = 0}^{n-1} e^{-\frac{l}{\phi}}.
+$$
+The series converges to 
+$$
+\hat{x}(\xi_n) =  
 \frac
 {
-	1
+	d
 }
 {
-	2 \, d^T c
+	1 - e^{-\frac{1}{\phi}}.
 }
-\right)
+$$
+Between the spikes the readout exponentially decays so that the network estimate is given by
+
+\begin{align}
+\label{eq:analysis:comparison_sc_vs_pcf_vs_gj:const_dynamics:pcf_network_estimate_steady_state}
+\hat{x}_{pcf}(\xi) =
+\frac
+{
+	d
+}
+{
+	1 - e^{-\frac{1}{\phi}}
+}
 e^
 {
 	- \hspace{2mm}
@@ -185,11 +235,11 @@ e^
 			\phi
 		}
 	}
-}
-\, \, d.
+}.
 \end{align}
 
-\item \textbf{\textit{Gap-Junction Network Response to Constant Stimulus:}} Here we derive the decoded estimate of a gap-junction network driven by a constant stimulus, $c(\xi) = \begin{bmatrix}
+
+\subsection{Gap-Junction Network Response to Constant Stimulus:} Here we derive the decoded estimate of a gap-junction network driven by a constant stimulus, $c(\xi) = \begin{bmatrix}
 1 & 0
 \end{bmatrix}
 $. All other parameters are identical to those in equation (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:pcf_demo_sim_params}).
@@ -764,5 +814,341 @@ The preceding, somewhat painful analysis shows that if the PCF and gap-junction 
 
 
 
+\subsection{Per-spike RMSE of the PCF and Gap-Junction Networks for a Constant Stimulus}
 
-\end{enumerate}
+Equation (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:const_dynamics:pcf_network_estimate_steady_state}) gives both gap-junction and PCF trajectories. We compute the per-spike RMSE by the integral 
+$$
+RMSE_{spike} \overset{\Delta}{=}\
+\sqrt
+{
+	\phi \int_
+	{	
+		0
+	}
+	^
+	{
+		\frac
+		{
+			1
+		}
+		{
+			\phi
+		}
+	}
+	 \!  e^T e(\tau)\, \, \mathrm{d} \tau
+}.
+$$
+The target dynamical system over this interval is $x(\xi) = \mathcal{U}_1$. Assuming the first spike is at $\xi_1 = 0$, we have 
+
+\begin{align*}
+e(\xi) 
+&=
+x(\xi) - \hat{x}(\xi)
+\\
+\\
+&=
+\mathcal{U}_1 
+- 
+\frac
+{
+	d
+}
+{
+	1 - e^{-\frac{1}{\phi}}
+}
+e^{-\xi}
+\\
+\\
+\implies
+e^T e &= 
+\mathcal{U}_1^T \mathcal{U}_1 
+- 2 \, 
+\mathcal{U}_1^T \frac
+{
+	d
+}
+{
+	1 - e^{-\frac{1}{\phi}}
+}
+e^{-\xi}
++ 
+\frac
+{
+	d^T d
+}
+{
+	\left(1 - e^{-\frac{1}{\phi}}\right)^2
+}
+e^{- 2 \xi}
+\\
+\\
+&= 
+1 - 2 \frac{ c^T d } {1 - e^{-\frac{1}{\phi}}} e^{-\xi}
++ 
+\frac
+{
+	d^T d
+}
+{
+	\left(1 - e^{-\frac{1}{\phi}}\right)^2
+}
+e^{- 2 \xi}. 
+\end{align*}
+Integrate over a spike interval to arrive at 
+
+\begin{align*}
+ \int_
+	{	
+		0
+	}
+	^
+	{
+		\frac
+		{
+			1
+		}
+		{
+			\phi
+		}
+	}
+	 \!  e^T e(\tau)\, \, \mathrm{d} \tau
+	 &= 
+	 \frac{1}{\phi}
+	 - 
+	 2 \frac{ c^T d } {1 - e^{-\frac{1}{\phi}}}  
+	 \left(
+	 	1 - e^{-\frac{1}{\phi}}
+     \right)
+	 + 
+	 \frac
+	 {
+		d^T d
+	 }
+	 {
+		\left(1 - e^{-\frac{1}{\phi}}\right)^2
+	 }
+	 \frac{1}{2}`
+	 \left(
+	 	1 - e^{-\frac{2}{\phi}}
+     \right)
+     \\
+     \\
+     &= 
+	 \frac{1}{\phi}
+	 - 
+	 2 \,  c^T d 
+	 + 
+ 	 \frac{||d||}{2}
+	 \frac
+	 {
+		1 - e^{-\frac{2}{\phi}}
+	 }
+	 {
+		\left(1 - e^{-\frac{1}{\phi}}\right)^2
+	 }.
+\end{align*}
+The per-spike RMSE of both PCF and Gap-Junction Networks is therefore
+
+\begin{align*}
+	RMSE_{spike} = 
+	\sqrt{
+		1
+		-
+		2 \, \phi  c^T d 
+		 + 
+	 	\phi \frac{||d||^2}{2}
+		\frac
+		{
+			1 - e^{-\frac{2}{\phi}}
+		}
+		{
+			\left(1 - e^{-\frac{1}{\phi}}\right)^2
+		}
+	}.
+\end{align*}
+
+To write the RMSE as a function of only firing rate $\phi$, we invert equation (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:const_dynamics:pcf_spike_rate}) to obtain $d(\phi)$:
+$$
+\frac{1}{\phi} = 
+ln
+\left(
+	d^T c + \frac{||d||^2}{2}
+\right)
+-
+ln 
+\left(
+	d^T c - \frac{||d||^2}{2}
+\right). 
+$$ 
+
+Note that $d^T c = d^T \begin{bmatrix} 1 \\ 0 \end{bmatrix} = d_0$. Because $d$ is the most parallel vector to $c$, for large enough networks with uniformly distributed directions $d$, we have that $d = d_0  c$. This implies that $||d||^2 = d_0^2$. The preceding equation becomes
+
+\begin{align*}
+\frac{1}{\phi} &= 
+ln
+\left(
+	d_0+ \frac{d_0^2}{2}
+\right)
+-
+ln 
+\left(
+	d_0 - \frac{d_0^2}{2}
+\right)
+\\
+\\
+\implies
+e^{-\frac{1}{\phi}}
+&= 
+\frac
+{
+	d_0 - \frac{d_0^2}{2}
+}
+{
+	d_0 + \frac{d_0^2}{2}
+}
+\\
+\\
+&= 
+\frac
+{
+	1 - \frac{d_0}{2}
+}
+{
+	1 + \frac{d_0}{2}
+}
+\\
+\\
+\implies
+e^{-\frac{1}{\phi}} + e^{-\frac{1}{\phi}} \frac{d_0}{2}
+&= 
+1 - \frac{d_0}{2}
+\\
+\\
+\implies
+d_0
+\frac{
+1 + e^{-\frac{1}{\phi}} 
+}
+{2}
+&=
+1 - e^{-\frac{1}{\phi}}
+\\
+\\
+\implies
+d_0(\phi) &=
+2\, \frac
+{
+	1 - e^{-\frac{1}{\phi}}
+}
+{
+	1 + e^{-\frac{1}{\phi}}
+}
+\\
+\\
+&= 
+2 \, \tanh
+{
+	\frac{1}{2\phi}
+}
+\end{align*}
+
+Thus the per-spike RMSE simplifies to 
+
+\begin{align}
+\label{eq:analysis:comparison_sc_vs_pcf_vs_gj:per_spike_rmse_pcf_gj}
+RMSE_{spike} = 
+	\sqrt{
+		1
+		-
+		4 \, \phi  \tanh
+{
+	\frac{1}{2\phi}
+}
+		 + 
+	 	2 \, \phi
+	 	\tanh^2{
+	\frac{1}{2\phi}
+}
+		\frac
+		{
+			1 - e^{-\frac{2}{\phi}}
+		}
+		{
+			\left(1 - e^{-\frac{1}{\phi}}\right)^2
+		}
+	}.
+\end{align}
+
+
+\subsection{Comparison of Self-Coupled, Gap-Junction, and PCF Networks for a Constant Stimulus}
+
+We now compare all three models as they respond to a constant driving stimulus, while varying their firing rate. 
+
+Let the parameters be 
+\begin{align*}
+A &= -
+\begin{bmatrix}  
+1 & 0 \\
+0 & 1
+\end{bmatrix},
+\\
+\\
+B &=
+\begin{bmatrix}  
+	1
+	\\
+	0 
+\end{bmatrix}, 
+\\ 
+\\
+c(\xi) &=  
+\begin{bmatrix}  
+1  \\
+0 \end{bmatrix},
+\\
+\\
+D
+&=
+\mathcal{U} 
+\begin{bmatrix}
+S & 0
+\end{bmatrix}
+V^T
+=
+\mathcal{U} 
+\begin{bmatrix}
+I_d & 0
+\end{bmatrix}
+I_N \notag,
+\\
+\\
+d\xi &= 10^{-4}, \notag \\
+\notag \\
+N &= 8,\notag \\
+\notag \\
+x(0) &= \begin{bmatrix} \frac{1}{2} & 0 \end{bmatrix}.
+\end{align*}
+
+
+
+We simulate the self-coupled, PCF, and gap-junction networks and compare their derived estimates given by equations (\ref{eq:analysis:constant_driving_constant_dynamics_estimate_equation_explicit}) and (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:const_dynamics:pcf_network_estimate_steady_state}) respectively. 
+Figure (\ref{fig:analysis:comparison_sc_vs_pcf_vs_gj:network_decode_sc_pcf_gj}) shows the network estimates of each model for the above parameters. We see that all trajectories are identical as predicted by our derived estimates, shown by the dotted line. 
+
+\clearpage 
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{figures/const_dynamics_network_decode_comparison_sc_pcf_gj}
+\caption{Simulation of self-coupled, gap-junction, and PCF networks. Network readouts for each are plotted. The dotted line is the derived expression(s) given by equations (\ref{eq:analysis:constant_driving_constant_dynamics_estimate_equation_explicit}) and (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:const_dynamics:pcf_network_estimate_steady_state}). Note that all three trajectories are identical.}
+\label{fig:analysis:comparison_sc_vs_pcf_vs_gj:network_decode_sc_pcf_gj}
+\end{figure}
+
+Next we plot the per-spike RMSE of each model for the same parameters while varying the spike rate. Figure (\ref{fig:analysis:comparison_sc_vs_pcf_vs_gj:per_spike_rmse_sc_pcf_gj}) shows the numerically measured per-spike RMSE for each model and their derived expressions, equations (\ref{eq:analysis:const_dynamics_per_spike_rmse_phi}) and (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:per_spike_rmse_pcf_gj}). As the firing rate approaches the simulation timestep, $10^4$, the curves deviate from the derived expression. 
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth]{figures/per_spike_rmse_vs_phi_sc_gj_pcf}
+\caption{Simulated per-spike RMSE for self-coupled, gap-junction, and PCF networks. The dotted lines are the derived expression for each model given by given by equations (\ref{eq:analysis:const_dynamics_per_spike_rmse_phi}) for the self-coupled and (\ref{eq:analysis:comparison_sc_vs_pcf_vs_gj:per_spike_rmse_pcf_gj}) for the gap-junction and PCF models respectively. Spike rates were estimated numerically by dividing the number of spikes by the simulation length. The RMSE was computed numerically by the discrete integral $\hat{RMSE} = \sqrt{\hat{\phi} \sum_{\tau \text{ between spikes }} e(\xi)^T e(\xi) \, \, d\xi }$. All computations used the numerically estimated spike rate.} 
+\label{fig:analysis:comparison_sc_vs_pcf_vs_gj:per_spike_rmse_sc_pcf_gj}
+\end{figure}
+

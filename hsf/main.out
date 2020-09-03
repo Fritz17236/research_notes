@@ -1,6 +1,11 @@
 \BOOKMARK [1][-]{section.1}{The self-coupled SNN Model}{}% 1
 \BOOKMARK [1][-]{section.2}{Derivation: Basic Model}{}% 2
-\BOOKMARK [1][-]{section.3}{Analysis: RMSE vs Spike Rate for Constant Driving Force}{}% 3
-\BOOKMARK [1][-]{section.4}{Analysis: RMSE vs Spike Rate for a Fixed Dynamical System}{}% 4
-\BOOKMARK [1][-]{section.5}{Derivation: The Predictive Coding Framework and Gap-Junction Network}{}% 5
-\BOOKMARK [1][-]{section.6}{Analysis: PCF and Gap-Junction Response to Constant Stimulus}{}% 6
+\BOOKMARK [2][-]{subsection.2.1}{Simulation of Basic Equations}{section.2}% 3
+\BOOKMARK [1][-]{section.3}{Analysis: RMSE vs Spike Rate for Constant Driving Force}{}% 4
+\BOOKMARK [1][-]{section.4}{Analysis: RMSE vs Spike Rate for a Fixed Dynamical System}{}% 5
+\BOOKMARK [1][-]{section.5}{Derivation: The Predictive Coding Framework and Gap-Junction Network}{}% 6
+\BOOKMARK [1][-]{section.6}{Analysis: PCF and Gap-Junction Response to Constant Stimulus}{}% 7
+\BOOKMARK [2][-]{subsection.6.1}{PCF Network Response to Constant Stimulus:}{section.6}% 8
+\BOOKMARK [2][-]{subsection.6.2}{Gap-Junction Network Response to Constant Stimulus:}{section.6}% 9
+\BOOKMARK [2][-]{subsection.6.3}{Per-spike RMSE of the PCF and Gap-Junction Networks for a Constant Stimulus}{section.6}% 10
+\BOOKMARK [2][-]{subsection.6.4}{Comparison of Self-Coupled, Gap-Junction, and PCF Networks for a Constant Stimulus}{section.6}% 11
