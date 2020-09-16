@@ -78,8 +78,7 @@ where $D^{T \dagger}$ is the left pseudo-inverse of $D^T \in \mathbf{R}^{N \time
 
 \clearpage
 
-\item The self-coupled network is derived by applying a change of bases.  
-Assuming both $D$ and $A$ are full rank, diagonalize each to a common left basis:
+\item The self-coupled network is derived by via a change of bases. Assuming both $D$ and $A$ are full rank, diagonalize each to a common left basis:
 \begin{align*}
     A &= \mathcal{U} \Lambda \mathcal{U}^T = \sum_{j=1}^d \Lambda_j \mathcal{U}_j \mathcal{U}_j^T,\\
     \\
@@ -92,126 +91,240 @@ Assuming both $D$ and $A$ are full rank, diagonalize each to a common left basis
 \end{align*}
 with $\mathcal{U} \in \mathbf{R}^{d \times d}$ and $V \in \mathbf{R}^{N \times N}$, and $S \in \mathbf{R}^{d \times d }$. \\
 \\
-To express equation (\ref{eq:derivation_init}) with the $\mathcal{U}$ and $V$ bases, first note
 
-\begin{align*}
-     D^{T} A^{-1}  &= V \begin{bmatrix} S \\ 0\end{bmatrix} \mathcal{U}^T  \mathcal{U} \Lambda^{-1} \mathcal{U}^T \\
-     &= V \begin{bmatrix} S \\ 0\end{bmatrix} \Lambda^{-1} \mathcal{U}^T \\
-     &= \sum_{j = 1}^{d} \frac{S_j}{ \Lambda_j} V_j \mathcal{U}_j^T,
-\end{align*}\\
-
-and
-
-\begin{align*}
-D^{T} A^{-1} D  &= V \begin{bmatrix} S \\ 0\end{bmatrix} \mathcal{U}^T  \mathcal{U} \Lambda^{-1} \mathcal{U}^T \mathcal{U} \left[S \hspace{1mm} 0 \right] V^T \\
-  &= V \begin{bmatrix} S \\ 0\end{bmatrix} \Lambda^{-1} \left[S \hspace{1mm} 0 \right] V^T \\
-  &= \sum_{j = 1}^{d} \frac{S_j^2}{ \Lambda_j} V_j V_j^T.
-\end{align*}
-
-Consequently, 
+In the original basis, the state is $x$. In the rotated basis we denote this quantity as $y$. It is the projection of $x$ onto the d-dimensional $\mathcal{U}$ basis:
 
 \begin{align}
-    \label{eq:derivation_sub_svd}
-    \sum_{j = 1}^{d} \frac{S_j}{ \Lambda_j} V_j \mathcal{U}_j^T \dot{e} &= 
-     \sum_{j=1}^d S_j V_j  \mathcal{U}_j^T e
-    +
-    \sum_{j = 1}^{d} S_j^2 (1 + \Lambda_j^{-1}) V_j V_j^T r
-    + 
-    \sum_{j = 1}^{d} \frac{S_j}{ \Lambda_j} V_j \mathcal{U}_j^TBc 
-    -
-    \sum_{j = 1}^{d} \frac{S_j^2}{ \Lambda_j} V_j V_j^T o.
+\label{eq:definition_rotated_state_space}
+y &\overset{\Delta}{=} \mathcal{U}^T x 
+%\hat{y} &\overset{\Delta}{=} \mathcal{U}^T \hat{x}.
 \end{align}
 
+The rotated target dynamics are thus
 
-Left-multiply both sides of the preceding equation by $V_j^T$ to arrive at the system of equations
+\begin{align}
+\label{eq:rotated_targed_dynamical_system}
+\dot{y} &= \mathcal{U}^T \dot{x} \notag
+\\
+\\ \notag
+&= 
+\Lambda y (\xi)
++
+\beta c(\xi),
+\end{align}
+where  
+$$
+\beta \overset{\Delta}{=} \mathcal{U}^T B. 
+$$
 
+The network estimate in the rotated basis is 
+$$
+\hat{y} \overset{\Delta}{=} \mathcal{U}^T \hat{x}.
+$$
+
+From equation (\ref{eq:xhat}),
 \begin{align*}
-    \frac{S_j}{\Lambda_j} \mathcal{U}_j^T \dot{e} &= 
-    S_j \mathcal{U}_j^T e
-    +
-    S_j^2 (1 + \Lambda_j^{-1})V_j^T r 
-    +
-    S_j \Lambda_j^{-1} \mathcal{U}_j^T B c
-    -
-    S_j^2 \Lambda_j^{-1} V_j^T o
-    \\
-    \\
-    \implies 
-    S_j \mathcal{U}_j^T \dot{e} 
-    &= 
-    S_j\Lambda_j \mathcal{U}_j^T e
-    +
-    S_j^2 (\Lambda_j + 1) V_j^T r 
-    +
-    S_j \mathcal{U}_j^T B c
-    -
-    S_j^2 V_j^T o,\\
+\hat{y} &= \mathcal{U}^T \hat{x}
+\\
+\\
+&=
+\mathcal{U}^T D r
+\\
+\\
+&= 
+\begin{bmatrix}
+S & 0
+\end{bmatrix}
+V^T
+r
+\\
+\\
+\implies
+\dot{\hat{y}}
+&= 
+\begin{bmatrix}
+S & 0
+\end{bmatrix}
+V^T
+\dot{r}
+\\
+\\
+&= 
+\begin{bmatrix}
+S & 0
+\end{bmatrix}
+\left( 
+-V^T r + V^T o
+\right).
 \end{align*}
-for $j = 1, \ldots, d$.
 
-The preceding left-multiply has transformed the equations to the $\mathcal{U}-V$ basis. Denote the error $e$ expressed in the basis as $\epsilon$. 
+Note that $V^T r$ and $V^T o $ are projections of the N-neuron network's post-synaptic current and spike train respectively onto the rotated basis, denoted by 
+
+\begin{align}
+\rho \overset{\Delta}{=} V^T r, 
+\label{eq:def_rho}
+\\ \notag
+\\
+\tilde{o} \overset{\Delta}{=} V^T o
+\label{eq:def_o_tilde}.
+\end{align}
+
+The last equality also implies
+
+\begin{align}
+\dot{\rho} = -\rho + \tilde{o}.
+\end{align}
+
+Let $\epsilon$ be the error in the rotated basis:
 \begin{align}
 \label{eq:rotated_error_def}
-\epsilon \overset{\Delta}{=} \mathcal{U}^T e.
+\epsilon \overset{\Delta}{=} y - \hat{y} \\= \mathcal{U}^T e. \notag
 \end{align}
 
-In the $\mathcal{U}-V$ basis, left multiplication of a vector by $D^T$ is identical to scaling the first $d$ elements by the diagonal matrix $S$ and the rest by 0. The rotated voltage becomes
+\item Repeat the derivation of equation (\ref{eq:derivation_init}) but with $y$, $\hat{y},$ and $\epsilon$:
+
+\begin{align*}
+\dot{\epsilon}
+&=
+\dot{y} - \dot{\hat{y}}
+\\
+\\
+&= 
+\Lambda y + \beta c - 
+\begin{bmatrix}
+S & 0
+\end{bmatrix}
+\left(
+-\rho + \tilde{o}
+\right)
+\\
+\\
+&= 
+\Lambda \left(
+\epsilon + 
+\begin{bmatrix}
+S & 0
+\end{bmatrix}
+\rho
+\right)
++ 
+\beta c
+-
+\begin{bmatrix}
+S & 0
+\end{bmatrix}
+\left(
+-\rho + \tilde{o}
+\right)
+\\
+\\
+&= 
+\Lambda \epsilon
++
+\left( 
+\Lambda + I
+\right)
+\begin{bmatrix}
+S & 0
+\end{bmatrix}
+\rho
+-
+\begin{bmatrix}
+S & 0
+\end{bmatrix}
+\tilde{o}
+\\
+\\
+\implies
+\begin{bmatrix}
+S & 0
+\end{bmatrix}
+\dot{\epsilon}
+&= 
+\begin{bmatrix}
+S & 0
+\end{bmatrix}
+\Lambda \epsilon
++
+\begin{bmatrix}
+S & 0
+\end{bmatrix}
+\left( 
+\Lambda + I
+\right)
+\begin{bmatrix}
+S & 0
+\end{bmatrix}
+\rho
+-
+\begin{bmatrix}
+S & 0
+\end{bmatrix}
+\begin{bmatrix}
+S & 0
+\end{bmatrix}
+\tilde{o}.
+\end{align*}
+
+Note that only $d$ of the $N$ equations are nontrivial. A comparison with equation (\ref{eq:derivation_init}) suggests the N-dimensional rotated membrane potential $v$ is defined as:
 
 \begin{align}
 \label{eq:rotated_voltage_def}
-v \overset{\Delta}{=} S \epsilon.
+v \overset{\Delta}{=} \begin{bmatrix}
+S \\ 0
+\end{bmatrix} \epsilon \in \mathbf{R}^N.
 \end{align}
-
-Here, $v$ is a d vector which describes the dynamics of the d-neurons needed to implement the dynamical system. The remaining $N-d$ neurons are unused and do not contribute to the network readout at present.   \\
-
-Denote the spike train of the rotated neurons by $\tilde{o}$. Then $\omega$ denotes the fast synaptic inhibition given by 
+\\
+This mapping is not invertible unless we only consider the first $d$ components and neglect the remaining, trivial components. Abusing notation, we write  
 $$
-    \omega \overset{\Delta}{=} S^2 \tilde{o}.
+\epsilon = S^{-1} v, 
 $$
-
-The slow synaptic excitation is then
-
-\begin{equation}
-\label{eq:rho_dot}
-    \dot{\rho} = -\rho + \omega, 
-\end{equation}
-
-where 
-
-$$
-	\rho \overset{\Delta}{=} S^2 V^T r.
-$$
-
-Similar to equation (\ref{eq:rotated_voltage_def}), $\rho$ describes a d-vector. 
-
-The input matrix in the rotated basis is 
-
-\begin{align}
-\label{eq:rotated_input_matrix_def}
-\beta \overset{\Delta}{=} \mathcal{U}^T  B.
-\end{align}
-
-Equation (\ref{eq:derivation_sub_svd}) becomes (in matrix form)
-
+where the remaining $N-d$ components of $v$ are assumed to be zero. Using a similar abuse for the $\rho$ and $\tilde{o}$ terms, we arrive at the $d$ system of equations describing the nontrivial network voltage dynamics:
 \begin{align}
 \label{eq:rotated_voltage_dynamics}
-    \dot{v} &= 
-    \Lambda v
-    +
-    (\Lambda + I) \rho 
-    +
-     \beta c
-    -
-    \omega,
-   \end{align}
-which gives the dynamics of the rotated neuron voltages. 
+\dot{v}
+&= 
+S\Lambda S^{-1} v + S \left(\Lambda + I \right) S \rho
+- S^2 \tilde{o} \notag
+\\ \notag
+\\
+\implies
+\dot{v}
+&= 
+\Lambda v + S \left(\Lambda + I \right) S \rho - S^2 \tilde{o}.
+\end{align}
 
-There are 4 vector spaces in total: the error space which tracks the dynamical system and the network estimate, voltage space which tracks the membrane potentials, and their transformed counterparts in the $\mathcal{U}-V$ bases. Figure (\ref{fig:four_subspace_relation}) shows the relationship between these subspaces. 
+We can also write all $N$ dimensions explicitly to respect the dimensionality of $v$ and $\rho$:
 
-\begin{figure}
+\begin{align*}
+\dot{v}
+&= 
+\begin{bmatrix}
+\Lambda & 0
+\\
+0 & 0
+\end{bmatrix}
+v +
+\begin{bmatrix}
+S \left(\Lambda + I_d \right) S & 0
+\\
+0 & 0
+\end{bmatrix}
+  \rho - 
+ \begin{bmatrix}
+S^2 & 0
+\\
+0 & 0
+\end{bmatrix}
+    \tilde{o}.
+\end{align*}
+
+To summarize, there are 4 vector spaces in total: the error space which tracks the dynamical system and the network estimate, voltage space which tracks the membrane potentials, and their transformed counterparts in the $\mathcal{U}-V$ bases. Figure (\ref{fig:four_subspace_relation}) shows the relationships derived between these subspaces.
+
+\begin{figure}[h]
 \centering
 \includegraphics[width=\linewidth]{figures/ev_rotated_classic_graph}
-\caption{Depiction of the relationship between original and transformed spaces and their respective error and voltage spaces. An arrow represents left multiplication by the given matrix. }
+\caption{Depiction of the relationship between original and transformed spaces and their respective error and voltage spaces. An arrow represents left multiplication by the given matrix. The zeros in the full $N \times N$ matrices mapping between $v$ and $\epsilon$ are omitted for clarity.}
 \label{fig:four_subspace_relation}
 \end{figure}
    

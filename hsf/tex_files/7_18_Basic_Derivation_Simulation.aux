@@ -10,22 +10,23 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Mapping Between State and Voltage Spaces: \textbf  {\textit  {Top:}} The estimation error $e$ is computed by comparing the decoded network estimate to the true state of the target dynamical system. \textbf  {\textit  {Middle:}} The $e$ is projected onto the encoding directions of the neurons composing the network. The projection of error onto encoding direction $j$ gives the membrane voltage of neuron $j$, $v_j = d_j^T e$. \textbf  {\textit  {Bottom:}} The voltages form a N-dimensional vector contained in voltage space.\relax }}{5}{figure.caption.2}\protected@file@percent }
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
 \newlabel{fig:derivation:basic_model:pcf_e_v_map}{{1}{5}{Mapping Between State and Voltage Spaces: \textbf {\textit {Top:}} The estimation error $e$ is computed by comparing the decoded network estimate to the true state of the target dynamical system. \textbf {\textit {Middle:}} The $e$ is projected onto the encoding directions of the neurons composing the network. The projection of error onto encoding direction $j$ gives the membrane voltage of neuron $j$, $v_j = d_j^T e$. \textbf {\textit {Bottom:}} The voltages form a N-dimensional vector contained in voltage space.\relax }{figure.caption.2}{}}
-\newlabel{eq:derivation_sub_svd}{{2.6}{6}{Derivation: Basic Model}{equation.2.6}{}}
-\newlabel{eq:rotated_error_def}{{2.7}{7}{Derivation: Basic Model}{equation.2.7}{}}
-\newlabel{eq:rotated_voltage_def}{{2.8}{7}{Derivation: Basic Model}{equation.2.8}{}}
-\newlabel{eq:rho_dot}{{2.9}{7}{Derivation: Basic Model}{equation.2.9}{}}
-\newlabel{eq:rotated_input_matrix_def}{{2.10}{7}{Derivation: Basic Model}{equation.2.10}{}}
-\newlabel{eq:rotated_voltage_dynamics}{{2.11}{7}{Derivation: Basic Model}{equation.2.11}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Depiction of the relationship between original and transformed spaces and their respective error and voltage spaces. An arrow represents left multiplication by the given matrix. \relax }}{8}{figure.caption.3}\protected@file@percent }
-\newlabel{fig:four_subspace_relation}{{2}{8}{Depiction of the relationship between original and transformed spaces and their respective error and voltage spaces. An arrow represents left multiplication by the given matrix. \relax }{figure.caption.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Simulation of Basic Equations}{10}{subsection.2.1}\protected@file@percent }
-\newlabel{eq:sim_I_params}{{2.13}{10}{Simulation of Basic Equations}{equation.2.13}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Simulation of equations (\ref  {eq:rotated_voltage_dynamics}) and (\ref  {eq:rho_dot}) with parameters listed in equation (\ref  {eq:sim_I_params}). \textbf  {\textit  {Top:}} The decoded network estimate plotted alongside the target dynamical system. \textbf  {\textit  {Middle:}} The estimation error along each state-space dimension. \textbf  {\textit  {Bottom: }}The membrane potentials of the 4 neurons during the same time period.  For the numerical implementation, the matrix exponential was used to integrate the continuous terms over a simulation time step. Continuous terms include all equation terms excepting the delta functions $\omega $ handled separately. After integrating over a timestep, any neuron above threshold was manually reset (action of fast inhibition). If multiple neurons are above threshold, the system is integrated backwards in time until only one neuron is above threshold before spiking. The matrix exponential was computed using a Pad\'{e} approximation via the Python package Scipy: \textit  {scipy.linalg.expm()}. \relax }}{12}{figure.3}\protected@file@percent }
-\newlabel{fig:Simulation_I}{{3}{12}{Simulation of equations (\ref {eq:rotated_voltage_dynamics}) and (\ref {eq:rho_dot}) with parameters listed in equation (\ref {eq:sim_I_params}). \textbf {\textit {Top:}} The decoded network estimate plotted alongside the target dynamical system. \textbf {\textit {Middle:}} The estimation error along each state-space dimension. \textbf {\textit {Bottom: }}The membrane potentials of the 4 neurons during the same time period.\\ For the numerical implementation, the matrix exponential was used to integrate the continuous terms over a simulation time step. Continuous terms include all equation terms excepting the delta functions $\omega $ handled separately. After integrating over a timestep, any neuron above threshold was manually reset (action of fast inhibition). If multiple neurons are above threshold, the system is integrated backwards in time until only one neuron is above threshold before spiking. The matrix exponential was computed using a Pad\'{e} approximation via the Python package Scipy: \textit {scipy.linalg.expm()}. \relax }{figure.3}{}}
+\newlabel{eq:definition_rotated_state_space}{{2.6}{6}{Derivation: Basic Model}{equation.2.6}{}}
+\newlabel{eq:rotated_targed_dynamical_system}{{2.7}{6}{Derivation: Basic Model}{equation.2.7}{}}
+\newlabel{eq:def_rho}{{2.8}{7}{Derivation: Basic Model}{equation.2.8}{}}
+\newlabel{eq:def_o_tilde}{{2.9}{7}{Derivation: Basic Model}{equation.2.9}{}}
+\newlabel{eq:rotated_error_def}{{2.11}{7}{Derivation: Basic Model}{equation.2.11}{}}
+\newlabel{eq:rotated_voltage_def}{{2.12}{8}{Derivation: Basic Model}{equation.2.12}{}}
+\newlabel{eq:rotated_voltage_dynamics}{{2.13}{8}{Derivation: Basic Model}{equation.2.13}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Depiction of the relationship between original and transformed spaces and their respective error and voltage spaces. An arrow represents left multiplication by the given matrix. The zeros in the full $N \times N$ matrices mapping between $v$ and $\epsilon $ are omitted for clarity.\relax }}{8}{figure.caption.3}\protected@file@percent }
+\newlabel{fig:four_subspace_relation}{{2}{8}{Depiction of the relationship between original and transformed spaces and their respective error and voltage spaces. An arrow represents left multiplication by the given matrix. The zeros in the full $N \times N$ matrices mapping between $v$ and $\epsilon $ are omitted for clarity.\relax }{figure.caption.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Simulation of Basic Equations}{11}{subsection.2.1}\protected@file@percent }
+\newlabel{eq:sim_I_params}{{2.15}{11}{Simulation of Basic Equations}{equation.2.15}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Simulation of equations (\ref  {eq:rotated_voltage_dynamics}) and (\ref  {eq:rho_dot}) with parameters listed in equation (\ref  {eq:sim_I_params}). \textbf  {\textit  {Top:}} The decoded network estimate plotted alongside the target dynamical system. \textbf  {\textit  {Middle:}} The estimation error along each state-space dimension. \textbf  {\textit  {Bottom: }}The membrane potentials of the 4 neurons during the same time period.  For the numerical implementation, the matrix exponential was used to integrate the continuous terms over a simulation time step. Continuous terms include all equation terms excepting the delta functions $\omega $ handled separately. After integrating over a timestep, any neuron above threshold was manually reset (action of fast inhibition). If multiple neurons are above threshold, the system is integrated backwards in time until only one neuron is above threshold before spiking. The matrix exponential was computed using a Pad\'{e} approximation via the Python package Scipy: \textit  {scipy.linalg.expm()}. \relax }}{13}{figure.3}\protected@file@percent }
+\newlabel{fig:Simulation_I}{{3}{13}{Simulation of equations (\ref {eq:rotated_voltage_dynamics}) and (\ref {eq:rho_dot}) with parameters listed in equation (\ref {eq:sim_I_params}). \textbf {\textit {Top:}} The decoded network estimate plotted alongside the target dynamical system. \textbf {\textit {Middle:}} The estimation error along each state-space dimension. \textbf {\textit {Bottom: }}The membrane potentials of the 4 neurons during the same time period.\\ For the numerical implementation, the matrix exponential was used to integrate the continuous terms over a simulation time step. Continuous terms include all equation terms excepting the delta functions $\omega $ handled separately. After integrating over a timestep, any neuron above threshold was manually reset (action of fast inhibition). If multiple neurons are above threshold, the system is integrated backwards in time until only one neuron is above threshold before spiking. The matrix exponential was computed using a Pad\'{e} approximation via the Python package Scipy: \textit {scipy.linalg.expm()}. \relax }{figure.3}{}}
 \@setckpt{tex_files/7_18_Basic_Derivation_Simulation}{
-\setcounter{page}{13}
-\setcounter{equation}{13}
-\setcounter{enumi}{5}
+\setcounter{page}{14}
+\setcounter{equation}{15}
+\setcounter{enumi}{6}
 \setcounter{enumii}{0}
 \setcounter{enumiii}{0}
 \setcounter{enumiv}{0}
@@ -42,7 +43,7 @@
 \setcounter{parentequation}{0}
 \setcounter{caption@flags}{0}
 \setcounter{continuedfloat}{0}
-\setcounter{Item}{9}
+\setcounter{Item}{10}
 \setcounter{Hfootnote}{0}
 \setcounter{bookmark@seq@number}{3}
 \setcounter{section@level}{2}

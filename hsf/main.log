@@ -1,12 +1,14 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.6.29) (preloaded format=pdflatex 2020.7.19)  3 SEP 2020 11:57
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.9.15)  15 SEP 2020 23:08
 entering extended mode
-**./main.tex
-(main.tex
-LaTeX2e <2020-02-02> patch level 5
-L3 programming layer <2020-06-18>
-("C:\Program Files\MiKTeX\tex/latex/base\article.cls"
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**main.tex
+(./main.tex
+LaTeX2e <2020-02-02> patch level 2
+L3 programming layer <2020-02-14>
+(/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2019/12/20 v1.4l Standard LaTeX document class
-("C:\Program Files\MiKTeX\tex/latex/base\size10.clo"
+(/usr/share/texlive/texmf-dist/tex/latex/base/size10.clo
 File: size10.clo 2019/12/20 v1.4l Standard LaTeX file (size option)
 )
 \c@part=\count167
@@ -21,43 +23,43 @@ File: size10.clo 2019/12/20 v1.4l Standard LaTeX file (size option)
 \belowcaptionskip=\skip48
 \bibindent=\dimen134
 )
-("C:\Program Files\MiKTeX\tex/latex/base\inputenc.sty"
+(/usr/share/texlive/texmf-dist/tex/latex/base/inputenc.sty
 Package: inputenc 2018/08/11 v1.3c Input encoding file
-\inpenc@prehook=\toks15
-\inpenc@posthook=\toks16
+\inpenc@prehook=\toks14
+\inpenc@posthook=\toks15
 )
-(C:\Users\fritz\AppData\Roaming\MiKTeX\tex/latex/preprint\fullpage.sty
+(/usr/share/texlive/texmf-dist/tex/latex/preprint/fullpage.sty
 Package: fullpage 1999/02/23 1.1 (PWD)
 \FP@margin=\skip49
 )
-(C:\Users\fritz\AppData\Roaming\MiKTeX\tex/latex/enumitem\enumitem.sty
+(/usr/share/texlive/texmf-dist/tex/latex/enumitem/enumitem.sty
 Package: enumitem 2019/06/20 v3.9 Customized lists
-\enitkv@toks@=\toks17
+\enitkv@toks@=\toks16
 \labelindent=\skip50
 \enit@outerparindent=\dimen135
-\enit@toks=\toks18
+\enit@toks=\toks17
 \enit@inbox=\box45
 \enit@count@id=\count175
 \enitdp@description=\count176
 )
-("C:\Program Files\MiKTeX\tex/latex/amsmath\amsmath.sty"
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsmath.sty
 Package: amsmath 2020/01/20 v2.17e AMS math features
 \@mathmargin=\skip51
 
 For additional information on amsmath, use the `?' option.
-("C:\Program Files\MiKTeX\tex/latex/amsmath\amstext.sty"
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amstext.sty
 Package: amstext 2000/06/29 v2.01 AMS text
 
-("C:\Program Files\MiKTeX\tex/latex/amsmath\amsgen.sty"
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsgen.sty
 File: amsgen.sty 1999/11/30 v2.0 generic functions
-\@emptytoks=\toks19
+\@emptytoks=\toks18
 \ex@=\dimen136
 ))
-("C:\Program Files\MiKTeX\tex/latex/amsmath\amsbsy.sty"
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsbsy.sty
 Package: amsbsy 1999/11/29 v1.2d Bold Symbols
 \pmbraise@=\dimen137
 )
-("C:\Program Files\MiKTeX\tex/latex/amsmath\amsopn.sty"
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsopn.sty
 Package: amsopn 2016/03/08 v2.02 operator names
 )
 \inf@bad=\count177
@@ -80,28 +82,28 @@ LaTeX Font Info:    Redeclaring font encoding OMS on input line 734.
 \dotsspace@=\muskip16
 \c@parentequation=\count184
 \dspbrk@lvl=\count185
-\tag@help=\toks20
+\tag@help=\toks19
 \row@=\count186
 \column@=\count187
 \maxfields@=\count188
-\andhelp@=\toks21
+\andhelp@=\toks20
 \eqnshift@=\dimen139
 \alignsep@=\dimen140
 \tagshift@=\dimen141
 \tagwidth@=\dimen142
 \totwidth@=\dimen143
 \lineht@=\dimen144
-\@envbody=\toks22
+\@envbody=\toks21
 \multlinegap=\skip52
 \multlinetaggap=\skip53
-\mathdisplay@stack=\toks23
+\mathdisplay@stack=\toks22
 LaTeX Info: Redefining \[ on input line 2859.
 LaTeX Info: Redefining \] on input line 2860.
 )
-("C:\Program Files\MiKTeX\tex/latex/amsfonts\amssymb.sty"
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/amssymb.sty
 Package: amssymb 2013/01/14 v3.01 AMS font symbols
 
-("C:\Program Files\MiKTeX\tex/latex/amsfonts\amsfonts.sty"
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/amsfonts.sty
 Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
 \symAMSa=\mathgroup4
 \symAMSb=\mathgroup5
@@ -109,35 +111,35 @@ LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
 LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
 (Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
 ))
-("C:\Program Files\MiKTeX\tex/latex/graphics\graphicx.sty"
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/graphicx.sty
 Package: graphicx 2019/11/30 v1.2a Enhanced LaTeX Graphics (DPC,SPQR)
 
-("C:\Program Files\MiKTeX\tex/latex/graphics\keyval.sty"
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/keyval.sty
 Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
-\KV@toks@=\toks24
+\KV@toks@=\toks23
 )
-("C:\Program Files\MiKTeX\tex/latex/graphics\graphics.sty"
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/graphics.sty
 Package: graphics 2019/11/30 v1.4a Standard LaTeX Graphics (DPC,SPQR)
 
-("C:\Program Files\MiKTeX\tex/latex/graphics\trig.sty"
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/trig.sty
 Package: trig 2016/01/03 v1.10 sin cos tan (DPC)
 )
-("C:\Program Files\MiKTeX\tex/latex/graphics-cfg\graphics.cfg"
+(/usr/share/texlive/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
 File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
 )
 Package graphics Info: Driver file: pdftex.def on input line 105.
 
-("C:\Program Files\MiKTeX\tex/latex/graphics-def\pdftex.def"
+(/usr/share/texlive/texmf-dist/tex/latex/graphics-def/pdftex.def
 File: pdftex.def 2018/01/08 v1.0l Graphics/color driver for pdftex
 ))
 \Gin@req@height=\dimen145
 \Gin@req@width=\dimen146
 )
-(C:\Users\fritz\AppData\Roaming\MiKTeX\tex/latex/caption\caption.sty
-Package: caption 2020/05/30 v3.4k Customizing captions (AR)
+(/usr/share/texlive/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2020/01/03 v3.4h Customizing captions (AR)
 
-(C:\Users\fritz\AppData\Roaming\MiKTeX\tex/latex/caption\caption3.sty
-Package: caption3 2020/05/30 v1.12 caption3 kernel (AR)
+(/usr/share/texlive/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2020/01/03 v1.8h caption3 kernel (AR)
 Package caption3 Info: TeX engine: e-TeX on input line 61.
 \captionmargin=\dimen147
 \captionmargin@=\dimen148
@@ -151,124 +153,123 @@ Package caption Info: Standard document class detected.
 \c@caption@flags=\count189
 \c@continuedfloat=\count190
 )
-("C:\Program Files\MiKTeX\tex/latex/hyperref\hyperref.sty"
-Package: hyperref 2020-05-15 v7.00e Hypertext links for LaTeX
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/hyperref.sty
+Package: hyperref 2020/01/14 v7.00d Hypertext links for LaTeX
 
-(C:\Users\fritz\AppData\Roaming\MiKTeX\tex/generic/ltxcmds\ltxcmds.sty
+(/usr/share/texlive/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty
 Package: ltxcmds 2019/12/15 v1.24 LaTeX kernel commands for general use (HO)
 )
-("C:\Program Files\MiKTeX\tex/generic/iftex\iftex.sty"
-Package: iftex 2020/03/06 v1.0d TeX engine tests
+(/usr/share/texlive/texmf-dist/tex/generic/iftex/iftex.sty
+Package: iftex 2019/11/07 v1.0c TeX engine tests
 )
-("C:\Program Files\MiKTeX\tex/generic/pdftexcmds\pdftexcmds.sty"
-Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO
+(/usr/share/texlive/texmf-dist/tex/latex/pdftexcmds/pdftexcmds.sty
+Package: pdftexcmds 2019/11/24 v0.31 Utility functions of pdfTeX for LuaTeX (HO
 )
 
-(C:\Users\fritz\AppData\Roaming\MiKTeX\tex/generic/infwarerr\infwarerr.sty
+(/usr/share/texlive/texmf-dist/tex/generic/infwarerr/infwarerr.sty
 Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
 )
 Package pdftexcmds Info: \pdf@primitive is available.
 Package pdftexcmds Info: \pdf@ifprimitive is available.
 Package pdftexcmds Info: \pdfdraftmode found.
 )
-(C:\Users\fritz\AppData\Roaming\MiKTeX\tex/generic/kvsetkeys\kvsetkeys.sty
+(/usr/share/texlive/texmf-dist/tex/generic/kvsetkeys/kvsetkeys.sty
 Package: kvsetkeys 2019/12/15 v1.18 Key value parser (HO)
 )
-(C:\Users\fritz\AppData\Roaming\MiKTeX\tex/generic/kvdefinekeys\kvdefinekeys.st
-y
+(/usr/share/texlive/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty
 Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
-) (C:\Users\fritz\AppData\Roaming\MiKTeX\tex/generic/pdfescape\pdfescape.sty
+)
+(/usr/share/texlive/texmf-dist/tex/generic/pdfescape/pdfescape.sty
 Package: pdfescape 2019/12/09 v1.15 Implements pdfTeX's escape features (HO)
 )
-(C:\Users\fritz\AppData\Roaming\MiKTeX\tex/latex/hycolor\hycolor.sty
+(/usr/share/texlive/texmf-dist/tex/latex/hycolor/hycolor.sty
 Package: hycolor 2020-01-27 v1.10 Color options for hyperref/bookmark (HO)
 )
-(C:\Users\fritz\AppData\Roaming\MiKTeX\tex/latex/letltxmacro\letltxmacro.sty
+(/usr/share/texlive/texmf-dist/tex/latex/letltxmacro/letltxmacro.sty
 Package: letltxmacro 2019/12/03 v1.6 Let assignment for LaTeX macros (HO)
 )
-(C:\Users\fritz\AppData\Roaming\MiKTeX\tex/latex/auxhook\auxhook.sty
+(/usr/share/texlive/texmf-dist/tex/latex/auxhook/auxhook.sty
 Package: auxhook 2019-12-17 v1.6 Hooks for auxiliary files (HO)
 )
-(C:\Users\fritz\AppData\Roaming\MiKTeX\tex/latex/kvoptions\kvoptions.sty
+(/usr/share/texlive/texmf-dist/tex/latex/kvoptions/kvoptions.sty
 Package: kvoptions 2019/11/29 v3.13 Key value format for package options (HO)
 )
 \@linkdim=\dimen154
 \Hy@linkcounter=\count191
 \Hy@pagecounter=\count192
 
-("C:\Program Files\MiKTeX\tex/latex/hyperref\pd1enc.def"
-File: pd1enc.def 2020-05-15 v7.00e Hyperref: PDFDocEncoding definition (HO)
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/pd1enc.def
+File: pd1enc.def 2020/01/14 v7.00d Hyperref: PDFDocEncoding definition (HO)
 Now handling font encoding PD1 ...
 ... no UTF-8 mapping file for font encoding PD1
 )
-(C:\Users\fritz\AppData\Roaming\MiKTeX\tex/generic/intcalc\intcalc.sty
+(/usr/share/texlive/texmf-dist/tex/generic/intcalc/intcalc.sty
 Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
 )
-(C:\Users\fritz\AppData\Roaming\MiKTeX\tex/generic/etexcmds\etexcmds.sty
+(/usr/share/texlive/texmf-dist/tex/generic/etexcmds/etexcmds.sty
 Package: etexcmds 2019/12/15 v1.7 Avoid name clashes with e-TeX commands (HO)
 )
 \Hy@SavedSpaceFactor=\count193
-Package hyperref Info: Hyper figures OFF on input line 4464.
-Package hyperref Info: Link nesting OFF on input line 4469.
-Package hyperref Info: Hyper index ON on input line 4472.
-Package hyperref Info: Plain pages OFF on input line 4479.
-Package hyperref Info: Backreferencing OFF on input line 4484.
+\pdfmajorversion=\count194
+Package hyperref Info: Hyper figures OFF on input line 4547.
+Package hyperref Info: Link nesting OFF on input line 4552.
+Package hyperref Info: Hyper index ON on input line 4555.
+Package hyperref Info: Plain pages OFF on input line 4562.
+Package hyperref Info: Backreferencing OFF on input line 4567.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
-Package hyperref Info: Bookmarks ON on input line 4717.
-\c@Hy@tempcnt=\count194
+Package hyperref Info: Bookmarks ON on input line 4800.
+\c@Hy@tempcnt=\count195
 
-("C:\Program Files\MiKTeX\tex/latex/url\url.sty"
+(/usr/share/texlive/texmf-dist/tex/latex/url/url.sty
 \Urlmuskip=\muskip17
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
-LaTeX Info: Redefining \url on input line 5076.
+LaTeX Info: Redefining \url on input line 5159.
 \XeTeXLinkMargin=\dimen155
 
-(C:\Users\fritz\AppData\Roaming\MiKTeX\tex/generic/bitset\bitset.sty
+(/usr/share/texlive/texmf-dist/tex/generic/bitset/bitset.sty
 Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
 
-(C:\Users\fritz\AppData\Roaming\MiKTeX\tex/generic/bigintcalc\bigintcalc.sty
+(/usr/share/texlive/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
 Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
 )
 ))
-\Fld@menulength=\count195
+\Fld@menulength=\count196
 \Field@Width=\dimen156
 \Fld@charsize=\dimen157
-Package hyperref Info: Hyper figures OFF on input line 6347.
-Package hyperref Info: Link nesting OFF on input line 6352.
-Package hyperref Info: Hyper index ON on input line 6355.
-Package hyperref Info: backreferencing OFF on input line 6362.
-Package hyperref Info: Link coloring OFF on input line 6367.
-Package hyperref Info: Link coloring with OCG OFF on input line 6372.
-Package hyperref Info: PDF/A mode OFF on input line 6377.
-LaTeX Info: Redefining \ref on input line 6417.
-LaTeX Info: Redefining \pageref on input line 6421.
+Package hyperref Info: Hyper figures OFF on input line 6430.
+Package hyperref Info: Link nesting OFF on input line 6435.
+Package hyperref Info: Hyper index ON on input line 6438.
+Package hyperref Info: backreferencing OFF on input line 6445.
+Package hyperref Info: Link coloring OFF on input line 6450.
+Package hyperref Info: Link coloring with OCG OFF on input line 6455.
+Package hyperref Info: PDF/A mode OFF on input line 6460.
+LaTeX Info: Redefining \ref on input line 6500.
+LaTeX Info: Redefining \pageref on input line 6504.
 
-(C:\Users\fritz\AppData\Roaming\MiKTeX\tex/generic/atbegshi\atbegshi.sty
+(/usr/share/texlive/texmf-dist/tex/generic/atbegshi/atbegshi.sty
 Package: atbegshi 2019/12/05 v1.19 At begin shipout hook (HO)
 )
-\Hy@abspage=\count196
-\c@Item=\count197
-\c@Hfootnote=\count198
+\Hy@abspage=\count197
+\c@Item=\count198
+\c@Hfootnote=\count199
 )
 Package hyperref Info: Driver (autodetected): hpdftex.
 
-("C:\Program Files\MiKTeX\tex/latex/hyperref\hpdftex.def"
-File: hpdftex.def 2020-05-15 v7.00e Hyperref driver for pdfTeX
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/hpdftex.def
+File: hpdftex.def 2020/01/14 v7.00d Hyperref driver for pdfTeX
 
-(C:\Users\fritz\AppData\Roaming\MiKTeX\tex/latex/atveryend\atveryend.sty
+(/usr/share/texlive/texmf-dist/tex/latex/atveryend/atveryend.sty
 Package: atveryend 2019-12-11 v1.11 Hooks at the very end of document (HO)
 Package atveryend Info: \enddocument detected (standard20110627).
 )
-\Fld@listcount=\count199
-\c@bookmark@seq@number=\count266
+\Fld@listcount=\count266
+\c@bookmark@seq@number=\count267
 
-(C:\Users\fritz\AppData\Roaming\MiKTeX\tex/latex/rerunfilecheck\rerunfilecheck.
-sty
+(/usr/share/texlive/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
 Package: rerunfilecheck 2019/12/05 v1.9 Rerun checks for auxiliary files (HO)
 
-(C:\Users\fritz\AppData\Roaming\MiKTeX\tex/generic/uniquecounter\uniquecounter.
-sty
+(/usr/share/texlive/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
 Package: uniquecounter 2019/12/15 v1.4 Provide unlimited unique counter (HO)
 )
 Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
@@ -277,21 +278,22 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 \Hy@SectionHShift=\skip54
 )
 Package hyperref Info: Option `colorlinks' set `true' on input line 16.
- ("C:\Program Files\MiKTeX\tex/latex/l3backend\l3backend-pdfmode.def"
-File: l3backend-pdfmode.def 2020-06-29 L3 backend support: PDF mode
-\l__kernel_color_stack_int=\count267
+
+(/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdfmode.def
+File: l3backend-pdfmode.def 2020-02-03 L3 backend support: PDF mode
+\l__kernel_color_stack_int=\count268
 \l__pdf_internal_box=\box48
 )
-(main.aux (tex_files/7_18_Overview.aux)
-(tex_files/7_18_Basic_Derivation_Simulation.aux)
-(tex_files/7_19_Analysis_Basic_Constant_Spike_Rate.aux
+(./main.aux (./tex_files/7_18_Overview.aux)
+(./tex_files/7_18_Basic_Derivation_Simulation.aux)
+(./tex_files/7_19_Analysis_Basic_Constant_Spike_Rate.aux
 
 LaTeX Warning: Label `eq:simple_voltage_dynamics_constant_driving' multiply def
 ined.
 
-) (tex_files/7_25_Analysis_Basic_Constant_Dynamical_System.aux)
-(tex_files/7_29_Analysis_Comparison_w_PCF.aux)
-(tex_files/8_15_Analysis_PCF_GJ_response_to_const_stimulus.aux))
+) (./tex_files/7_25_Analysis_Basic_Constant_Dynamical_System.aux)
+(./tex_files/7_29_Analysis_Comparison_w_PCF.aux)
+(./tex_files/8_15_Analysis_PCF_GJ_response_to_const_stimulus.aux))
 \openout1 = `main.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 24.
@@ -311,80 +313,85 @@ LaTeX Font Info:    ... okay on input line 24.
 LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 24.
 LaTeX Font Info:    ... okay on input line 24.
 
-("C:\Program Files\MiKTeX\tex/context/base/mkii\supp-pdf.mkii"
+(/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count268
+\scratchcounter=\count269
 \scratchdimen=\dimen158
 \scratchbox=\box49
-\nofMPsegments=\count269
-\nofMParguments=\count270
-\everyMPshowfont=\toks25
-\MPscratchCnt=\count271
+\nofMPsegments=\count270
+\nofMParguments=\count271
+\everyMPshowfont=\toks24
+\MPscratchCnt=\count272
 \MPscratchDim=\dimen159
-\MPnumerator=\count272
-\makeMPintoPDFobject=\count273
-\everyMPtoPDFconversion=\toks26
-) ("C:\Program Files\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-base.sty"
+\MPnumerator=\count273
+\makeMPintoPDFobject=\count274
+\everyMPtoPDFconversion=\toks25
+) (/usr/share/texlive/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 85.
-)
+
+(/usr/share/texlive/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
+e
+))
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: hyperref package is loaded.
 Package caption Info: End \AtBeginDocument code.
 \AtBeginShipoutBox=\box50
 
-("C:\Program Files\MiKTeX\tex/latex/graphics\color.sty"
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/color.sty
 Package: color 2019/11/23 v1.2a Standard LaTeX Color (DPC)
 
-("C:\Program Files\MiKTeX\tex/latex/graphics-cfg\color.cfg"
+(/usr/share/texlive/texmf-dist/tex/latex/graphics-cfg/color.cfg
 File: color.cfg 2016/01/02 v1.6 sample color configuration
 )
 Package color Info: Driver file: pdftex.def on input line 147.
 )
 Package hyperref Info: Link coloring ON on input line 24.
 
-("C:\Program Files\MiKTeX\tex/latex/hyperref\nameref.sty"
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2019/09/16 v2.46 Cross-referencing by name of section
 
-(C:\Users\fritz\AppData\Roaming\MiKTeX\tex/latex/refcount\refcount.sty
+(/usr/share/texlive/texmf-dist/tex/latex/refcount/refcount.sty
 Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
 )
-(C:\Users\fritz\AppData\Roaming\MiKTeX\tex/generic/gettitlestring\gettitlestrin
-g.sty
+(/usr/share/texlive/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty
 Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
-\c@section@level=\count274
+\c@section@level=\count275
 )
 LaTeX Info: Redefining \ref on input line 24.
 LaTeX Info: Redefining \pageref on input line 24.
 LaTeX Info: Redefining \nameref on input line 24.
- (main.out) (main.out)
+
+(./main.out) (./main.out)
 \@outlinefile=\write3
 \openout3 = `main.out'.
 
 LaTeX Font Info:    Trying to load font information for U+msa on input line 27.
 
 
-("C:\Program Files\MiKTeX\tex/latex/amsfonts\umsa.fd"
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
 LaTeX Font Info:    Trying to load font information for U+msb on input line 27.
 
 
-("C:\Program Files\MiKTeX\tex/latex/amsfonts\umsb.fd"
+(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-) (main.toc)
+) (./main.toc)
 \tf@toc=\write4
 \openout4 = `main.toc'.
 
- [1
 
-{C:/Users/fritz/AppData/Local/MiKTeX/pdftex/config/pdftex.map}]
+[1
+
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
 \openout2 = `tex_files/7_18_Overview.aux'.
 
 
-(tex_files/7_18_Overview.tex
+(./tex_files/7_18_Overview.tex
 Underfull \hbox (badness 10000) in paragraph at lines 3--7
 
  []
@@ -410,12 +417,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 14--21
 ]
 \openout2 = `tex_files/7_18_Basic_Derivation_Simulation.aux'.
 
- (tex_files/7_18_Basic_Derivation_Simulation.tex [3
+ (./tex_files/7_18_Basic_Derivation_Simulation.tex [3
 
 
 
 ]
-<figures/pcf_e_v_graphic.pdf, id=99, 584.80188pt x 829.14491pt>
+<figures/pcf_e_v_graphic.pdf, id=100, 584.80188pt x 829.14491pt>
 File: figures/pcf_e_v_graphic.pdf Graphic file (type pdf)
 <use figures/pcf_e_v_graphic.pdf>
 Package pdftex.def Info: figures/pcf_e_v_graphic.pdf  used on input line 74.
@@ -425,70 +432,82 @@ Package pdftex.def Info: figures/pcf_e_v_graphic.pdf  used on input line 74.
 LaTeX Warning: Float too large for page by 32.45985pt on input line 77.
 
 [4] [5 <./figures/pcf_e_v_graphic.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 92--96
+Underfull \hbox (badness 10000) in paragraph at lines 91--94
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 101--102
+Underfull \hbox (badness 10000) in paragraph at lines 91--94
 
  []
 
 [6
 
-]
-Underfull \hbox (badness 10000) in paragraph at lines 165--166
-
- []
-
-<figures/ev_rotated_classic_graph.pdf, id=128, 540.09035pt x 209.4228pt>
+] [7]
+<figures/ev_rotated_classic_graph.pdf, id=140, 540.09035pt x 209.4228pt>
 File: figures/ev_rotated_classic_graph.pdf Graphic file (type pdf)
 <use figures/ev_rotated_classic_graph.pdf>
 Package pdftex.def Info: figures/ev_rotated_classic_graph.pdf  used on input li
-ne 213.
+ne 326.
 (pdftex.def)             Requested size: 469.75502pt x 182.15802pt.
-[7] [8 <./figures/ev_rotated_classic_graph.pdf>] [9]
-<figures/network_decode.png, id=166, 956.8548pt x 574.5465pt>
+ [8 <./figures/ev_rotated_classic_graph.pdf>] [9]
+
+LaTeX Warning: Reference `eq:rho_dot' on page 10 undefined on input line 411.
+
+[10]
+
+LaTeX Warning: Reference `eq:rho_dot' on page 11 undefined on input line 440.
+
+<figures/network_decode.png, id=173, 956.8548pt x 574.5465pt>
 File: figures/network_decode.png Graphic file (type png)
 <use figures/network_decode.png>
-Package pdftex.def Info: figures/network_decode.png  used on input line 392.
+Package pdftex.def Info: figures/network_decode.png  used on input line 505.
 (pdftex.def)             Requested size: 352.31625pt x 211.54439pt.
-<figures/decode_error.png, id=168, 956.8548pt x 574.5465pt>
+<figures/decode_error.png, id=175, 956.8548pt x 574.5465pt>
 File: figures/decode_error.png Graphic file (type png)
 <use figures/decode_error.png>
-Package pdftex.def Info: figures/decode_error.png  used on input line 394.
+Package pdftex.def Info: figures/decode_error.png  used on input line 507.
 (pdftex.def)             Requested size: 352.31625pt x 211.54439pt.
-<figures/membrane_potential_image.png, id=169, 898.3161pt x 572.3784pt>
+<figures/membrane_potential_image.png, id=176, 898.3161pt x 572.3784pt>
 File: figures/membrane_potential_image.png Graphic file (type png)
 <use figures/membrane_potential_image.png>
 Package pdftex.def Info: figures/membrane_potential_image.png  used on input li
-ne 396.
+ne 509.
 (pdftex.def)             Requested size: 328.82707pt x 209.51463pt.
 
+LaTeX Warning: Float too large for page by 14.1734pt on input line 510.
 
-LaTeX Warning: Float too large for page by 14.1734pt on input line 397.
-
-[10] [11 <./figures/network_decode.png> <./figures/decode_error.png> <./figures
+[11] [12 <./figures/network_decode.png> <./figures/decode_error.png> <./figures
 /membrane_potential_image.png>]
 
 Package caption Warning: \captionsetup{type*=...} or \captionof
-(caption)                outside box or environment on input line 401.
+(caption)                outside box or environment on input line 514.
 See the caption package documentation for explanation.
 
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
-(caption)                particular \caption on input line 404.
+(caption)                particular \caption on input line 517.
 See the caption package documentation for explanation.
 
-) [12]
+
+LaTeX Warning: Reference `eq:rho_dot' on page 13 undefined on input line 517.
+
+
+LaTeX Warning: Reference `eq:rho_dot' on page 13 undefined on input line 517.
+
+) [13]
 \openout2 = `tex_files/7_19_Analysis_Basic_Constant_Spike_Rate.aux'.
 
- (tex_files/7_19_Analysis_Basic_Constant_Spike_Rate.tex
+ (./tex_files/7_19_Analysis_Basic_Constant_Spike_Rate.tex
+
+LaTeX Warning: Reference `eq:rho_dot' on page 14 undefined on input line 6.
+
+
 Underfull \hbox (badness 10000) in paragraph at lines 6--8
 
  []
 
-[13
+[14
 
 
 
@@ -497,14 +516,14 @@ Underfull \hbox (badness 10000) in paragraph at lines 93--95
 
  []
 
-<figures/phi_vs_k_const_driving.png, id=205, 505.1673pt x 341.1144pt>
+<figures/phi_vs_k_const_driving.png, id=209, 505.1673pt x 341.1144pt>
 File: figures/phi_vs_k_const_driving.png Graphic file (type png)
 <use figures/phi_vs_k_const_driving.png>
 Package pdftex.def Info: figures/phi_vs_k_const_driving.png  used on input line
  98.
 (pdftex.def)             Requested size: 469.75502pt x 317.20706pt.
-[14] [15 <./figures/phi_vs_k_const_driving.png>]
-<figures/network_decode_long_term_estimate_const_driving.png, id=226, 959.7456p
+[15] [16 <./figures/phi_vs_k_const_driving.png>]
+<figures/network_decode_long_term_estimate_const_driving.png, id=230, 959.7456p
 t x 573.8238pt>
 File: figures/network_decode_long_term_estimate_const_driving.png Graphic file 
 (type png)
@@ -516,17 +535,17 @@ g.png  used on input line 187.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[16] [17 <./figures/network_decode_long_term_estimate_const_driving.png>]
-[18
+[17] [18 <./figures/network_decode_long_term_estimate_const_driving.png>]
+[19
 
 ]
-<figures/rmse_sp_vs_k_const_driving.png, id=261, 1011.78pt x 574.5465pt>
+<figures/rmse_sp_vs_k_const_driving.png, id=266, 1011.78pt x 574.5465pt>
 File: figures/rmse_sp_vs_k_const_driving.png Graphic file (type png)
 <use figures/rmse_sp_vs_k_const_driving.png>
 Package pdftex.def Info: figures/rmse_sp_vs_k_const_driving.png  used on input 
 line 305.
 (pdftex.def)             Requested size: 469.75502pt x 266.75807pt.
-<figures/rmse_sp_vs_phi_const_driving.png, id=262, 996.6033pt x 577.4373pt>
+<figures/rmse_sp_vs_phi_const_driving.png, id=267, 996.6033pt x 577.4373pt>
 File: figures/rmse_sp_vs_phi_const_driving.png Graphic file (type png)
 <use figures/rmse_sp_vs_phi_const_driving.png>
 Package pdftex.def Info: figures/rmse_sp_vs_phi_const_driving.png  used on inpu
@@ -539,23 +558,27 @@ LaTeX Warning: Float too large for page by 31.88017pt on input line 310.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-) [19] [20 <./figures/rmse_sp_vs_k_const_driving.png> <./figures/rmse_sp_vs_phi
+) [20] [21 <./figures/rmse_sp_vs_k_const_driving.png> <./figures/rmse_sp_vs_phi
 _const_driving.png>]
 \openout2 = `tex_files/7_25_Analysis_Basic_Constant_Dynamical_System.aux'.
 
 
-(tex_files/7_25_Analysis_Basic_Constant_Dynamical_System.tex
+(./tex_files/7_25_Analysis_Basic_Constant_Dynamical_System.tex
 
-LaTeX Warning: Reference `eq:rotated_voltage_psc_def' on page 21 undefined on i
+LaTeX Warning: Reference `eq:rotated_voltage_psc_def' on page 22 undefined on i
 nput line 29.
 
-[21
+[22
 
 
 
-] [22] [23]
+]
+
+LaTeX Warning: Reference `eq:rho_dot' on page 23 undefined on input line 144.
+
+[23] [24]
 <figures/analysis_const_dynamics_const_driving_network_decode_explicit_comparis
-on.png, id=308, 959.7456pt x 573.8238pt>
+on.png, id=312, 959.7456pt x 573.8238pt>
 File: figures/analysis_const_dynamics_const_driving_network_decode_explicit_com
 parison.png Graphic file (type png)
 <use figures/analysis_const_dynamics_const_driving_network_decode_explicit_comp
@@ -563,15 +586,15 @@ arison.png>
 Package pdftex.def Info: figures/analysis_const_dynamics_const_driving_network_
 decode_explicit_comparison.png  used on input line 1007.
 (pdftex.def)             Requested size: 469.75502pt x 280.86967pt.
- [24] [25 <./figures/analysis_const_dynamics_const_driving_network_decode_expli
-cit_comparison.png>] [26]
-<figures/rmse_sp_vs_s_const_driving.png, id=334, 970.5861pt x 578.16pt>
+ [25] [26 <./figures/analysis_const_dynamics_const_driving_network_decode_expli
+cit_comparison.png>] [27]
+<figures/rmse_sp_vs_s_const_driving.png, id=338, 970.5861pt x 578.16pt>
 File: figures/rmse_sp_vs_s_const_driving.png Graphic file (type png)
 <use figures/rmse_sp_vs_s_const_driving.png>
 Package pdftex.def Info: figures/rmse_sp_vs_s_const_driving.png  used on input 
 line 2167.
 (pdftex.def)             Requested size: 469.75502pt x 279.82501pt.
-<figures/rmse_sp_vs_phi_s_const_driving.png, id=335, 970.5861pt x 578.8827pt>
+<figures/rmse_sp_vs_phi_s_const_driving.png, id=339, 970.5861pt x 578.8827pt>
 File: figures/rmse_sp_vs_phi_s_const_driving.png Graphic file (type png)
 <use figures/rmse_sp_vs_phi_s_const_driving.png>
 Package pdftex.def Info: figures/rmse_sp_vs_phi_s_const_driving.png  used on in
@@ -581,11 +604,11 @@ put line 2169.
 
 LaTeX Warning: Float too large for page by 41.39769pt on input line 2173.
 
-) [27] [28 <./figures/rmse_sp_vs_s_const_driving.png> <./figures/rmse_sp_vs_phi
+) [28] [29 <./figures/rmse_sp_vs_s_const_driving.png> <./figures/rmse_sp_vs_phi
 _s_const_driving.png>]
 \openout2 = `tex_files/7_29_Analysis_Comparison_w_PCF.aux'.
 
- (tex_files/7_29_Analysis_Comparison_w_PCF.tex
+ (./tex_files/7_29_Analysis_Comparison_w_PCF.tex
 Underfull \hbox (badness 1112) in paragraph at lines 1--1
 []\OT1/cmr/bx/n/14.4 Derivation: The Pre-dic-tive Cod-ing Frame-work and Gap-
  []
@@ -600,22 +623,22 @@ Underfull \hbox (badness 10000) in paragraph at lines 14--15
 
  []
 
-[29
+[30
 
 
 
-] [30]
+] [31]
 Underfull \hbox (badness 10000) in paragraph at lines 197--198
 
  []
 
-<figures/network_decode_PCF.png, id=373, 954.6867pt x 574.5465pt>
+<figures/network_decode_PCF.png, id=378, 954.6867pt x 574.5465pt>
 File: figures/network_decode_PCF.png Graphic file (type png)
 <use figures/network_decode_PCF.png>
 Package pdftex.def Info: figures/network_decode_PCF.png  used on input line 204
 .
 (pdftex.def)             Requested size: 469.75502pt x 282.71378pt.
-<figures/decode_error_PCF.png, id=374, 971.3088pt x 574.5465pt>
+<figures/decode_error_PCF.png, id=379, 971.3088pt x 574.5465pt>
 File: figures/decode_error_PCF.png Graphic file (type png)
 <use figures/decode_error_PCF.png>
 Package pdftex.def Info: figures/decode_error_PCF.png  used on input line 205.
@@ -623,33 +646,33 @@ Package pdftex.def Info: figures/decode_error_PCF.png  used on input line 205.
 
 LaTeX Warning: Float too large for page by 35.15823pt on input line 209.
 
-[31] [32 <./figures/network_decode_PCF.png> <./figures/decode_error_PCF.png>]
-<figures/network_decode_Gap-Junction.png, id=406, 954.6867pt x 574.5465pt>
+[32] [33 <./figures/network_decode_PCF.png> <./figures/decode_error_PCF.png>]
+<figures/network_decode_Gap-Junction.png, id=410, 954.6867pt x 574.5465pt>
 File: figures/network_decode_Gap-Junction.png Graphic file (type png)
 <use figures/network_decode_Gap-Junction.png>
 Package pdftex.def Info: figures/network_decode_Gap-Junction.png  used on input
  line 296.
 (pdftex.def)             Requested size: 469.75502pt x 282.71378pt.
-<figures/decode_error_Gap-Junction.png, id=407, 971.3088pt x 574.5465pt>
+<figures/decode_error_Gap-Junction.png, id=411, 971.3088pt x 574.5465pt>
 File: figures/decode_error_Gap-Junction.png Graphic file (type png)
 <use figures/decode_error_Gap-Junction.png>
 Package pdftex.def Info: figures/decode_error_Gap-Junction.png  used on input l
 ine 297.
 (pdftex.def)             Requested size: 469.75502pt x 277.87447pt.
 
-[33
+[34
 
-] [34 <./figures/network_decode_Gap-Junction.png> <./figures/decode_error_Gap-J
+] [35 <./figures/network_decode_Gap-Junction.png> <./figures/decode_error_Gap-J
 unction.png>])
 \openout2 = `tex_files/8_15_Analysis_PCF_GJ_response_to_const_stimulus.aux'.
 
 
-(tex_files/8_15_Analysis_PCF_GJ_response_to_const_stimulus.tex [35
+(./tex_files/8_15_Analysis_PCF_GJ_response_to_const_stimulus.tex [36
 
 
 
 
-] [36]
+] [37]
 Underfull \hbox (badness 10000) in paragraph at lines 393--397
 
  []
@@ -659,7 +682,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 417--423
 
  []
 
-[37]
+[38]
 Underfull \hbox (badness 10000) in paragraph at lines 456--460
 
  []
@@ -674,7 +697,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 572--574
 
  []
 
-[38]
+[39]
 Underfull \hbox (badness 10000) in paragraph at lines 645--647
 
  []
@@ -684,13 +707,13 @@ Overfull \hbox (15.61761pt too wide) detected at line 689
 []
  []
 
-[39]
+[40]
 Underfull \hbox (badness 10000) in paragraph at lines 765--768
 
  []
 
-[40] [41] [42] [43]
-<figures/const_dynamics_network_decode_comparison_sc_pcf_gj.png, id=498, 959.74
+[41] [42] [43] [44]
+<figures/const_dynamics_network_decode_comparison_sc_pcf_gj.png, id=503, 959.74
 56pt x 574.5465pt>
 File: figures/const_dynamics_network_decode_comparison_sc_pcf_gj.png Graphic fi
 le (type png)
@@ -698,24 +721,25 @@ le (type png)
 Package pdftex.def Info: figures/const_dynamics_network_decode_comparison_sc_pc
 f_gj.png  used on input line 1141.
 (pdftex.def)             Requested size: 469.75502pt x 281.2234pt.
-<figures/per_spike_rmse_vs_phi_sc_gj_pcf.png, id=506, 970.5861pt x 577.4373pt>
+<figures/per_spike_rmse_vs_phi_sc_gj_pcf.png, id=511, 970.5861pt x 577.4373pt>
 File: figures/per_spike_rmse_vs_phi_sc_gj_pcf.png Graphic file (type png)
 <use figures/per_spike_rmse_vs_phi_sc_gj_pcf.png>
 Package pdftex.def Info: figures/per_spike_rmse_vs_phi_sc_gj_pcf.png  used on i
 nput line 1150.
 (pdftex.def)             Requested size: 469.75502pt x 279.47522pt.
-) [44
+) [45
 
- <./figures/const_dynamics_network_decode_comparison_sc_pcf_gj.png>] [45 <./fig
+ <./figures/const_dynamics_network_decode_comparison_sc_pcf_gj.png>] [46 <./fig
 ures/per_spike_rmse_vs_phi_sc_gj_pcf.png>]
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 48.
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 48.
- (main.aux
-(tex_files/7_18_Overview.aux) (tex_files/7_18_Basic_Derivation_Simulation.aux)
-(tex_files/7_19_Analysis_Basic_Constant_Spike_Rate.aux)
-(tex_files/7_25_Analysis_Basic_Constant_Dynamical_System.aux)
-(tex_files/7_29_Analysis_Comparison_w_PCF.aux)
-(tex_files/8_15_Analysis_PCF_GJ_response_to_const_stimulus.aux))
+ (./main.aux
+(./tex_files/7_18_Overview.aux)
+(./tex_files/7_18_Basic_Derivation_Simulation.aux)
+(./tex_files/7_19_Analysis_Basic_Constant_Spike_Rate.aux)
+(./tex_files/7_25_Analysis_Basic_Constant_Dynamical_System.aux)
+(./tex_files/7_29_Analysis_Comparison_w_PCF.aux)
+(./tex_files/8_15_Analysis_PCF_GJ_response_to_const_stimulus.aux))
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 48.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 48.
 Package rerunfilecheck Info: File `main.out' has not changed.
@@ -730,32 +754,34 @@ LaTeX Warning: There were multiply-defined labels.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 48.
  ) 
 Here is how much of TeX's memory you used:
- 8224 strings out of 480790
- 133822 string characters out of 2907055
- 403627 words of memory out of 3000000
- 23901 multiletter control sequences out of 15000+200000
- 541860 words of font info for 60 fonts, out of 3000000 for 9000
- 1141 hyphenation exceptions out of 8191
- 38i,15n,44p,1287b,495s stack positions out of 5000i,500n,10000p,200000b,50000s
- <C:\Users\fritz\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm
-1000.pk><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/
-Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Program File
-s/MiKTeX/fonts/type1/public/amsfonts/cm/cmbxti10.pfb><C:/Program Files/MiKTeX/f
-onts/type1/public/amsfonts/cm/cmex10.pfb><C:/Program Files/MiKTeX/fonts/type1/p
-ublic/amsfonts/cmextra/cmex7.pfb><C:/Program Files/MiKTeX/fonts/type1/public/am
-sfonts/cm/cmmi10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cm
-mi5.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/P
-rogram Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program Files/
-MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Program Files/MiKTeX/fonts/
-type1/public/amsfonts/cm/cmr17.pfb><C:/Program Files/MiKTeX/fonts/type1/public/
-amsfonts/cm/cmr5.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cm
-r7.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/P
-rogram Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Program Files/
-MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Program Files/MiKTeX/fonts/
-type1/public/amsfonts/cm/cmti10.pfb>
-Output written on main.pdf (45 pages, 2915175 bytes).
+ 8184 strings out of 483183
+ 131360 string characters out of 5966292
+ 396873 words of memory out of 5000000
+ 22861 multiletter control sequences out of 15000+600000
+ 541860 words of font info for 60 fonts, out of 8000000 for 9000
+ 14 hyphenation exceptions out of 8191
+ 41i,15n,43p,1285b,493s stack positions out of 5000i,500n,10000p,200000b,80000s
+ </home/chris/.texlive2019/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1000.600
+pk></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></u
+sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/sha
+re/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbxti10.pfb></usr/share/t
+exlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive
+/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex7.pfb></usr/share/texlive/t
+exmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-d
+ist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texlive/texmf-dist/fon
+ts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type
+1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/publi
+c/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfo
+nts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmr5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb
+></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr
+/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/share/
+texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
+Output written on main.pdf (46 pages, 2854435 bytes).
 PDF statistics:
- 612 PDF objects out of 1000 (max. 8388607)
- 139 named destinations out of 1000 (max. 500000)
+ 619 PDF objects out of 1000 (max. 8388607)
+ 486 compressed objects within 5 object streams
+ 143 named destinations out of 1000 (max. 500000)
  179 words of extra memory for PDF output out of 10000 (max. 10000000)
 
