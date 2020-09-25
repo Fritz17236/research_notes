@@ -1,0 +1,438 @@
+\section{Extensions of the Basic Model}
+The basic model presented in section (\ref{section:derivation:basic_model}) currently has the following limitations
+\begin{enumerate}
+\item Dynamical systems with complex eigenvalues are ill-defined
+\item Only $2d$ of $N$ neurons have nontrivial dynamics. 
+\item Network dynamics are inherently periodic and deterministic, not asynchronous. 
+\end{enumerate}
+
+We extend the basic model to address these limitations. 
+
+\subsection{Dynamical Systems with Complex Eigenvalues}
+Recall the basic self-coupled network equations:
+
+$$
+\dot{v}
+= 
+\begin{bmatrix}
+\Lambda & 0
+\\
+0 & 0
+\end{bmatrix}
+v +
+\begin{bmatrix}
+S \left(\Lambda + I_d \right) S & 0
+\\
+0 & 0
+\end{bmatrix}
+  \rho - 
+ \begin{bmatrix}
+S^2 & 0
+\\
+0 & 0
+\end{bmatrix}
+    \tilde{o},
+$$
+
+$$
+\dot{\rho} = -\rho + \tilde{o},
+$$
+
+$$
+\hat{y} = \begin{bmatrix}
+S & 0
+\end{bmatrix}
+\rho.
+$$
+
+When the dynamical system $\dot{x} = Ax + Bc$ is oscillatory, the eigenvalues $\Lambda$ of $A=\mathcal{U} \, \Lambda \, \mathcal{U}^T$ are complex valued. In this case, $\dot{v}$ is a system of complex-valued differential equations. Membrane voltages are physical, necessarily real quantities. To resolve this contradiction, we must address how the self-coupled network manages complex-valued voltages. 
+
+Viewing $A$ as an operator between vector spaces, when $A$ has real eigenvalues, our dynamical system is an operator mapping $\mathbf{R}^{d}$ to itself.  When $A$ contains complex eigenvalues, our dynamical system now maps $\mathbf{C}^{d}$ to itself. To reflect this view, we rewrite the factorization of $A$ so that the eigenvectors form a complex basis set of vectors. Before with real eigenvalues, we wrote $A$ as 
+$$
+A = \mathcal{U} \Lambda \mathcal{U}^T = 
+\begin{bmatrix}
+\mathcal{U}_1 & \hdots  & \mathcal{U}_d
+\end{bmatrix}
+\begin{bmatrix}
+\Lambda_1 & 0 & \hdots &0  & 0
+\\
+0 & \Lambda_2 & 0 & \hdots & 0
+\\
+\vdots & & & & \vdots
+\\
+ 0& 0  & 0 & 0 & \Lambda_d
+ \end{bmatrix}
+ \begin{bmatrix}
+\mathcal{U}_1^T \\ \vdots  \\ \mathcal{U}_d^T
+\end{bmatrix}.
+$$
+
+For the case that $\Lambda_j = a_j + ib_j \in \mathbf{C},$ we have
+
+\begin{align*}
+\Lambda_j \mathcal{U}_j 
+&=
+\left(a_j + ib_j\right) \mathcal{U}_j
+\\
+\\
+&= 
+\left(a_j \mathcal{U}_j + ib_j \mathcal{U}_j\right)
+\\
+\\
+&=
+\frac{||a_j \mathcal{U}_j + ib_j \mathcal{U}_j||}
+{||a_j \mathcal{U}_j + ib_j \mathcal{U}_j||}
+\left(a_j \mathcal{U}_j + ib_j \mathcal{U}_j\right)
+\\
+\\
+&= 
+||a_j \mathcal{U}_j + ib_j \mathcal{U}_j||
+\frac
+{a_j \mathcal{U}_j + ib_j \mathcal{U}_j}
+{||a_j \mathcal{U}_j + ib_j \mathcal{U}_j||}
+\\
+\\
+&=
+||\Lambda_j|| \, W_j,
+\end{align*}
+
+where 
+$$ W_j \overset{\Delta}{=} \frac
+{a_j \mathcal{U}_j + ib_j \mathcal{U}_j}
+{||a_j \mathcal{U}_j + ib_j \mathcal{U}_j||}
+$$
+gives the complex basis vector corresponding to $\mathcal{U}_j$.
+
+We now write $A$ as 
+$$
+A = 
+W \bar{\Lambda} W^*
+=
+\begin{bmatrix}
+W_1 & \hdots  & W_d
+\end{bmatrix}
+\begin{bmatrix}
+||\Lambda_1|| & 0 & \hdots &0  & 0
+\\
+0 & ||\Lambda_2|| & 0 & \hdots & 0
+\\
+\vdots & & & & \vdots
+\\
+ 0& 0  & 0 & 0 & ||\Lambda_d||
+ \end{bmatrix}
+ \begin{bmatrix}
+W_1^* \\ \vdots  \\ W_d^*
+\end{bmatrix}.
+$$
+
+Note that for the case of real-valued $\Lambda$, $W_j = \mathcal{U}_j$ and $||\Lambda_j|| = \Lambda_j$. With the rotated (now complex) basis, we derive the self-coupled network as previously. Rotate the left-basis of $D$:
+$$
+D = W \begin{bmatrix}
+S & 0
+\end{bmatrix}
+V^T
+$$
+
+
+The state in the rotated basis is 
+$$ y = W^* x \in \mathbf{C}^d$$.
+\\
+\\
+The network estimate and estimation error are 
+$$
+\hat{y} = W^* \hat{x} = W^* W \begin{bmatrix} S & 0 \end{bmatrix} V^T r = \begin{bmatrix} S & 0 \end{bmatrix} \rho,
+$$
+
+$$
+\epsilon = y-\hat{y} = W^* e,
+$$
+
+and the neuron spike trains and slow synaptic feedback are respectively given by
+$$
+\tilde{o} = V^T o,
+$$
+
+$$
+\rho = V^T r.
+$$
+
+Note that the right basis of $D = W \begin{bmatrix}S & 0 \end{bmatrix} V^T$ remains real-valued, provided that the given  $V \in \mathbf{R}^{N \times N}$.
+
+The rotated target dynamical system is
+
+$$
+\dot{y} = \bar{\Lambda} y + \beta \tilde{c},
+$$
+
+where 
+$$
+\beta = W^* B W,
+$$
+
+$$
+\tilde{c} = W^* c.
+$$
+
+We repeat the original derivation until we arrive at the error dynamics 
+
+$$
+\dot{\epsilon}
+= 
+\bar{\Lambda} \epsilon
++
+\left( 
+\bar{\Lambda} + I
+\right)
+\begin{bmatrix}
+S & 0
+\end{bmatrix}
+\rho
+-
+\begin{bmatrix}
+S & 0
+\end{bmatrix}
+\tilde{o}.
+$$
+
+To get voltage dynamics, we must map $\epsilon \in \mathbf{C}^d$ to $v \in \mathbf{R}^{N}$. We can't simply scale $v_j = S_j \epsilon_j$ as before because this would give a complex vector. Since the original voltage definition follows from the network's spike-optimization, a natural place to seek a new voltage definition is in optimizing the objective
+
+$$
+\mathcal{L}(\xi) = ||  y(\xi + d\xi) - \hat{y}(\xi + d\xi)||^2.
+$$
+
+When neuron $j$ spikes, the vector $S_j W_j$ is added to the network estimate so that the objective is
+
+\begin{align*}
+\mathcal{L}_{sp} &= ||y - \left(\hat{y} + S_j W_j\right) ||^2.
+\end{align*}
+
+Now dealing with complex vectors, recall the definition of the complex vector norm,
+$$
+|| x \in \mathbf{C}^d|| = \sqrt{\sum_{k=0}^d |x_k|^2},
+$$
+where $|x_k|^2$ denotes the modulus of $x_k$, i.e, $|x_k|^2 = x_k^*x_k$.
+Therefore,
+
+\begin{align*}
+||y - \left(\hat{y} + S_j W_j\right)||^2
+&=
+\sum_{k=0}^d \left(y_k - \hat{y}_k - S_j W_{kj} \right)^*\left(y_k - \hat{y}_k - S_j W_{kj} \right),
+\end{align*}
+where $W_{kj}$ is the $k^{th}$ element of $W_j$, which is the $j^{th}$ column of $W \in \mathbf{C}^{d \times N}$.
+The summand is the squared modulus of a complex number, i.e. 
+\begin{multline*}
+\left(y_k - \hat{y}_k - S_j W_{kj} \right)^*\left(y_k - \hat{y}_k - S_j W_{kj} \right)
+= 
+\Re{\left\{y_k - \hat{y}_k -S_j W_{kj}\right\}}^2 + \Im{\left\{y_k - \hat{y}_k -S_j W_{kj}\right\}}^2
+\\
+\\
+=
+\Re{\left\{ y_k \right\}}^2 + \Re{\left\{ \hat{y}_k \right\}}^2 + \Re{\left\{ S_jW_{kj}\right\}}^2 - 2 \Re{\left\{ y_k \right\}}\Re{\left\{ \hat{y}_k \right\}} -2\Re{\left\{ S_j W_{kj} \right\}}\left[\Re{\left\{ y_k \right\}}-\Re{\left\{ \hat{y}_k \right\}}\right]
+\\
+\\ 
++
+\Im{\left\{ y_k \right\}}^2 + \Im{\left\{ \hat{y}_k \right\}}^2 + \Im{\left\{ S_jW_{kj}\right\}}^2 - 2 \Im{\left\{ y_k \right\}}\Im{\left\{ \hat{y}_k \right\}} -2\Im{\left\{ S_j W_{kj} \right\}}\left[\Im{\left\{ y_k \right\}}-\Im{\left\{ \hat{y}_k \right\}}\right]
+\\
+\\
+=
+\Re{\left\{y_k - \hat{y}_k\right\}}^2 + \Im{\left\{y_k - \hat{y}_k\right\}}^2
++ \Re{\left\{ S_j W_{kj} \right\}}^2 + \Im{\left\{ S_j W_{kj} \right\}}^2 -2\Re{\left\{ S_j W_{kj} \right\}}\left[\Re{\left\{ y_k \right\}}-\Re{\left\{ \hat{y}_k \right\}}\right]-2\Im{\left\{ S_j W_{kj} \right\}}\left[\Im{\left\{ y_k \right\}}-\Im{\left\{ \hat{y}_k \right\}}\right].
+\end{multline*}
+
+The first two terms give the modulus $|y_k - \hat{y}_k|$. For the remaining terms group real parts together and complete the square, then do likewise with the imaginary terms to get:
+\begin{multline*}
+\Re{\left\{ S_j W_{kj} \right\}}^2  -\Re{\left\{ S_j W_{kj} \right\}}\left[\Re{\left\{ y_k \right\}}-\Re{\left\{ \hat{y}_k \right\}}\right]+ \Im{\left\{ S_j W_{kj} \right\}}^2-\Im{\left\{ S_j W_{kj} \right\}}\left[\Im{\left\{ y_k \right\}}-\Im{\left\{ \hat{y}_k \right\}}\right] =
+\\
+\left(\Re\left\{S_j W_{kj} \right\} - \Re\left\{ y_k-\hat{y}_k\right\} \right)^2 -  \Re\left\{ y_k-\hat{y}_k
+\right\}^2
++
+\left(\Im\left\{S_j W_{kj} \right\} - \Im\left\{ y_k-\hat{y}_k\right\} \right)^2 -  \Im\left\{ y_k-\hat{y}_k
+\right\}^2
+\\
+=
+\left|S_j W_{kj}-y_k-\hat{y}_k\right|^2 - \left|y_k-\hat{y}_k\right|^2.
+\end{multline*}
+
+All together the squared modulus of the summand is
+
+\begin{align*}
+\left(y_k - \hat{y}_k - S_j W_{kj} \right)^*\left(y_k - \hat{y}_k - S_j W_{kj} \right)
+&=
+\left|y_k - \hat{y}_k\right|^2 + \left|S_j W_{kj}- y_k-\hat{y}_k\right|^2 - \left|y_k-\hat{y}_k\right|^2. 
+\end{align*}
+
+It follows that 
+
+\begin{align*}
+||y - \left(\hat{y} + S_j W_j\right)||^2 
+&=
+\sum_{k=0}^{d} \left|S_j W_{kj}- y_k-\hat{y}_k\right|^2 
+\\
+\\
+&=
+||S_j W_j-\epsilon||^2 .
+\end{align*}
+
+The spike condition then is
+
+\begin{align*}
+\mathcal{L}_{sp} < \mathcal{L}_{ns}
+\\
+\\
+\implies
+||S_j W_j-\epsilon||^2 < ||\epsilon||^2.
+\end{align*}
+Simplify:
+\begin{align*}
+||S_j W_j-\epsilon||^2
+&=
+\sum_{k=0}^{d} 
+\Re\left\{S_j^2 W_{kj}^2 - 2 S_j W_{kj}\epsilon_k + \epsilon_k^2\right\}
++
+\Im\left\{S_j^2 W_{kj}^2 - 2 S_j W_{kj}\epsilon_k + \epsilon_k^2\right\}
+\\
+\\
+&=
+\sum_{k=0}^{d} 
+\Re\left\{S_j^2 W_{kj}^2 - 2 S_j W_{kj}\epsilon_k\right\}
++
+\Im\left\{S_j^2 W_{kj}^2 - 2 S_j W_{kj}\epsilon_k\right\} + ||\epsilon||^2.
+\\
+\\
+&=
+||S_jW_j||^2
+-2 \, \sum_{k=0}^{d} 
+\left(
+\Re\left\{S_j W_{kj}\epsilon_k\right\}
++
+\Im\left\{S_j W_{kj}\epsilon_k\right\}
+\right)
+ + ||\epsilon||^2.
+ \\
+ \\
+ &= 
+||S_jW_j||^2
+-2 
+\left(
+\Re \left\{S_jW_j^*\epsilon\right\}
++
+\Im \left\{S_jW_j^*\epsilon\right\}
+\right)
+ + ||\epsilon||^2.
+\end{align*}
+
+The spiking condition is therefore 
+\begin{align*}
+\Re \left\{S_jW_j^*\epsilon\right\}
++
+\Im \left\{S_jW_j^*\epsilon\right\}
+>
+\frac{||S_jW_j||^2}{2}.
+\end{align*}
+
+Once again as a sanity check, for the case of only real numbers, we recover the original voltage threshold equations. 
+
+If we split the real and imaginary components of $W_j$ into sepate vectors, we can write this expression as
+
+$$
+S_j \left( \Re \left\{W_j^* \epsilon\right\} + \Im \left\{W_j^*\epsilon\right\} \right) > \frac{||S_j W_j||^2}{2}.
+$$
+
+This suggests the voltage definition
+$$
+v = 
+\begin{bmatrix}S \\ 0\end{bmatrix} \left( \Re\left\{W^*\epsilon\right\} + \Im\left\{W^*\epsilon\right\}\right) \in \mathbf{R}^d
+$$
+Put simply, the voltage is the sum of imaginary and real parts.
+
+
+With this definition, we can resume the derivation as before from the error dynamics:
+
+\begin{align*}
+\dot{\epsilon}
+&= 
+\bar{\Lambda} \epsilon
++
+\left( 
+\bar{\Lambda} + I
+\right)
+\begin{bmatrix}
+S & 0
+\end{bmatrix}
+\rho
+-
+\begin{bmatrix}
+S & 0
+\end{bmatrix}
+\tilde{o}
+\\
+\\
+\implies 
+\dot{v} &= \begin{bmatrix}S \\ 0\end{bmatrix} \left( \Re\left\{W^*\dot{\epsilon}\right\} + \Im\left\{W^*\dot{\epsilon}\right\}\right)
+\\
+\\
+&=
+\begin{bmatrix}S \\ 0\end{bmatrix} \left( \Re\left\{W^*
+\bar{\Lambda} \epsilon
++
+\left( 
+\bar{\Lambda} + I
+\right)
+\begin{bmatrix}
+S & 0
+\end{bmatrix}
+\rho
+-
+\begin{bmatrix}
+S & 0
+\end{bmatrix}
+\tilde{o}
+\right\} + \Im\left\{W^*
+\bar{\Lambda} \epsilon
++
+\left( 
+\bar{\Lambda} + I
+\right)
+\begin{bmatrix}
+S & 0
+\end{bmatrix}
+\rho
+-
+\begin{bmatrix}
+S & 0
+\end{bmatrix}
+\tilde{o}
+\right\}\right)
+\\
+\\
+&=
+\begin{bmatrix}
+S \\ 0
+\end{bmatrix} \left(
+\Re\left\{W^*
+\bar{\Lambda} \epsilon\right\} + \Im \left\{W^*
+\bar{\Lambda} \epsilon\right\}
+\right)
++
+\begin{bmatrix}
+S
+\left( 
+\bar{\Lambda} + I
+\right)
+S & 0
+\\
+0 & 0
+\end{bmatrix}
+\rho
+-
+\begin{bmatrix}
+S^2 & 0
+\\ 0 & 0
+\end{bmatrix}
+\tilde{o}.
+\end{align*}
+
+To summarize, the self-coupled network model is extended to complex-valued dynamical systems by the following:
+The rotated basis is no
+
+

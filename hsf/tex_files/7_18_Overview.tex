@@ -31,3 +31,63 @@ synthesize a spiking neural network that implements the linear dynamical system.
     \item \textbf{\textit{Dimensionless Time}} We describe both the network and target system in dimensionless time. Time is normalized by the synapses' time constant, $\tau_s$. This dimensionless representation ensures consistent numerical simulation independent of simulation timestep. Furthermore, $\tau_s$ is implicitly specified as 1, reducing the model's parameters by one.     
 \end{enumerate}
 
+%\textbf{\textit{The Self-Coupled Equations}}
+%\\
+%Let the neurons have synaptic decay rate . Normalize the dynamical system to dimensionless time $\xi$:
+%$$
+%\xi \overset{\Delta}{=} 
+%$$
+%Assume the matrices $A$ and $D$ are full rank. Factor each via eigenvalue and singular-value decompositions (SVD) respectively. Rotate $D$ using its SVD so that $A$ and $D$ have the same left-eigenspace basis set, i.e:
+%\begin{align*}
+%A &= \mathcal{U} \Lambda \mathcal{U}^T\\
+%\\
+%D &= \mathcal{U} \begin{bmatrix}
+%S & 0
+%\end{bmatrix}
+%V^T.
+%\end{align*}
+%The following quantities express network parameters in this rotated basis:
+%\begin{enumerate}
+%\item $\epsilon \in \mathbf{R}^{d}$ : The estimation error between the network estimate $\hat{y}$ and the true dynamical system state $y$
+%$$
+%\epsilon \overset{\Delta}{=} y - \hat{y}
+%$$.
+%\item $v \in \mathbf{R}^N$ : The membrane voltage of N neurons that compose the network.
+%$$
+%v \overset{\Delta}{=} S \epsilon
+%$$
+%\item $\tilde{o} \in \mathbf{R}^N$ :  The spike train of the neurons, represented as Dirac $\delta$-functions. 
+%$$
+%\tilde{o}_j \overset{\Delta}{=} \sum_{i=0}^{\infty} \delta(
+%$$
+%\end{enumerate}
+%
+%The self-coupled network implements the given dynamical system using a network of neurons whose membrane potential dynamics are given by 
+%
+%\begin{align}
+%\label{overview:voltage_dynamics}
+%\dot{v}
+%&= 
+%\begin{bmatrix}
+%\Lambda & 0
+%\\
+%0 & 0
+%\end{bmatrix}
+%v +
+%\begin{bmatrix}
+%S \left(\Lambda + I_d \right) S & 0
+%\\
+%0 & 0
+%\end{bmatrix}
+%  \rho - 
+% \begin{bmatrix}
+%S^2 & 0
+%\\
+%0 & 0
+%\end{bmatrix}
+%    \tilde{o},
+%\end{align}
+%
+%where 
+%\begin{align*}
+%\end{align*}
