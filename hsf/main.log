@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.9.15)  15 SEP 2020 23:08
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.9.23)  24 SEP 2020 14:36
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -286,12 +286,7 @@ File: l3backend-pdfmode.def 2020-02-03 L3 backend support: PDF mode
 )
 (./main.aux (./tex_files/7_18_Overview.aux)
 (./tex_files/7_18_Basic_Derivation_Simulation.aux)
-(./tex_files/7_19_Analysis_Basic_Constant_Spike_Rate.aux
-
-LaTeX Warning: Label `eq:simple_voltage_dynamics_constant_driving' multiply def
-ined.
-
-) (./tex_files/7_25_Analysis_Basic_Constant_Dynamical_System.aux)
+(./tex_files/7_19_Analysis_Basic_Constant_Spike_Rate.aux)
 (./tex_files/7_29_Analysis_Comparison_w_PCF.aux)
 (./tex_files/8_15_Analysis_PCF_GJ_response_to_const_stimulus.aux))
 \openout1 = `main.aux'.
@@ -425,84 +420,72 @@ Underfull \hbox (badness 10000) in paragraph at lines 14--21
 <figures/pcf_e_v_graphic.pdf, id=100, 584.80188pt x 829.14491pt>
 File: figures/pcf_e_v_graphic.pdf Graphic file (type pdf)
 <use figures/pcf_e_v_graphic.pdf>
-Package pdftex.def Info: figures/pcf_e_v_graphic.pdf  used on input line 74.
+Package pdftex.def Info: figures/pcf_e_v_graphic.pdf  used on input line 75.
 (pdftex.def)             Requested size: 411.11642pt x 582.88986pt.
 
 
-LaTeX Warning: Float too large for page by 32.45985pt on input line 77.
+LaTeX Warning: Float too large for page by 32.45985pt on input line 78.
 
 [4] [5 <./figures/pcf_e_v_graphic.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 91--94
+Underfull \hbox (badness 10000) in paragraph at lines 92--95
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 91--94
+Underfull \hbox (badness 10000) in paragraph at lines 92--95
 
  []
 
 [6
 
 ] [7]
-<figures/ev_rotated_classic_graph.pdf, id=140, 540.09035pt x 209.4228pt>
+<figures/ev_rotated_classic_graph.pdf, id=141, 540.09035pt x 209.4228pt>
 File: figures/ev_rotated_classic_graph.pdf Graphic file (type pdf)
 <use figures/ev_rotated_classic_graph.pdf>
 Package pdftex.def Info: figures/ev_rotated_classic_graph.pdf  used on input li
-ne 326.
+ne 362.
 (pdftex.def)             Requested size: 469.75502pt x 182.15802pt.
- [8 <./figures/ev_rotated_classic_graph.pdf>] [9]
 
-LaTeX Warning: Reference `eq:rho_dot' on page 10 undefined on input line 411.
 
-[10]
+LaTeX Warning: `h' float specifier changed to `ht'.
 
-LaTeX Warning: Reference `eq:rho_dot' on page 11 undefined on input line 440.
-
-<figures/network_decode.png, id=173, 956.8548pt x 574.5465pt>
+[8] [9 <./figures/ev_rotated_classic_graph.pdf>] [10]
+<figures/network_decode.png, id=173, 981.4266pt x 574.5465pt>
 File: figures/network_decode.png Graphic file (type png)
 <use figures/network_decode.png>
-Package pdftex.def Info: figures/network_decode.png  used on input line 505.
-(pdftex.def)             Requested size: 352.31625pt x 211.54439pt.
-<figures/decode_error.png, id=175, 956.8548pt x 574.5465pt>
+Package pdftex.def Info: figures/network_decode.png  used on input line 559.
+(pdftex.def)             Requested size: 352.31625pt x 206.24919pt.
+<figures/decode_error.png, id=175, 981.4266pt x 574.5465pt>
 File: figures/decode_error.png Graphic file (type png)
 <use figures/decode_error.png>
-Package pdftex.def Info: figures/decode_error.png  used on input line 507.
-(pdftex.def)             Requested size: 352.31625pt x 211.54439pt.
-<figures/membrane_potential_image.png, id=176, 898.3161pt x 572.3784pt>
+Package pdftex.def Info: figures/decode_error.png  used on input line 561.
+(pdftex.def)             Requested size: 352.31625pt x 206.24919pt.
+<figures/membrane_potential_image.png, id=176, 910.602pt x 572.3784pt>
 File: figures/membrane_potential_image.png Graphic file (type png)
 <use figures/membrane_potential_image.png>
 Package pdftex.def Info: figures/membrane_potential_image.png  used on input li
-ne 509.
-(pdftex.def)             Requested size: 328.82707pt x 209.51463pt.
+ne 563.
+(pdftex.def)             Requested size: 328.82707pt x 206.68489pt.
 
-LaTeX Warning: Float too large for page by 14.1734pt on input line 510.
+
+LaTeX Warning: Float too large for page by 0.75327pt on input line 564.
 
 [11] [12 <./figures/network_decode.png> <./figures/decode_error.png> <./figures
 /membrane_potential_image.png>]
 
 Package caption Warning: \captionsetup{type*=...} or \captionof
-(caption)                outside box or environment on input line 514.
+(caption)                outside box or environment on input line 568.
 See the caption package documentation for explanation.
 
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
-(caption)                particular \caption on input line 517.
+(caption)                particular \caption on input line 571.
 See the caption package documentation for explanation.
-
-
-LaTeX Warning: Reference `eq:rho_dot' on page 13 undefined on input line 517.
-
-
-LaTeX Warning: Reference `eq:rho_dot' on page 13 undefined on input line 517.
 
 ) [13]
 \openout2 = `tex_files/7_19_Analysis_Basic_Constant_Spike_Rate.aux'.
 
  (./tex_files/7_19_Analysis_Basic_Constant_Spike_Rate.tex
-
-LaTeX Warning: Reference `eq:rho_dot' on page 14 undefined on input line 6.
-
-
 Underfull \hbox (badness 10000) in paragraph at lines 6--8
 
  []
@@ -512,100 +495,51 @@ Underfull \hbox (badness 10000) in paragraph at lines 6--8
 
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 93--95
-
- []
-
-<figures/phi_vs_k_const_driving.png, id=209, 505.1673pt x 341.1144pt>
+<figures/phi_vs_k_const_driving.png, id=214, 964.8045pt x 588.2778pt>
 File: figures/phi_vs_k_const_driving.png Graphic file (type png)
 <use figures/phi_vs_k_const_driving.png>
 Package pdftex.def Info: figures/phi_vs_k_const_driving.png  used on input line
- 98.
-(pdftex.def)             Requested size: 469.75502pt x 317.20706pt.
-[15] [16 <./figures/phi_vs_k_const_driving.png>]
-<figures/network_decode_long_term_estimate_const_driving.png, id=230, 959.7456p
-t x 573.8238pt>
-File: figures/network_decode_long_term_estimate_const_driving.png Graphic file 
-(type png)
-<use figures/network_decode_long_term_estimate_const_driving.png>
-Package pdftex.def Info: figures/network_decode_long_term_estimate_const_drivin
-g.png  used on input line 187.
+ 99.
+(pdftex.def)             Requested size: 469.75502pt x 286.42746pt.
+ [15] [16 <./figures/phi_vs_k_const_driving.png>]
+<figures/network_decode_long_term_estimate.png, id=234, 959.7456pt x 573.8238pt
+>
+File: figures/network_decode_long_term_estimate.png Graphic file (type png)
+<use figures/network_decode_long_term_estimate.png>
+Package pdftex.def Info: figures/network_decode_long_term_estimate.png  used on
+ input line 188.
 (pdftex.def)             Requested size: 469.75502pt x 280.86967pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[17] [18 <./figures/network_decode_long_term_estimate_const_driving.png>]
-[19
+[17] [18 <./figures/network_decode_long_term_estimate.png>]
+Overfull \hbox (39.08519pt too wide) detected at line 322
+[]
+ []
 
-]
-<figures/rmse_sp_vs_k_const_driving.png, id=266, 1011.78pt x 574.5465pt>
+[19]
+<figures/rmse_sp_vs_k_const_driving.png, id=274, 1011.78pt x 574.5465pt>
 File: figures/rmse_sp_vs_k_const_driving.png Graphic file (type png)
 <use figures/rmse_sp_vs_k_const_driving.png>
 Package pdftex.def Info: figures/rmse_sp_vs_k_const_driving.png  used on input 
-line 305.
+line 365.
 (pdftex.def)             Requested size: 469.75502pt x 266.75807pt.
-<figures/rmse_sp_vs_phi_const_driving.png, id=267, 996.6033pt x 577.4373pt>
+<figures/rmse_sp_vs_phi_const_driving.png, id=275, 996.6033pt x 578.16pt>
 File: figures/rmse_sp_vs_phi_const_driving.png Graphic file (type png)
 <use figures/rmse_sp_vs_phi_const_driving.png>
 Package pdftex.def Info: figures/rmse_sp_vs_phi_const_driving.png  used on inpu
-t line 307.
-(pdftex.def)             Requested size: 469.75502pt x 272.17973pt.
+t line 367.
+(pdftex.def)             Requested size: 469.75502pt x 272.52039pt.
 
 
-LaTeX Warning: Float too large for page by 31.88017pt on input line 310.
+LaTeX Warning: Float too large for page by 20.67635pt on input line 370.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 ) [20] [21 <./figures/rmse_sp_vs_k_const_driving.png> <./figures/rmse_sp_vs_phi
 _const_driving.png>]
-\openout2 = `tex_files/7_25_Analysis_Basic_Constant_Dynamical_System.aux'.
-
-
-(./tex_files/7_25_Analysis_Basic_Constant_Dynamical_System.tex
-
-LaTeX Warning: Reference `eq:rotated_voltage_psc_def' on page 22 undefined on i
-nput line 29.
-
-[22
-
-
-
-]
-
-LaTeX Warning: Reference `eq:rho_dot' on page 23 undefined on input line 144.
-
-[23] [24]
-<figures/analysis_const_dynamics_const_driving_network_decode_explicit_comparis
-on.png, id=312, 959.7456pt x 573.8238pt>
-File: figures/analysis_const_dynamics_const_driving_network_decode_explicit_com
-parison.png Graphic file (type png)
-<use figures/analysis_const_dynamics_const_driving_network_decode_explicit_comp
-arison.png>
-Package pdftex.def Info: figures/analysis_const_dynamics_const_driving_network_
-decode_explicit_comparison.png  used on input line 1007.
-(pdftex.def)             Requested size: 469.75502pt x 280.86967pt.
- [25] [26 <./figures/analysis_const_dynamics_const_driving_network_decode_expli
-cit_comparison.png>] [27]
-<figures/rmse_sp_vs_s_const_driving.png, id=338, 970.5861pt x 578.16pt>
-File: figures/rmse_sp_vs_s_const_driving.png Graphic file (type png)
-<use figures/rmse_sp_vs_s_const_driving.png>
-Package pdftex.def Info: figures/rmse_sp_vs_s_const_driving.png  used on input 
-line 2167.
-(pdftex.def)             Requested size: 469.75502pt x 279.82501pt.
-<figures/rmse_sp_vs_phi_s_const_driving.png, id=339, 970.5861pt x 578.8827pt>
-File: figures/rmse_sp_vs_phi_s_const_driving.png Graphic file (type png)
-<use figures/rmse_sp_vs_phi_s_const_driving.png>
-Package pdftex.def Info: figures/rmse_sp_vs_phi_s_const_driving.png  used on in
-put line 2169.
-(pdftex.def)             Requested size: 469.75502pt x 280.17479pt.
-
-
-LaTeX Warning: Float too large for page by 41.39769pt on input line 2173.
-
-) [28] [29 <./figures/rmse_sp_vs_s_const_driving.png> <./figures/rmse_sp_vs_phi
-_s_const_driving.png>]
 \openout2 = `tex_files/7_29_Analysis_Comparison_w_PCF.aux'.
 
  (./tex_files/7_29_Analysis_Comparison_w_PCF.tex
@@ -623,22 +557,22 @@ Underfull \hbox (badness 10000) in paragraph at lines 14--15
 
  []
 
-[30
+[22
 
 
 
-] [31]
+] [23]
 Underfull \hbox (badness 10000) in paragraph at lines 197--198
 
  []
 
-<figures/network_decode_PCF.png, id=378, 954.6867pt x 574.5465pt>
+<figures/network_decode_PCF.png, id=315, 954.6867pt x 574.5465pt>
 File: figures/network_decode_PCF.png Graphic file (type png)
 <use figures/network_decode_PCF.png>
 Package pdftex.def Info: figures/network_decode_PCF.png  used on input line 204
 .
 (pdftex.def)             Requested size: 469.75502pt x 282.71378pt.
-<figures/decode_error_PCF.png, id=379, 971.3088pt x 574.5465pt>
+<figures/decode_error_PCF.png, id=316, 971.3088pt x 574.5465pt>
 File: figures/decode_error_PCF.png Graphic file (type png)
 <use figures/decode_error_PCF.png>
 Package pdftex.def Info: figures/decode_error_PCF.png  used on input line 205.
@@ -646,33 +580,33 @@ Package pdftex.def Info: figures/decode_error_PCF.png  used on input line 205.
 
 LaTeX Warning: Float too large for page by 35.15823pt on input line 209.
 
-[32] [33 <./figures/network_decode_PCF.png> <./figures/decode_error_PCF.png>]
-<figures/network_decode_Gap-Junction.png, id=410, 954.6867pt x 574.5465pt>
+[24] [25 <./figures/network_decode_PCF.png> <./figures/decode_error_PCF.png>]
+<figures/network_decode_Gap-Junction.png, id=348, 954.6867pt x 574.5465pt>
 File: figures/network_decode_Gap-Junction.png Graphic file (type png)
 <use figures/network_decode_Gap-Junction.png>
 Package pdftex.def Info: figures/network_decode_Gap-Junction.png  used on input
  line 296.
 (pdftex.def)             Requested size: 469.75502pt x 282.71378pt.
-<figures/decode_error_Gap-Junction.png, id=411, 971.3088pt x 574.5465pt>
+<figures/decode_error_Gap-Junction.png, id=349, 971.3088pt x 574.5465pt>
 File: figures/decode_error_Gap-Junction.png Graphic file (type png)
 <use figures/decode_error_Gap-Junction.png>
 Package pdftex.def Info: figures/decode_error_Gap-Junction.png  used on input l
 ine 297.
 (pdftex.def)             Requested size: 469.75502pt x 277.87447pt.
 
-[34
+[26
 
-] [35 <./figures/network_decode_Gap-Junction.png> <./figures/decode_error_Gap-J
+] [27 <./figures/network_decode_Gap-Junction.png> <./figures/decode_error_Gap-J
 unction.png>])
 \openout2 = `tex_files/8_15_Analysis_PCF_GJ_response_to_const_stimulus.aux'.
 
 
-(./tex_files/8_15_Analysis_PCF_GJ_response_to_const_stimulus.tex [36
+(./tex_files/8_15_Analysis_PCF_GJ_response_to_const_stimulus.tex [28
 
 
 
 
-] [37]
+] [29]
 Underfull \hbox (badness 10000) in paragraph at lines 393--397
 
  []
@@ -682,7 +616,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 417--423
 
  []
 
-[38]
+[30]
 Underfull \hbox (badness 10000) in paragraph at lines 456--460
 
  []
@@ -697,7 +631,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 572--574
 
  []
 
-[39]
+[31]
 Underfull \hbox (badness 10000) in paragraph at lines 645--647
 
  []
@@ -707,13 +641,18 @@ Overfull \hbox (15.61761pt too wide) detected at line 689
 []
  []
 
-[40]
+[32]
 Underfull \hbox (badness 10000) in paragraph at lines 765--768
 
  []
 
-[41] [42] [43] [44]
-<figures/const_dynamics_network_decode_comparison_sc_pcf_gj.png, id=503, 959.74
+[33] [34] [35]
+
+LaTeX Warning: Reference `eq:analysis:constant_driving_constant_dynamics_estima
+te_equation_explicit' on page 36 undefined on input line 1134.
+
+[36]
+<figures/const_dynamics_network_decode_comparison_sc_pcf_gj.png, id=439, 959.74
 56pt x 574.5465pt>
 File: figures/const_dynamics_network_decode_comparison_sc_pcf_gj.png Graphic fi
 le (type png)
@@ -721,67 +660,85 @@ le (type png)
 Package pdftex.def Info: figures/const_dynamics_network_decode_comparison_sc_pc
 f_gj.png  used on input line 1141.
 (pdftex.def)             Requested size: 469.75502pt x 281.2234pt.
-<figures/per_spike_rmse_vs_phi_sc_gj_pcf.png, id=511, 970.5861pt x 577.4373pt>
+
+
+LaTeX Warning: Reference `eq:analysis:constant_driving_constant_dynamics_estima
+te_equation_explicit' on page 37 undefined on input line 1142.
+
+
+LaTeX Warning: Reference `eq:analysis:constant_driving_constant_dynamics_estima
+te_equation_explicit' on page 37 undefined on input line 1142.
+
+
+LaTeX Warning: Reference `eq:analysis:const_dynamics_per_spike_rmse_phi' on pag
+e 37 undefined on input line 1146.
+
+<figures/per_spike_rmse_vs_phi_sc_gj_pcf.png, id=444, 970.5861pt x 577.4373pt>
 File: figures/per_spike_rmse_vs_phi_sc_gj_pcf.png Graphic file (type png)
 <use figures/per_spike_rmse_vs_phi_sc_gj_pcf.png>
 Package pdftex.def Info: figures/per_spike_rmse_vs_phi_sc_gj_pcf.png  used on i
 nput line 1150.
 (pdftex.def)             Requested size: 469.75502pt x 279.47522pt.
-) [45
 
- <./figures/const_dynamics_network_decode_comparison_sc_pcf_gj.png>] [46 <./fig
-ures/per_spike_rmse_vs_phi_sc_gj_pcf.png>]
+LaTeX Warning: Reference `eq:analysis:const_dynamics_per_spike_rmse_phi' on pag
+e 37 undefined on input line 1151.
+
+
+LaTeX Warning: Reference `eq:analysis:const_dynamics_per_spike_rmse_phi' on pag
+e 37 undefined on input line 1151.
+
+) [37
+
+ <./figures/const_dynamics_network_decode_comparison_sc_pcf_gj.png>]
+[38 <./figures/per_spike_rmse_vs_phi_sc_gj_pcf.png>]
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 48.
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 48.
  (./main.aux
 (./tex_files/7_18_Overview.aux)
 (./tex_files/7_18_Basic_Derivation_Simulation.aux)
 (./tex_files/7_19_Analysis_Basic_Constant_Spike_Rate.aux)
-(./tex_files/7_25_Analysis_Basic_Constant_Dynamical_System.aux)
 (./tex_files/7_29_Analysis_Comparison_w_PCF.aux)
 (./tex_files/8_15_Analysis_PCF_GJ_response_to_const_stimulus.aux))
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 48.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 48.
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: C695FF6A5870DF1676095CD4A461DD1F;1025.
+(rerunfilecheck)             Checksum: A2ABAE6AB4C8813F2BD5B302252B4501;980.
 
 
 LaTeX Warning: There were undefined references.
 
-
-LaTeX Warning: There were multiply-defined labels.
-
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 48.
  ) 
 Here is how much of TeX's memory you used:
- 8184 strings out of 483183
- 131360 string characters out of 5966292
- 396873 words of memory out of 5000000
- 22861 multiletter control sequences out of 15000+600000
+ 8131 strings out of 481239
+ 129133 string characters out of 5920377
+ 399038 words of memory out of 5000000
+ 23087 multiletter control sequences out of 15000+600000
  541860 words of font info for 60 fonts, out of 8000000 for 9000
- 14 hyphenation exceptions out of 8191
- 41i,15n,43p,1285b,493s stack positions out of 5000i,500n,10000p,200000b,80000s
- </home/chris/.texlive2019/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1000.600
-pk></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></u
-sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/sha
-re/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbxti10.pfb></usr/share/t
-exlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive
-/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex7.pfb></usr/share/texlive/t
-exmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-d
-ist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texlive/texmf-dist/fon
-ts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type
-1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/publi
-c/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfo
-nts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/
-cmr5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb
-></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr
-/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/share/
-texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive
-/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on main.pdf (46 pages, 2854435 bytes).
+ 1141 hyphenation exceptions out of 8191
+ 41i,15n,43p,1270b,493s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-ts1.enc}</usr/share/texli
+ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dis
+t/fonts/type1/public/amsfonts/cm/cmbxti10.pfb></usr/share/texlive/texmf-dist/fo
+nts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/ty
+pe1/public/amsfonts/cmextra/cmex7.pfb></usr/share/texlive/texmf-dist/fonts/type
+1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/publ
+ic/amsfonts/cm/cmmi5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsf
+onts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm
+/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.
+pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></u
+sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/share
+/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf
+-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/share/texlive/texmf-dist/f
+onts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/ty
+pe1/public/amsfonts/cm/cmti10.pfb></usr/share/texmf/fonts/type1/public/cm-super
+/sfrm1000.pfb>
+Output written on main.pdf (38 pages, 2544563 bytes).
 PDF statistics:
- 619 PDF objects out of 1000 (max. 8388607)
- 486 compressed objects within 5 object streams
- 143 named destinations out of 1000 (max. 500000)
- 179 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 548 PDF objects out of 1000 (max. 8388607)
+ 434 compressed objects within 5 object streams
+ 125 named destinations out of 1000 (max. 500000)
+ 164 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -1,5 +1,6 @@
-\section{Derivation: Basic Model}
+\section{Basic Model}
 \label{section:derivation:basic_model}
+\subsection{Derivation}
 \begin{enumerate}
     \item Let $\tau_s$ be the synaptic time constant of each synapse in the network. Define dimensionless time as:
     \begin{equation*}
@@ -54,7 +55,7 @@
         \implies D^T \dot{e} &= D^T A e + D^T (A + I) \left(Dr\right) + D^T Bc - D^T Do. 
 	\end{align*} 
 	
-The quantity $D^T e$ defines the membrane voltage of the the predictive coding framework (PCF), a precursor to this model:
+The quantity $D^T e$ defines the membrane voltage of the predictive coding framework (PCF), a precursor to this model:
 $$
 	v_{pcf} \overset{\Delta}{=}  D^T e.
 $$
@@ -78,7 +79,7 @@ where $D^{T \dagger}$ is the left pseudo-inverse of $D^T \in \mathbf{R}^{N \time
 
 \clearpage
 
-\item The self-coupled network is derived by via a change of bases. Assuming both $D$ and $A$ are full rank, diagonalize each to a common left basis:
+\item The self-coupled network is derived via a change of bases. Assuming both $D$ and $A$ are full rank, diagonalize each to a common left basis:
 \begin{align*}
     A &= \mathcal{U} \Lambda \mathcal{U}^T = \sum_{j=1}^d \Lambda_j \mathcal{U}_j \mathcal{U}_j^T,\\
     \\
@@ -105,18 +106,34 @@ The rotated target dynamics are thus
 \begin{align}
 \label{eq:rotated_targed_dynamical_system}
 \dot{y} &= \mathcal{U}^T \dot{x} \notag
-\\
+\\ \notag
 \\ \notag
 &= 
 \Lambda y (\xi)
 +
-\beta c(\xi),
+\mathcal{U}^T B c(\xi)
+\\ \notag
+\\ \notag
+&= 
+\Lambda y (\xi)
++
+\mathcal{U}^T B \mathcal{U} \mathcal{U}^T c(\xi) \notag
+\\ \notag
+\\ 
+&=
+\Lambda y (\xi)
++
+\beta \tilde{c}(\xi)
 \end{align}
 where  
 $$
-\beta \overset{\Delta}{=} \mathcal{U}^T B. 
+\beta \overset{\Delta}{=} \mathcal{U}^T B \mathcal{U},  
 $$
-
+and
+$$
+\tilde{c} \overset{\Delta}{=} \mathcal{U}^T c,
+$$
+give the projections of $B$ and $c$ respectively.
 The network estimate in the rotated basis is 
 $$
 \hat{y} \overset{\Delta}{=} \mathcal{U}^T \hat{x}.
@@ -125,18 +142,25 @@ $$
 From equation (\ref{eq:xhat}),
 \begin{align*}
 \hat{y} &= \mathcal{U}^T \hat{x}
-\\
-\\
+\\ 
+\\ 
 &=
 \mathcal{U}^T D r
-\\
-\\
+\\ 
+\\ 
 &= 
 \begin{bmatrix}
 S & 0
 \end{bmatrix}
 V^T
 r
+\\
+\\
+&=
+\begin{bmatrix}
+S & 0
+\end{bmatrix}
+\rho
 \\
 \\
 \implies
@@ -169,13 +193,25 @@ Note that $V^T r$ and $V^T o $ are projections of the N-neuron network's post-sy
 \label{eq:def_o_tilde}.
 \end{align}
 
-The last equality also implies
+The preceding equality also gives $\hat{y}$ in terms of $\rho$:
 
 \begin{align}
+\label{eq:basic:def:y_hat}
+\hat{y} = 
+\begin{bmatrix}
+S & 0
+\end{bmatrix}
+\rho.
+\end{align}
+
+With these definitions, the last equality above also implies
+
+\begin{align}
+\label{eq:rho_dot}
 \dot{\rho} = -\rho + \tilde{o}.
 \end{align}
 
-Let $\epsilon$ be the error in the rotated basis:
+To finish describing the basic network quantities in terms of the rotated basis, let $\epsilon$ be the error in the rotated basis:
 \begin{align}
 \label{eq:rotated_error_def}
 \epsilon \overset{\Delta}{=} y - \hat{y} \\= \mathcal{U}^T e. \notag
@@ -237,28 +273,28 @@ S & 0
 \\
 \implies
 \begin{bmatrix}
-S & 0
+S \\ 0
 \end{bmatrix}
 \dot{\epsilon}
 &= 
 \begin{bmatrix}
-S & 0
+S \\ 0
 \end{bmatrix}
 \Lambda \epsilon
 +
 \begin{bmatrix}
-S & 0
+S \\ 0
 \end{bmatrix}
 \left( 
 \Lambda + I
 \right)
 \begin{bmatrix}
-S & 0
+S \\ 0
 \end{bmatrix}
 \rho
 -
 \begin{bmatrix}
-S & 0
+S \\ 0
 \end{bmatrix}
 \begin{bmatrix}
 S & 0
@@ -266,7 +302,7 @@ S & 0
 \tilde{o}.
 \end{align*}
 
-Note that only $d$ of the $N$ equations are nontrivial. A comparison with equation (\ref{eq:derivation_init}) suggests the N-dimensional rotated membrane potential $v$ is defined as:
+The last equality gives a system of $N$ equations of which only $d$ of are nontrivial. A comparison with equation (\ref{eq:derivation_init}) suggests the N-dimensional rotated membrane potential $v$ is best defined as:
 
 \begin{align}
 \label{eq:rotated_voltage_def}
@@ -279,7 +315,7 @@ This mapping is not invertible unless we only consider the first $d$ components 
 $$
 \epsilon = S^{-1} v, 
 $$
-where the remaining $N-d$ components of $v$ are assumed to be zero. Using a similar abuse for the $\rho$ and $\tilde{o}$ terms, we arrive at the $d$ system of equations describing the nontrivial network voltage dynamics:
+giving an $N$ vector whose first $d$ elements are well defined, and the remaining components of $v$ are assumed to be zero. Using a similar abuse for the $\rho$ and $\tilde{o}$ terms, we arrive at the system of $d$ equations describing the nontrivial network voltage dynamics:
 \begin{align}
 \label{eq:rotated_voltage_dynamics}
 \dot{v}
@@ -319,7 +355,7 @@ S^2 & 0
     \tilde{o}.
 \end{align*}
 
-To summarize, there are 4 vector spaces in total: the error space which tracks the dynamical system and the network estimate, voltage space which tracks the membrane potentials, and their transformed counterparts in the $\mathcal{U}-V$ bases. Figure (\ref{fig:four_subspace_relation}) shows the relationships derived between these subspaces.
+To summarize conceptually, there are 4 vector spaces in total: the error space which tracks the dynamical system and the network estimate, the voltage space which tracks the membrane potentials, and the transformed counterparts of each in the $\mathcal{U}-V$ bases. Figure (\ref{fig:four_subspace_relation}) shows the relationships derived between these subspaces.
 
 \begin{figure}[h]
 \centering
@@ -329,89 +365,107 @@ To summarize, there are 4 vector spaces in total: the error space which tracks t
 \end{figure}
    
    
-\item The spike trains are chosen minimize the network estimation error
+\item The spike trains $\tilde{o}$ are chosen minimize the network estimation error
 \begin{align}
     \mathcal{L}(\xi) =  || x(\xi + d\xi) - \hat{x}(\xi + d\xi) ||^2. 
 \end{align}
-The network greedily minimizes $\mathcal{L}$ an instant $d\xi$ ahead in time. Writing $\hat{x}$ in terms of $\omega$ and $\rho$, equations (\ref{eq:xhat}) and (\ref{eq:rotated_voltage_def}) imply 
+The network greedily minimizes $\mathcal{L}(\xi)$ an instant $d\xi$ ahead in time. If no spike occurs at time $\xi$, then the objective is given above. If neuron $j$ spikes, the estimate $\hat{x} \leftarrow \hat{x} + d_j$, where $d_j$ is column $j$ of $D$. The objective is now
 
 \begin{align*}
-    \hat{x} &= D r 
-    \\
-    \\
-    &=
-    \sum_{j=1}^d S_j \mathcal{U}_j V_j^T r
-    \\
-    \\
-    &= 
-    \sum_{j=1}^d S_j^{-1} \mathcal{U}_j \rho_j
-    \\
-    \\
-    &=
-    S^{-1} \mathcal{U} \rho. 
+\mathcal{L}_{sp}(\xi) &= ||x - (\hat{x} + d_j)||^2
+\\
+\\
+&= x^T x - 2 \, x^T \hat{x} - 2 x^T d_j + \hat{x}^T \hat{x} + 2 \hat{x}^T d_j + d_j^T d_j
+\\
+\\
+&= x^T x - 2 x^T \hat{x} + \hat{x}^T \hat{x} - 2 d_j^T(x - \hat{x}) + d_j^T d_j
+\\
+\\
+&= ||x - \hat{x}||^2 - 2 d_j^T(x - \hat{x}) + d_j^T d_j
+\\
+\\
+&= 
+\mathcal{L}_{ns}(\xi) - 2 d_j^T(x - \hat{x}) + d_j^T d_j,
+\end{align*}
+where $\mathcal{L}_{ns}(\xi)$ is the objective if no spike occurs. Spiking occurs when the objective decreases or
+\begin{align*}
+\mathcal{L}_{sp} &< \mathcal{L}_{ns}
+\\
+\\
+\implies
+- 2 d_j^T(x - \hat{x}) &+ d_j^T d_j < 0
+\\
+\\
+\implies
+d_j^T(x - \hat{x}) >& \frac{||d_j||^2}{2}.
+\end{align*}
+Since $d_j^T(x-\hat{x}) = d_j^Te$ is already defined as membrane voltage, the right hand side gives neuron $j's$ spike threshold voltage $v_th$,
+
+$$
+v_{th}^{pcf} = \frac{1}{2}
+\begin{bmatrix}
+d_1^T d_1
+\\
+\vdots
+\\
+d_N^T d_N
+\end{bmatrix}.
+$$
+
+For the rotated network, note $\mathcal{U}^T$ is an orthonormal matrix by definition. Thus it is norm-preserving:
+
+\begin{align*}
+\mathcal{L}_{sp}(\xi) &= ||x - \hat{x}||^2
+\\
+\\
+&= 
+||\mathcal{U}^T(x - \hat{x})||^2
+\\
+\\
+&= 
+||y - \hat{y}||^2.
 \end{align*}
 
-If neuron $j$ does not spike, the objective is
+If we define the rotated network objective as 
+$$
+\tilde{L}(\xi) \overset{\Delta}{=} || y(\xi + d\xi) - \hat{y}(\xi + d\xi)||^2,
+$$
+it is equal to the original network objective when no spike occurs. However, a spike alters the readout by $\hat{y} \leftarrow \hat{y} + S_l$, where $S_l$ is the $l^{th}$ column of $\begin{bmatrix}
+S & 0
+\end{bmatrix}$. With the same approach as above, the objective when neuron $l$ spikes is
+
 \begin{align*}
-    \mathcal{L}_{ns} = ||x - \hat{x}||^2.
+\tilde{L}_{sp} &= \tilde{L}_{ns} + 2 S_l^T\epsilon  + S_l^TS_l
+\\
+\\
+\implies
+v_l &> \frac{||S_l||^2}{2}.
 \end{align*}
- 
-If neuron $j$ spikes at time $\xi$, then $\hat{x} \leftarrow \hat{x} + S^{-1}_j \hat{U}_j$. The objective is now
-\begin{align*}
-    \mathcal{L}_{sp} &= || x - (\hat{x} + \mathcal{U}_j) ||^2,\\
-    \\
-    &= 
-    (x-\hat{x}-S^{-1}_j \mathcal{U}_j)^T (x-\hat{x}-S^{-1}_j \mathcal{U}_j)\\
-    &= 
-    x^T x - x^T \hat{x} - x^T S^{-1}_j \mathcal{U}_j
-    - \hat{x}^T x +\hat{x}^T\hat{x} +\hat{x}^T S^{-1}_j \mathcal{U}_j
-    -
-    S^{-1}_j \mathcal{U}_j^T x + S^{-1}_j \mathcal{U}_j^T \hat{x} + S^{-2}_j \mathcal{U}_j^T \mathcal{U}_j
-    \\
-    &=
-    \left(x^T x -2 x^T \hat{x} +\hat{x}^T\hat{x}  \right) + 
-    2 S^{-1}_j \mathcal{U}_j^T \left( \hat{x} - x
-    \right) + S^{-2}_j \mathcal{U}_j^T \mathcal{U}_j\\
-    &= 
-    ||x -\hat{x}|| +  2 S^{-1}_j \mathcal{U}_j^T \left( \hat{x} - x
-    \right) + S^{-2}_j \mathcal{U}_j^T \mathcal{U}_j\\
-    &= 
-    \mathcal{L}_{ns} + 2 S^{-1}_j \mathcal{U}_j^T \left( \hat{x} - x
-    \right) + S^{-2}_j \mathcal{U}_j^T \mathcal{U}_j\\
-\end{align*}
- A spike occurs when it lowers the objective more than not spiking. Our spiking condition is therefore
-\begin{align*}
-    \mathcal{L}_{sp} &< \mathcal{L}_{ns}\\
-    \\
-    \implies
-     2 S^{-1}_j \mathcal{U}_j^T \left( \hat{x} - x
-    \right) &+ S^{-2}_j \mathcal{U}_j^T \mathcal{U}_j < 0\\
-    \\
-    \implies 
-    S^{-1}_j \mathcal{U}_j^T \left(x -\hat{x} \right) &> \frac{S^{-2}_j \mathcal{U}_j ^T \mathcal{U}_j}{2}\\
-    \\
-    \implies
-    S^{-1}_j \mathcal{U}_j^T e &> \frac{S^{-2}_j \mathcal{U}_j^T \mathcal{U}_j}{2}
-    \\
-    \\
-    \implies
-    \\
-    \\
-    S_j U_j^T e &> \frac{1}{2}
-    \\
-    \\
-    \implies S_j \epsilon_j &> \frac{1}{2}
-    \\
-    \\
-    \implies
-    v_j &> \frac{1}{2},
-\end{align*}
-where the last inequality follows from equation ($\ref{eq:rotated_voltage_def}$). Thus neuron $j$ spikes when its membrane voltage $v_j$ exceeds the threshold $v_{th} = \frac{1}{2}$. 
+
+This leads to voltage thresholds
+
+$$
+v_{th} = \frac{1}{2}
+\begin{bmatrix}
+S_1^TS_1
+\\
+\vdots
+\\
+S_d^T S_d
+\\
+0
+\\
+\vdots
+\\
+0
+\end{bmatrix}. 
+$$
+
 
 \item Equations (\ref{eq:rotated_voltage_dynamics}) and (\ref{eq:rho_dot}) describe how we implement a network with d neurons that produces an accurate estimate $\hat{x}$ of the given target system. 
 
 
-When neuron $j$ spikes, a vector $S^{-1}_j \mathcal{U}_j$ is added to the network estimate, $\hat{x}$. A spike has a strictly positive area so that the network is only able to modify its estimate by adding from a fixed set of vectors.  This restricts the space representable by the network to strictly positive state-space, or only $\frac{1}{2^d}$ of the desired state-space. To remove this restriction, we add an additional d neurons whose preferred directions $S^{-1}_j \mathcal{U}_j$ are anti-parallel to neurons $j$ for $j=1, \ldots, d$. Such vectors are required in order to allow subtraction, defined as addition of the additive inverse. Thus the number of neurons required to represent a d-dimensional system is $2d$. We update $U$, $S$, $\Lambda$ and $v_{th}$ to reflect the additional neurons:
+When neuron $l$ spikes, a vector $S_l$ is added to the network estimate, $\hat{y}$. A spike has a strictly positive area so that the network is only able to modify its estimate by adding from a fixed set of vectors.  This restricts the space representable by the network to strictly positive state-space, or only $\frac{1}{2^d}$ dimensions of the desired state-space. To remove this restriction, we add an additional d neurons whose preferred directions $-S_l$ are anti-parallel to neurons $l$ for $l=1, \ldots, d$. Thus the number of neurons required to represent a d-dimensional system is $2d$. We update $U$, $S$, $\Lambda$ and $v_{th}$ to reflect the additional neurons:
 \begin{align*}
     U &\leftarrow \left[ U \hspace{2mm} -U\right] \in \mathbf{R}^{d \times 2 d},\\
     \\
@@ -460,7 +514,7 @@ B
 \\
 c(\xi) 
 &=
-10 \begin{bmatrix} 
+\begin{bmatrix} 
 cos(\frac{\pi}{4} \xi)\\
 sin(\frac{\pi}{4} \xi)
 \end{bmatrix} 
@@ -477,7 +531,7 @@ V^T
 =
 \mathcal{U} 
 \begin{bmatrix}
-I_d & 0
+.1 \, I_d & 0
 \end{bmatrix}
 I_N \notag,
 \\
