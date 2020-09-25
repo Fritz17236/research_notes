@@ -47,7 +47,7 @@ $$
 
 When the dynamical system $\dot{x} = Ax + Bc$ is oscillatory, the eigenvalues $\Lambda$ of $A=\mathcal{U} \, \Lambda \, \mathcal{U}^T$ are complex valued. In this case, $\dot{v}$ is a system of complex-valued differential equations. Membrane voltages are physical, necessarily real quantities. To resolve this contradiction, we must address how the self-coupled network manages complex-valued voltages. 
 
-Viewing $A$ as an operator between vector spaces, when $A$ has real eigenvalues, our dynamical system is an operator mapping $\mathbf{R}^{d}$ to itself.  When $A$ contains complex eigenvalues, our dynamical system now maps $\mathbf{C}^{d}$ to itself. To reflect this view, we rewrite the factorization of $A$ so that the eigenvectors form a complex basis set of vectors. Before with real eigenvalues, we wrote $A$ as 
+When $A$ has real eigenvalues it acts an operator mapping $\mathbf{R}^{d}$ to itself.  When $A$ contains complex eigenvalues, it then maps $\mathbf{C}^{d}$ to itself. To reflect this, we rewrite the factorization of $A$ so that the eigenvectors form a complex basis set of vectors. Before with real eigenvalues, we wrote $A$ as 
 $$
 A = \mathcal{U} \Lambda \mathcal{U}^T = 
 \begin{bmatrix}
@@ -99,7 +99,7 @@ For the case that $\Lambda_j = a_j + ib_j \in \mathbf{C},$ we have
 where 
 $$ W_j \overset{\Delta}{=} \frac
 {a_j \mathcal{U}_j + ib_j \mathcal{U}_j}
-{||a_j \mathcal{U}_j + ib_j \mathcal{U}_j||}
+{||a_j \mathcal{U}_j + ib_j \mathcal{U}_j||} \in \mathbf{C}^d
 $$
 gives the complex basis vector corresponding to $\mathcal{U}_j$.
 
@@ -125,7 +125,7 @@ W_1^* \\ \vdots  \\ W_d^*
 \end{bmatrix}.
 $$
 
-Note that for the case of real-valued $\Lambda$, $W_j = \mathcal{U}_j$ and $||\Lambda_j|| = \Lambda_j$. With the rotated (now complex) basis, we derive the self-coupled network as previously. Rotate the left-basis of $D$:
+Note that for the case of real-valued $\Lambda$, $W_j = \mathcal{U}_j$ and $||\Lambda_j|| = \Lambda_j$. With the new (now complex) basis, we derive the self-coupled network as previously. Rotate the left-basis of $D$:
 $$
 D = W \begin{bmatrix}
 S & 0
@@ -135,9 +135,8 @@ $$
 
 
 The state in the rotated basis is 
-$$ y = W^* x \in \mathbf{C}^d$$.
-\\
-\\
+$$ y = W^* x \in \mathbf{C}^d.$$
+
 The network estimate and estimation error are 
 $$
 \hat{y} = W^* \hat{x} = W^* W \begin{bmatrix} S & 0 \end{bmatrix} V^T r = \begin{bmatrix} S & 0 \end{bmatrix} \rho,
@@ -194,7 +193,7 @@ S & 0
 \tilde{o}.
 $$
 
-To get voltage dynamics, we must map $\epsilon \in \mathbf{C}^d$ to $v \in \mathbf{R}^{N}$. We can't simply scale $v_j = S_j \epsilon_j$ as before because this would give a complex vector. Since the original voltage definition follows from the network's spike-optimization, a natural place to seek a new voltage definition is in optimizing the objective
+To get voltage dynamics, we must map $\epsilon \in \mathbf{C}^d$ to $v \in \mathbf{R}^{N}$. We can't simply scale $v_j = S_j \epsilon_j$ as before because this would give a complex vector. Since the original voltage definition follows from the network's spike-optimization, a natural place to seek a generalized voltage definition is in optimizing the objective
 
 $$
 \mathcal{L}(\xi) = ||  y(\xi + d\xi) - \hat{y}(\xi + d\xi)||^2.
@@ -427,12 +426,12 @@ S & 0
 -
 \begin{bmatrix}
 S^2 & 0
-\\ 0 & 0
+\\ 0 & 0s
 \end{bmatrix}
 \tilde{o}.
 \end{align*}
 
 To summarize, the self-coupled network model is extended to complex-valued dynamical systems by the following:
-The rotated basis is no
+
 
 
