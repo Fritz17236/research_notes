@@ -221,6 +221,7 @@ def run_sim(N, p=1, T = 20,  k = 1, dt = 1e-5, stim='const', D_scale = 1, D_type
     lds = sat.LinearDynamicalSystem(x0, A, B, u = sin_func , T = T, dt = dt)
     net = SelfCoupledNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0, spike_trans_prob = p)
     data = net.run_sim() 
+    
 
     return data
 
