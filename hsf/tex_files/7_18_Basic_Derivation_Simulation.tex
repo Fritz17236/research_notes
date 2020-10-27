@@ -1,6 +1,6 @@
-\section{Basic Model}
+\section{Derivation of the Basic Model}
 \label{section:derivation:basic_model}
-\subsection{Derivation}
+\subsection{Predecessor: PCF Voltage Dynamics}
 \begin{enumerate}
     \item Let $\tau_s$ be the synaptic time constant of each synapse in the network. Define dimensionless time as:
     \begin{equation*}
@@ -77,9 +77,13 @@ where $D^{T \dagger}$ is the left pseudo-inverse of $D^T \in \mathbf{R}^{N \time
     \label{fig:derivation:basic_model:pcf_e_v_map}
 \end{figure}
 
+\end{enumerate}
+
 \clearpage
 
-\item The self-coupled network is derived via a change of bases. Assuming both $D$ and $A$ are full rank, diagonalize each to a common left basis:
+\subsection{The Self-Coupled Model is PCF in an Orthonormal Basis}
+\begin{enumerate}
+\item The self-coupled network is derived from the PCF via a change of bases. Assuming both $D$ and $A$ are full rank, diagonalize each to a common left basis:
 \begin{align*}
     A &= \mathcal{U} \Lambda \mathcal{U}^T = \sum_{j=1}^d \Lambda_j \mathcal{U}_j \mathcal{U}_j^T,\\
     \\
@@ -244,7 +248,7 @@ S & 0
 \rho
 \right)
 + 
-\beta c
+\beta tilde{c}
 -
 \begin{bmatrix}
 S & 0
@@ -264,6 +268,8 @@ S & 0
 S & 0
 \end{bmatrix}
 \rho
++ 
+\beta \tilde{c}
 -
 \begin{bmatrix}
 S & 0
@@ -289,9 +295,15 @@ S \\ 0
 \Lambda + I
 \right)
 \begin{bmatrix}
-S \\ 0
+S & 0
 \end{bmatrix}
 \rho
++
+\begin{bmatrix}
+S \\ 0
+\end{bmatrix}
+\beta
+\tilde{c}
 -
 \begin{bmatrix}
 S \\ 0
@@ -302,7 +314,7 @@ S & 0
 \tilde{o}.
 \end{align*}
 
-The last equality gives a system of $N$ equations of which only $d$ of are nontrivial. A comparison with equation (\ref{eq:derivation_init}) suggests the N-dimensional rotated membrane potential $v$ is best defined as:
+The last equality gives a system of $N$ equations of which only $d$ are nontrivial. A comparison with equation (\ref{eq:derivation_init}) suggests the N-dimensional rotated membrane potential $v$ is best defined as:
 
 \begin{align}
 \label{eq:rotated_voltage_def}
@@ -311,28 +323,13 @@ S \\ 0
 \end{bmatrix} \epsilon \in \mathbf{R}^N.
 \end{align}
 \\
-This mapping is not invertible unless we only consider the first $d$ components and neglect the remaining, trivial components. Abusing notation, we write  
+This mapping is invertible from $v$ to $\epsilon$ if we write  
 $$
-\epsilon = S^{-1} v, 
+\epsilon = \begin{bmatrix} S^{-1} & 0 \end{bmatrix}.
 $$
-giving an $N$ vector whose first $d$ elements are well defined, and the remaining components of $v$ are assumed to be zero. Using a similar abuse for the $\rho$ and $\tilde{o}$ terms, we arrive at the system of $d$ equations describing the nontrivial network voltage dynamics:
+This gives a well-defined $d-$vector. whose first $d$ elements are well defined, and the remaining components of $v$ are assumed to be zero. Using a similar abuse for the $\rho$ and $\tilde{o}$ terms, we arrive at the system of $N$ equations describing the network voltage dynamics:
 \begin{align}
 \label{eq:rotated_voltage_dynamics}
-\dot{v}
-&= 
-S\Lambda S^{-1} v + S \left(\Lambda + I \right) S \rho
-- S^2 \tilde{o} \notag
-\\ \notag
-\\
-\implies
-\dot{v}
-&= 
-\Lambda v + S \left(\Lambda + I \right) S \rho - S^2 \tilde{o}.
-\end{align}
-
-We can also write all $N$ dimensions explicitly to respect the dimensionality of $v$ and $\rho$:
-
-\begin{align*}
 \dot{v}
 &= 
 \begin{bmatrix}
@@ -346,14 +343,20 @@ S \left(\Lambda + I_d \right) S & 0
 \\
 0 & 0
 \end{bmatrix}
-  \rho - 
+  \rho 
+  +
+\begin{bmatrix}
+S \\ 0
+\end{bmatrix}  
+\beta \tilde{c}
+  - 
  \begin{bmatrix}
 S^2 & 0
 \\
 0 & 0
 \end{bmatrix}
     \tilde{o}.
-\end{align*}
+\end{align}
 
 To summarize conceptually, there are 4 vector spaces in total: the error space which tracks the dynamical system and the network estimate, the voltage space which tracks the membrane potentials, and the transformed counterparts of each in the $\mathcal{U}-V$ bases. Figure (\ref{fig:four_subspace_relation}) shows the relationships derived between these subspaces.
 
@@ -363,9 +366,13 @@ To summarize conceptually, there are 4 vector spaces in total: the error space w
 \caption{Depiction of the relationship between original and transformed spaces and their respective error and voltage spaces. An arrow represents left multiplication by the given matrix. The zeros in the full $N \times N$ matrices mapping between $v$ and $\epsilon$ are omitted for clarity.}
 \label{fig:four_subspace_relation}
 \end{figure}
+\end{enumerate}   
+\clearpage
    
-   
-\item The spike trains $\tilde{o}$ are chosen minimize the network estimation error
+\subsection{Optimizing Spike-Timing: From PCF to Self-Coupled} 
+
+\begin{enumerate}
+\item In PCF, the spike trains $o$ are chosen minimize the network estimation error
 \begin{align}
     \mathcal{L}(\xi) =  || x(\xi + d\xi) - \hat{x}(\xi + d\xi) ||^2. 
 \end{align}
@@ -412,7 +419,7 @@ d_N^T d_N
 \end{bmatrix}.
 $$
 
-For the rotated network, note $\mathcal{U}^T$ is an orthonormal matrix by definition. Thus it is norm-preserving:
+\item For the rotated network, note $\mathcal{U}^T$ is an orthonormal matrix by definition. Thus it is norm-preserving:
 
 \begin{align*}
 \mathcal{L}_{sp}(\xi) &= ||x - \hat{x}||^2
@@ -461,34 +468,1083 @@ S_d^T S_d
 \end{bmatrix}. 
 $$
 
+\end{enumerate}
 
-\item Equations (\ref{eq:rotated_voltage_dynamics}) and (\ref{eq:rho_dot}) describe how we implement a network with d neurons that produces an accurate estimate $\hat{x}$ of the given target system. 
+\subsection{Consequences of Positive Unit-Area Spikes}
+\begin{enumerate}
+\item The voltage thresholds are nonnegative, such that neuron $j$ will only spike if 
+
+$$
+v_l = S_l^T \epsilon > v_{th} > 0.
+$$
+
+The spike form neuron $l$ corrects the network error $\epsilon$ by adding $S_l$ to the estimate $\hat{y}$. The nonnegative voltage implies it is impossible for neuron $l$ to correct antiparallel errors ($-S_l$), since
+$$
+S_l^T(\epsilon) = S_l^T(-S_l) = - ||S_l||^2 < 0 < v_{th}.
+$$
+
+To illustrate consider the space of errors $\epsilon \in \mathbf{R}^d$ which satisfy the voltage threshold of neuron $l$, i.e
+$$ 
+\epsilon_{sp} = \left\{ \epsilon \in \mathbf{R}^d \, | \, S_l^T \epsilon > v_{th}  \right\}. 
+$$
+
+In $\mathbf{R}^2$, $\epsilon_{sp}$ is the half-plane formed by the line normal to $S_l$ shifted $v_{th}$ from the origin along $S_l$ as in figure (\ref{fig:relu_encoding_demo}). This excludes $-S_l$. The optimization thus tells us that neuron $l$ spikes when the projection $S_l^T\epsilon$ exceeds $v_{th}$. 
 
 
-When neuron $l$ spikes, a vector $S_l$ is added to the network estimate, $\hat{y}$. A spike has a strictly positive area so that the network is only able to modify its estimate by adding from a fixed set of vectors.  This restricts the space representable by the network to strictly positive state-space, or only $\frac{1}{2^d}$ dimensions of the desired state-space. To remove this restriction, we add an additional d neurons whose preferred directions $-S_l$ are anti-parallel to neurons $l$ for $l=1, \ldots, d$. Thus the number of neurons required to represent a d-dimensional system is $2d$. We update $U$, $S$, $\Lambda$ and $v_{th}$ to reflect the additional neurons:
+\begin{figure}
+\centering
+\includegraphics[scale=.5]{figures/half_plane_relu_demo}
+\caption{Sketch of the Encoding space $\epsilon_{sp}$ of neuron $l$ with direction $S_l \in \mathbf{R}^2.$ The radius of the circle is $v_{th}=\frac{||S_l||^2}{2}$. (Vector $S_l$ not drawn to scale).}
+\label{fig:relu_encoding_demo}
+\end{figure} 
+
+\clearpage
+
+
+\item Equations (\ref{eq:rotated_voltage_dynamics}) and (\ref{eq:rho_dot}) describe how we implement a network with d neurons that produces an estimate $\hat{y}$ of the given target system. As written, the network can only encode vectors $y$ with strictly nonnegative elements. To see why we return to the optimization procedure performed by the network. 
+
+The network optimizes the objective 
+
+$$
+\mathcal{L} = || y - \hat{y}||,
+$$
+
+by choosing spike times $\tilde{o}$. The spikes are integrated into a post-synaptic feedback $\rho$. This feedback vector is scaled by $S$ to generate the estimate $\hat{y}$ that minimizes the objective at time $\xi$.  In other words, the network performs the optimization
+
+$$
+\underset{\rho \in \mathbf{R}^{d+}}{min} ||y - S \rho ||^2,
+$$
+
+where $\mathbf{R}^{d+}$ denotes the real $d-$vectors with nonnegative components. The components must be nonnegative because the spikes $\tilde{o}$ have nonnegative area when integrated, and their dynamics will not decay below zero otherwise. In using a greedy approach with only one spike at a given time step, the network more specifically performs 
+$$
+\underset{x \in \mathbf{Z}^{d+} \, : \, \sum_j Z_j = 1}{min} ||y - S \left( \rho + x\right) ||^2.
+$$
+
+I.e, it must choose one neuron to spike with unit area 1, which adds precisely one column of $S$ to the estimate $\hat{y}$. 
+
+It is easier to analyze the former optimization of $\rho \in \mathbf{R}^{d+}$, and we do so here. Because $ \left\{x \in \mathbf{Z}^{d+} \, : \, \sum_j Z_j = 1 \right\} \subset \mathbf{R}^{d+},$ it is always the case that 
+$$
+\underset{\rho \in \mathbf{R}^{d+}}{min} ||y - S \rho ||^2
+\leq \underset{x \in \mathbf{Z}^{d+} \, : \, \sum_j Z_j = 1}{min} ||y - S \left( \rho + x\right) ||^2,
+$$
+
+i.e optimizing over arbitrary $ \rho \in \mathbf{R}^{d+}$ will always give just as low or lower objectives than under the single-greedy spike optimization.
+
+We're interested in the range of vectors representable by the network.  That is the set
+
+$$
+X^* = \left\{x \in  \mathbf{R}^{d+} \, \ : \, Sx = y \right\}.
+$$
+
+
+Over this set, the objective function is 0, i.e. 
+$$
+X^* = \left\{x \in  \mathbf{R}^{d+} \, \ : \, \mathcal{L}=||y-Sx||^2 = 0 \right\}. 
+$$
+
+Let $x \in X^*$, and consider its negative $-x$. It follows that 
+
 \begin{align*}
-    U &\leftarrow \left[ U \hspace{2mm} -U\right] \in \mathbf{R}^{d \times 2 d},\\
+x &= S\rho
+\\
+\\
+\implies -x &= -S \rho
+\\
+\\
+&= S \left(-\rho\right). 
+\end{align*}
+
+However if $\rho \in \mathbf{R}^{d+}$, then it is impossible for $-\rho \in \mathbf{R}^{d+}$ to also be true. Thus $-\rho \not\in X^*$ so that $\mathcal{L} > 0$. We conclude that for any vector $\hat{y}$, the network can represent with $\mathcal{L}=0$, there exists a negative vector that the network cannot represent with $\mathcal{L}=0$. This is undesirable as it restricts the set of vectors the network can reconstruct within a given error tolerance. In $\mathbf{R}^2$ for example, network representation where $\mathcal{L} = 0$ is restricted to the first quadrant. This restriction applies equally to the greedy single-spike optimization. 
+
+This issue is unique to the self-coupled network and does not occur in the original PCF network even through its spikes must also have positive unit area. The difference arises when we take the SVD of the decoder matrix.
+$$
+D = \mathcal{U} \begin{bmatrix} S & 0 \end{bmatrix} V^T.
+$$ 
+
+The SVD decomposes $D$ into orthonormal bases $\mathcal{U}$ and $V$ which are mapped to one another by singular values $S$, as in figure (\ref{fig:linear_maps_between_subspaces_D_real}). By rotating into the $\mathcal{U}-V$ bases, we preemptively perform the first and last mappings, leaving only multiplication by a diagonal matrix. This eliminates linearly dependent encoding vectors, keeping only the orthonormal. For example, suppose $x = Dy = \mathcal{U} \begin{bmatrix} S & 0 \end{bmatrix} V^T y$. For an orthonormal basis, $-x$ is obtainable by $\mathcal{U} \begin{bmatrix} S & 0 \end{bmatrix} V^T (-y)$. However the constraint that spikes have positive unit area prevents a vector $\rho=-y$ from being reachable by the network as written. We consider two options to address this below.  
+
+
+
+
+\begin{figure}
+\centering
+\includegraphics[scale=.6]{figures/linear_map_sequence}
+\caption{Visualizing $D$ as a sequence of linear maps between subspaces. \textbf{\textit{Top: }} The matrix $D \in \mathbf{R}^{d \times N}$ is decomposed via SVD into a sequence of 3 linear maps (matrices). The rightmost matrix $V^T \in \mathbf{R}^{N \times N}$ projects a vector  $x$  to give coefficients for the expansion in the basis $V$. The center matrix $\begin{bmatrix} S & 0 \end{bmatrix} \in \mathbf{R}^{d \times N}$ maps vectors from the $V$ basis to a vector in $\mathbf{R}^d$ by scaling and truncation. The leftmost matrix $\mathcal{U} \in \mathbf{R}^{d \times d}$ gives the resultant vector $D x \in \mathbf{R}^d$ by using the scaled vector $\begin{bmatrix} S & 0 \end{bmatrix} V^T$  as coefficients for a basis expansion in $\mathcal{U}$. \textbf{\textit{Bottom:}} We rotate the basis for vectors in $\mathbf{R}^N$ and $\mathbf{R}^d$ to the $\mathcal{U}$ and $V$ bases respectively. This negates the need of $D$ to preemptively project and afterward rotate a vector, leaving only scaling by a diagonal matrix. The mapping $D$ performs on a vector $y$ simplifies to multiplication by a diagonal matrix $S$ of $y$'s first $d$ components. 
+}
+\label{fig:linear_maps_between_subspaces_D_real}
+\end{figure}
+
+\clearpage
+
+\item For the network decoder to fully span the state space of interest, it must have anti-parallel encoding directions even in the rotated orthonormal basis. To do so we augment the rotated bases by adding an antiparallel set so they are no longer orthonormal. We consider two methods of adding antiparallel bases: 
+
+\textbf{\textit{Method A: Separate Antiparallel Networks}} One solution is to form a separate network of $d$ neurons whose encoding directions are the antiparallel set $-\mathcal{U}$. That is, we form an identical network except the decode matrix is
+$$ -D = -\mathcal{U} \begin{bmatrix} S & 0 \end{bmatrix} V^T.$$
+
+We then add the output of the two networks to recover the encoded state. 
+
+
+We divide the error into its positive and negative components and encode each in a separate network. Let
+$$
+\epsilon^{+} = \epsilon \geq 0,
+$$
+
+be the nonnegative component of $\epsilon$. Note that the original estimate, $e$ may contain negative or positive components, but the projection $\epsilon^{+}$ does not.  Similarly define the negative error by 
+
+$$
+\epsilon^{-} = -\epsilon < 0.
+$$
+
+Note
+$$
+\epsilon^{-} \neq -\epsilon^+. 
+$$
+Rather, 
+$$
+\epsilon = \epsilon^{+} - \epsilon^{-}.
+$$
+
+The relationship between $\epsilon^+$ and $\epsilon^-$ resembles two orthogonal subspaces. The preceding relation is analogous to a direct sum. 
+
+
+Let
+$$
+v^{+} = S^T \epsilon^+, 
+$$
+be the voltage induced by projecting $\epsilon^+$ onto the orthonormal bases given by $D = \mathcal{U} \begin{bmatrix} S & 0 \end{bmatrix} V^T$,
+
+and 
+$$
+v^{-} = S^T \epsilon^-
+$$
+
+be the respective projection onto the antiparallel orthonormal bases, $D = \mathcal{U} \begin{bmatrix} -S & 0 \end{bmatrix} V^T$.
+
+Note that
+$$
+v^{-} \neq -v^+. 
+$$
+Rather, 
+$$
+v= v^{+} - v^{-}, 
+$$
+
+where $v$ is the voltage of an idealized neuron capable of positive and negative area spikes. Note that both $v_j^+$ and $v_j^-$ are bounded by thresholds $v_{th} = \frac{||S_j||^2}{2}$, so that the idealized neuron is always within the voltage range $v \in \left[ -v_{th}, v_{th} \right]$. This is equivalent to asserting the error along each encoding direction $S_j$ is contained within the polytope $S_j^T \epsilon \leq \frac{||S_j||^2}{2}$. 
+
+Let $\rho^+$ and $\tilde{o}^+$ be the slow synaptic feedback and spike trains of the positive neurons, with $\rho^-$ and $\tilde{o}^-$ defined similarly for the negative neurons. Finally split $\tilde{c} = \tilde{c}^+ - \tilde{c}^-$ into positive and negative components as with $\epsilon$.  
+
+ We now have two $d-$dimensional systems of equations.  
+\begin{align*}
+\dot{v}^{+}
+&= 
+\begin{bmatrix}
+\Lambda & 0
+\\
+0 & 0
+\end{bmatrix}
+v^+ +
+\begin{bmatrix}
+S \left(\Lambda + I_d \right) S & 0
+\\
+0 & 0
+\end{bmatrix}
+  \rho^+
+  +
+\begin{bmatrix}
+S \\ 0
+\end{bmatrix}  
+\beta \tilde{c}^+
+  - 
+ \begin{bmatrix}
+S^2 & 0
+\\
+0 & 0
+\end{bmatrix}
+    \tilde{o}^+,
+    \\
+    \\
+    \dot{v}^{-}
+&= 
+\begin{bmatrix}
+\Lambda & 0
+\\
+0 & 0
+\end{bmatrix}
+v^- +
+\begin{bmatrix}
+S \left(\Lambda + I_d \right) S & 0
+\\
+0 & 0
+\end{bmatrix}
+  \rho^-
+  +
+\begin{bmatrix}
+S \\ 0
+\end{bmatrix}  
+\beta \tilde{c}^-
+  - 
+ \begin{bmatrix}
+S^2 & 0
+\\
+0 & 0
+\end{bmatrix}
+    \tilde{o}^-.
+\end{align*}
+
+
+These equations each produce estimates 
+$$
+\hat{y}^+ = S \rho^+,
+$$
+
+$$
+\hat{y}^- = S \rho^-,
+$$
+
+which give the network estimate
+
+$$
+\hat{y} = \hat{y}^+ - \hat{y}^-.
+$$
+
+
+
+Writing the above as a single network, assume $N = 2d$ so we need not fill with zeros:
+
+$$
+\begin{bmatrix}\dot{v}^+\\ \dot{v}^-\end{bmatrix} = \begin{bmatrix}
+\Lambda & 0
+\\
+0 & \Lambda 
+\end{bmatrix}
+\begin{bmatrix} v^+ \\ v^- \end{bmatrix}
+ +
+\begin{bmatrix}
+S \left(\Lambda + I_{d} \right) S & 0 
+\\
+0 & S \left(\Lambda + I_{d} \right) S 
+\end{bmatrix}
+\begin{bmatrix}
+  \rho^+
+  \\
+  \rho^-
+\end{bmatrix}
+  +
+\begin{bmatrix}
+S & 0 \\ 0 & S
+\end{bmatrix}  
+\beta 
+\begin{bmatrix}
+\tilde{c}^+
+\\
+\tilde{c}^-
+\end{bmatrix}
+  - 
+ \begin{bmatrix}
+S^2 & 0
+\\
+0 & S^2
+\end{bmatrix}
+\begin{bmatrix}
+    \tilde{o}^+
+    \\
+    \tilde{o}^-
+\end{bmatrix}
+.
+$$
+
+We simplify this by writing 
+
+$$
+   \dot{v}
+= 
+\Lambda 
+v +
+S \left(\Lambda + I_{2d} \right) S 
+  \rho
+  +
+S 
+\beta \tilde{c}
+  - 
+S^2 
+    \tilde{o}, 
+$$
+
+
+where we have made the following substitutions: 
+
+\begin{align*}
+	v &\leftarrow \begin{bmatrix}
+	v^+ \\ v^-
+	\end{bmatrix} 
+	    \in \mathbf{R}^{2 d},
+	\\
+	\\
+	\Lambda &\leftarrow
+    \begin{bmatrix}
+    \Lambda & 0 \\ 0 & \Lambda
+    \end{bmatrix}
+    \in \mathbf{R}^{2 d \times 2 d},
+    \\
     \\
     S &\leftarrow
     \begin{bmatrix}
     S & 0 \\ 0 & S
     \end{bmatrix}
-    \in \mathbf{R}^{2 d \times 2 d},\\
+   \in \mathbf{R}^{2 d \times 2 d},\\
     \\
-    \Lambda &\leftarrow
+    \rho &\leftarrow 
     \begin{bmatrix}
-    \Lambda & 0 \\ 0 & \Lambda
+    \rho^+ \\ \rho^-
+    \end{bmatrix} \in \mathbf{R}^{2d},
+    \\
+    \\
+    \tilde{o} &\leftarrow 
+    \begin{bmatrix}
+    \tilde{o}^+ \\ \tilde{o}^-
+    \end{bmatrix} \in \mathbf{R}^{2d},
+    \\
+    \\
+    \beta &\leftarrow 
+    \begin{bmatrix}
+    \beta & 0 \\ 0 & \beta
     \end{bmatrix}
-    \in \mathbf{R}^{2 d \times 2 d},\\
+    \in \mathbf{R}^{2d \times 2d},
+    \\
+    \\
+    \tilde{c} & \leftarrow 
+    \begin{bmatrix}
+    \tilde{c}^+ \\ \tilde{c}^-
+    \end{bmatrix} \in \mathbf{R}^{2d},
+    \\
     \\
     v_{th} &\leftarrow 
     \begin{bmatrix}
     v_{th} \\ v_{th}
-    \end{bmatrix} \in \mathbf{R}^{2d},
+    \end{bmatrix} \in \mathbf{R}^{2d}.
 \end{align*}
-and afterward recompute $\beta \in \mathbf{R}^{2 d \times d}$. 
 
+To decode from the network to the $d-$dimensional estimate, we multiply by $ \begin{bmatrix}
+\mathcal{U} & -\mathcal{U}
+\end{bmatrix} \in \mathbf{R}^{d \times 2d},$ i.e 
+$$
+\hat{y} = \hat{y}^+ - \hat{y}^- = \begin{bmatrix}
+\mathcal{U} & -\mathcal{U}
+\end{bmatrix} \rho.
+$$
+\clearpage
+
+
+
+This approach suggests a balance between excitatory and inhibitory neurons when coding an oscillatory signal that inhabits the full $d-$dimensional state space. To illustrate, consider a 2 neuron network as in figure (\ref{fig:ei_balance_demo}). An input $\tilde{c}(\xi) = sin(\omega \xi)$ drives the neurons which encode $v^+$ and $v^-$ respectively. A readout neuron performs leaky integration of the spike trains from the two driven neurons. Consider how a received spike changes the voltage of the readout neuron. A spike from one neuron will increase the readout neuron's membrane potential (excitatory input), while a spike from the other neuron must symmetrically decrease the readout neuron's potential (inhibitory input). In this case, we observe equal levels of excitatory (and inhibitory input from the two neurons, suggesting a tight balance. Note also this ensures consistency with Dale's law, which states that a neuron cannot both excite and inhibit other neurons. 
+
+\begin{figure}
+\centering
+
+\includegraphics[width=\linewidth, height=19cm]{figures/demo_balance_ei}
+\caption{Balance Between Excitatory and Inhibitory Activity for Oscilllatory Input. \textbf{\textit{(a):}} A sinusoidal input $y$ is divided into its positive (excitatory) and negative (inhibitory) components.\textbf{\textit{(b):}} Each neuron encodes its respective input by spiking to produce a nonnegative filtered spike train $\rho$. \textbf{\textit{(c):}} } The network estimate is the sum of activity from excitatory and inhibitory filtered spike trains. For oscillatory input, both neurons must spike in equal amounts so that the amplitude of oscillation remains bounded. 
+\label{fig:ei_balance_demo}
+\end{figure}
+
+
+Note also that the fast coupling matrix preceding $\tilde{o}$ is diagonal. This implies that when a neuron $j$ spikes, its antiparallel neuron is unchanged. In the PCF, a neuron spike resets its threshold to $-v_{th}$, but likewise sets a neuron antiparallel to it to $v_{th}$. Next, the antiparallel neuron spikes and likewise resets the neuron. This cycle repeats itself causing the network estimate to oscillate uncontrollably in a catastrophic network failure termed "ping-ponging". The PCF addresses this through regularization terms applied to the network objective $\mathcal{L}$ and added noise,  (Boerlin 2013) both of which are unnecessary in this case. 
 \end{enumerate}
+
+\clearpage
+
+\textbf{\textit{Method B: Fast-Coupling Between Antiparallel Neurons}} The other method we consider maintains the fast-coupling relationship between a neuron and its opposite as described in PCF. Fast-coupling implies that when a neuron $i$ with encoding direction $d_i$ spikes, neuron $j$'s voltage changes by $-d_j^T d_i$. This is visible in the spiking ($D^TDo$) term in PCF's voltage equation (\ref{eq:derivation_init}). If $d_j = -d_i$, then a spike in $d_j$ decreases $j$'s voltage by $||d_j||^2$, while simultaneously increasing neuron $i$'s voltage by the same. 
+
+\begin{enumerate}
+
+
+
+\item  Previously we used a subset of $d$ neurons from the decoder matrix, 
+$$
+D = \mathcal{U} \begin{bmatrix}
+S & 0
+\end{bmatrix}
+V^T \in \mathbf{R}^{d \times N}.
+$$
+
+In adding $d$ antiparallel neurons, we assume $N \geq 2d$ and instead use $2d$ neurons, i.e. we write
+$$
+D = \begin{bmatrix}
+\mathcal{U} & -\mathcal{U}
+\end{bmatrix}^T \begin{bmatrix}
+S & 0 & 0
+\\
+0 & S & 0
+\end{bmatrix}
+V^T \in \mathbf{R}^{d \times N}.
+$$
+
+The first and second $d$ neurons have encoding directions $\mathcal{U}$ and $-\mathcal{U}$ respectively. Before the first $d$ right eigenvectors $V_j$ were scaled by $\sigma_j$ and mapped to $\mathcal{U}_j$, with the remaining $V_j$ mapped to $0$. In adding $d$ antiparallel vectors, we scale an additional $d$ right eigenvectors $V_{j+d}$ by $\sigma_j$ and map them to $-\mathcal{U}_j$. 
+
+
+Note that our change of basis should be invertible by its transpose and norm-preserving. Before, this meant
+$$
+\mathcal{U} \mathcal{U}^T x = x.
+$$
+
+Now we require
+$$
+\begin{bmatrix}
+\mathcal{U} & -\mathcal{U}
+\end{bmatrix} \begin{bmatrix}
+\mathcal{U} & -\mathcal{U}
+\end{bmatrix}^T x = x,
+$$
+
+but 
+
+\begin{align*}
+\begin{bmatrix}
+\mathcal{U} & -\mathcal{U}
+\end{bmatrix} \begin{bmatrix}
+\mathcal{U} & -\mathcal{U}
+\end{bmatrix}^T x
+&=
+\begin{bmatrix}
+\mathcal{U} & -\mathcal{U}
+\end{bmatrix}
+\begin{bmatrix}
+\mathcal{U}^T x \\ -\mathcal{U}^T x
+\end{bmatrix}
+\\
+\\
+&=
+\mathcal{U} \mathcal{U}^T x + \mathcal{U}\mathcal{U}^T x
+\\
+\\
+&=
+2x.
+\end{align*}
+
+So our desired basis is actually
+$$
+\frac{1}{\sqrt{2}} 
+\begin{bmatrix}
+\mathcal{U} & -\mathcal{U}
+\end{bmatrix}.
+$$
+
+Therefore we write the decode matrix instead as 
+$$
+D = \frac{1}{\sqrt{2}}\begin{bmatrix}
+\mathcal{U} & -\mathcal{U}
+\end{bmatrix}^T \begin{bmatrix}
+S & 0 & 0
+\\
+0 & S & 0
+\end{bmatrix}
+V^T \in \mathbf{R}^{d \times N}.
+$$
+
+
+In terms of the basis $\frac{1}{\sqrt{2}} \begin{bmatrix} \mathcal{U} & -\mathcal{U}\end{bmatrix},$ the state becomes
+
+$$
+y = \mathcal{U}^T x \leftarrow \frac{1}{\sqrt{2}}\begin{bmatrix}
+\mathcal{U} & -\mathcal{U}
+\end{bmatrix}^T x = \frac{1}{\sqrt{2}} \begin{bmatrix}
+y\\-y
+\end{bmatrix} \in \mathbf{R}^{2d}.
+$$
+
+
+This gives the dynamical system
+\begin{align*}
+\dot{y} &= \frac{1}{\sqrt{2}} \begin{bmatrix}
+\mathcal{U} & -\mathcal{U}
+\end{bmatrix}^T \dot{x}
+\\
+\\
+&=
+\frac{1}{\sqrt{2}} \begin{bmatrix}
+\mathcal{U} & -\mathcal{U}
+\end{bmatrix}^T \mathcal{U} \Lambda \mathcal{U}^T x + \frac{1}{\sqrt{2}}  \begin{bmatrix}
+\mathcal{U} & -\mathcal{U}
+\end{bmatrix}^T B c.
+\end{align*}
+
+The first term becomes
+\begin{align*}
+\frac{1}{\sqrt{2}} \begin{bmatrix}
+\mathcal{U} & -\mathcal{U}
+\end{bmatrix}^T \mathcal{U} \Lambda \mathcal{U}^T x
+&=
+\frac{1}{\sqrt{2}} \begin{bmatrix}
+I \\ -I
+\end{bmatrix}
+\Lambda \mathcal{U}^T x
+\\
+\\
+&=
+\frac{1}{\sqrt{2}} \begin{bmatrix}
+\Lambda \mathcal{U}^T
+\\
+-\Lambda \mathcal{U}^T 
+\end{bmatrix} x
+\\
+\\
+&=
+\frac{1}{\sqrt{2}}
+\begin{bmatrix}
+\Lambda & 0
+\\
+0 & \Lambda
+\end{bmatrix}
+\begin{bmatrix}
+\mathcal{U} & -\mathcal{U}
+\end{bmatrix}^T x
+\\
+\\
+&=
+\frac{1}{\sqrt{2}}
+\begin{bmatrix}
+\Lambda & 0 
+\\
+0 & \Lambda
+\end{bmatrix}
+\begin{bmatrix} y \\ -y \end{bmatrix} \in \mathbf{R}^{2d}.
+\end{align*}
+
+The latter input term which previously formed the drive term $\beta \tilde{c}$ becomes
+
+$$
+\tilde{c} = \mathcal{U}^T c \leftarrow \frac{1}{\sqrt{2}}\begin{bmatrix}
+\mathcal{U} & -\mathcal{U} 
+\end{bmatrix}^T \tilde{c} = 
+\frac{1}{\sqrt{2}}\begin{bmatrix}
+\tilde{c} \\ \tilde{c}
+\end{bmatrix} \in \mathbf{R}^{2d},
+$$
+
+$$
+\beta = \mathcal{U}^T B \mathcal{U} \leftarrow
+\frac{1}{2}\begin{bmatrix}
+\mathcal{U} & -\mathcal{U} 
+\end{bmatrix}^T
+B
+\begin{bmatrix}
+\mathcal{U} & -\mathcal{U} 
+\end{bmatrix}
+=
+\frac{1}{2}\begin{bmatrix}
+\beta & -\beta
+\\
+-\beta & \beta
+\end{bmatrix} \in \mathbf{R}^{2d \times 2d}.
+$$
+
+The rotated dynamical system is thus
+$$
+\dot{y} = \frac{1}{\sqrt{2}} \begin{bmatrix}
+\Lambda & 0
+\\
+0 & \Lambda
+\end{bmatrix}
+\begin{bmatrix}
+y\\-y
+\end{bmatrix}
++ 
+\frac{1}{2\sqrt{2}}
+\begin{bmatrix}
+\beta & -\beta
+\\
+-\beta & \beta
+\end{bmatrix}
+\begin{bmatrix}
+\tilde{c}
+\\
+\tilde{c}
+\end{bmatrix}.
+$$
+
+
+
+
+\item The network estimation 
+$$
+\hat{y}  = \mathcal{U}^T \hat{x} = \mathcal{U}^T \begin{bmatrix}
+S & 0
+\end{bmatrix} 
+V^T r
+$$
+is now
+
+\begin{align*}
+\hat{y} = \frac{1}{\sqrt{2}}\begin{bmatrix}
+\mathcal{U} & -\mathcal{U}
+\end{bmatrix}^T
+\hat{x}
+&=
+\frac{1}{2}\begin{bmatrix}
+\mathcal{U} & -\mathcal{U}
+\end{bmatrix} ^T \begin{bmatrix}
+\mathcal{U} & -\mathcal{U}
+\end{bmatrix} \begin{bmatrix}
+S & 0 & 0
+\\
+0 & S & 0
+\end{bmatrix}
+V^T r
+\\
+\\
+&=
+\frac{1}{2}\begin{bmatrix}
+S & -S & 0
+\\
+-S & S & 0
+\end{bmatrix}
+\rho \in \mathbf{R}^{2d}.
+\end{align*}
+
+The error goes from 
+$$
+\epsilon = y - \hat{y} \in \mathbf{R}^d
+$$
+
+to
+
+$$
+\epsilon = \frac{1}{\sqrt{2}}\begin{bmatrix}
+y \\ - y
+\end{bmatrix}
+-
+\frac{1}{2}\begin{bmatrix}
+S & -S & 0
+\\
+-S & S & 0
+\end{bmatrix}
+\rho \in \mathbf{R}^{2d}.
+$$
+
+We rederive the error dynamics 
+\begin{align*}
+\dot{\epsilon} &= \dot{y} - \dot{\hat{y}}
+\\
+\\
+&=
+\frac{1}{\sqrt{2}} \begin{bmatrix}
+\Lambda & 0
+\\
+0 & \Lambda
+\end{bmatrix}
+\begin{bmatrix}
+y\\-y
+\end{bmatrix}
++ 
+\frac{1}{2\sqrt{2}}
+\begin{bmatrix}
+\beta & -\beta
+\\
+-\beta & \beta
+\end{bmatrix}
+\begin{bmatrix}
+\tilde{c}
+\\
+\tilde{c}
+\end{bmatrix} -
+\frac{1}{2}\begin{bmatrix}
+S & -S & 0
+\\
+-S & S & 0
+\end{bmatrix} \left( -\rho + \tilde{o}\right)
+\\
+\\
+&= 
+\begin{bmatrix}
+\Lambda & 0
+\\
+0 & \Lambda
+\end{bmatrix}
+\left(
+\epsilon + \hat{y}
+\right)
++ 
+\frac{1}{2\sqrt{2}}
+\begin{bmatrix}
+\beta & -\beta
+\\
+-\beta & \beta
+\end{bmatrix}
+\begin{bmatrix}
+\tilde{c}
+\\
+\tilde{c}
+\end{bmatrix} -
+\frac{1}{2}\begin{bmatrix}
+S & -S & 0
+\\
+-S & S & 0
+\end{bmatrix} \left( -\rho + \tilde{o}\right)
+\\
+\\
+&=
+\begin{bmatrix}
+\Lambda & 0
+\\
+0 & \Lambda
+\end{bmatrix}
+\epsilon
++ 
+\frac{1}{2}
+\left(
+\begin{bmatrix}
+\Lambda & 0
+\\
+0 & \Lambda
+\end{bmatrix}
++ I
+\right)
+\begin{bmatrix}
+S & -S & 0
+\\
+-S & S & 0
+\end{bmatrix} \rho
++
+\frac{1}{2\sqrt{2}}
+\begin{bmatrix}
+\beta & -\beta
+\\
+-\beta & \beta
+\end{bmatrix}
+\begin{bmatrix}
+\tilde{c}
+\\
+\tilde{c}
+\end{bmatrix}
+-
+\frac{1}{2}\begin{bmatrix}
+S & -S & 0
+\\
+-S & S & 0
+\end{bmatrix} \tilde{o}.
+\end{align*}
+
+\item We previously obtained voltage by optimizing the objective
+
+$$
+\mathcal{L} = ||y - \hat{y}||^2. 
+$$
+
+When neuron $j$ spikes before, we added the $j^{th}$ column of the decoding matrix which mapped $\rho \to \hat{y}$. This was the matrix $\begin{bmatrix}S & 0 \end{bmatrix}$. It is now 
+$$
+\frac{1}{2} \begin{bmatrix}
+S & -S & 0 
+\\
+-S & S & 0
+\end{bmatrix}.
+$$
+
+When neuron $j$ spikes we thus add $\frac{1}{2}\begin{bmatrix} S_j & -S_j \end{bmatrix}$ to the network estimate. I.e.
+
+\begin{align*}
+\mathcal{L}_{spike} &= || 
+\frac{1}{\sqrt{2}}
+\begin{bmatrix}
+y \\-y
+\end{bmatrix}
+-
+\frac{1}{2}
+\begin{bmatrix}
+S & - S & 0 
+\\
+-S & S & 0
+\end{bmatrix}\rho
+-
+\frac{1}{2}
+\begin{bmatrix}
+S_j \\ -S_j
+\end{bmatrix}
+||^2
+\\
+\\
+&=
+\frac{1}{2}
+\begin{bmatrix}
+y \\-y
+\end{bmatrix}^T \begin{bmatrix}
+y \\-y
+\end{bmatrix}
+\\
+ &- \frac{1}{\sqrt{2}}
+ \begin{bmatrix}
+y \\-y
+\end{bmatrix}^T \begin{bmatrix}
+S & - S & 0 
+\\
+\\
+-S & S & 0
+\end{bmatrix}\rho
+\\
+\\
+&+ 
+\frac{1}{4}
+\left(\begin{bmatrix}
+S & - S & 0 
+\\
+\\
+-S & S & 0
+\end{bmatrix}\rho\right)^T \begin{bmatrix}
+S & - S & 0 
+\\
+\\
+-S & S & 0
+\end{bmatrix}\rho
+\\
+\\
+&- 
+2\, \begin{bmatrix}
+S_j \\ -S_j
+\end{bmatrix}^T \left(\frac{1}{\sqrt{2}}
+\begin{bmatrix}
+y \\-y
+\end{bmatrix}
+-
+\frac{1}{2}
+\begin{bmatrix}
+S & - S & 0 
+\\
+-S & S & 0
+\end{bmatrix}\rho \right)
+\\
+\\
+&+
+\frac{1}{4}
+\begin{bmatrix}
+S_j \\ -S_j
+\end{bmatrix}^T\begin{bmatrix}
+S_j \\ -S_j
+\end{bmatrix}
+\\
+\\
+&=
+\mathcal{L}_{ns} - \begin{bmatrix}
+S_j \\ -S_j
+\end{bmatrix}^T \left( \frac{1}{\sqrt{2}}
+\begin{bmatrix}
+y \\-y
+\end{bmatrix}
+-
+\frac{1}{2}
+\begin{bmatrix}
+S & - S & 0 
+\\
+-S & S & 0
+\end{bmatrix}\rho \right)
++
+\frac{1}{4}
+\begin{bmatrix}
+S_j \\ -S_j
+\end{bmatrix}^T\begin{bmatrix}
+S_j \\ -S_j
+\end{bmatrix}.
+\end{align*}
+
+The spiking rule becomes
+
+\begin{align*}
+- \begin{bmatrix}
+S_j \\ -S_j
+\end{bmatrix}^T \left( \frac{1}{\sqrt{2}}
+\begin{bmatrix}
+y \\-y
+\end{bmatrix}
+-
+\frac{1}{2}
+\begin{bmatrix}
+S & - S & 0 
+\\
+-S & S & 0
+\end{bmatrix}\rho \right)
++
+\frac{1}{4}
+\begin{bmatrix}
+S_j \\ -S_j
+\end{bmatrix}^T\begin{bmatrix}
+S_j \\ -S_j
+\end{bmatrix} &< 0
+\\
+\\
+&\implies
+-\begin{bmatrix}
+S_j \\
+-S_j
+\end{bmatrix}^T
+\begin{bmatrix}
+\epsilon 
+\\
+-\epsilon
+\end{bmatrix} + \frac{1}{2}||S_j||^2 &< 0
+\\
+\\
+&\implies
+-2 \, S_j^T \epsilon < ||S_j||^2
+\\
+\\
+&\implies
+S_j^T \epsilon > \frac{||S_j||^2}{2}.
+\end{align*}
+
+Thus the voltage definition for neuron $j$ $v_j = S_j^T \epsilon$ remains unchanged. The matrix expression is changed however. Applying the decode matrix to the error $\epsilon$ gives
+
+$$
+v = 
+\frac{1}{2}
+\begin{bmatrix}
+S & - S & 0
+\\
+-S & S & 0
+\end{bmatrix}^T \epsilon.
+$$
+
+From the error dynamics, we arrive at the voltage dynamics using the above relation:
+
+\begin{align*}
+\dot{v} &= 
+\frac{1}{2}
+\begin{bmatrix}
+S & - S & 0
+\\
+-S & S & 0
+\end{bmatrix}^T
+\begin{bmatrix}
+\Lambda & 0
+\\
+0 & \Lambda
+\end{bmatrix}
+\epsilon
+\\
+\\
+&+ 
+\frac{1}{4}
+\begin{bmatrix}
+S & - S & 0
+\\
+-S & S & 0
+\end{bmatrix}^T
+\left(
+\begin{bmatrix}
+\Lambda & 0
+\\
+0 & \Lambda
+\end{bmatrix}
++ I
+\right)
+\begin{bmatrix}
+S & -S & 0
+\\
+-S & S & 0
+\end{bmatrix} \rho
+\\
+\\
+&+
+\frac{1}{4\sqrt{2}}
+\begin{bmatrix}
+S & - S & 0
+\\
+-S & S & 0
+\end{bmatrix}^T
+\begin{bmatrix}
+\beta & -\beta
+\\
+-\beta & \beta
+\end{bmatrix}
+\begin{bmatrix}
+\tilde{c}
+\\
+\tilde{c}
+\end{bmatrix}
+\\
+\\
+&-
+\frac{1}{4}
+\begin{bmatrix}
+S & - S & 0
+\\
+-S & S & 0
+\end{bmatrix}^T
+\begin{bmatrix}
+S & -S & 0
+\\
+-S & S & 0
+\end{bmatrix} \tilde{o}
+\\
+\\
+\end{align*}
+
+This gives
+\begin{align*}
+\dot{v}
+&=
+\begin{bmatrix}
+\Lambda & 0
+\\
+0 & \Lambda
+\end{bmatrix} v 
+\\
+\\
+&+ 
+\frac{1}{4}
+\begin{bmatrix}
+S & - S & 0
+\\
+-S & S & 0
+\end{bmatrix}^T
+\left(
+\begin{bmatrix}
+\Lambda & 0
+\\
+0 & \Lambda
+\end{bmatrix}
++ I
+\right)
+\begin{bmatrix}
+S & -S & 0
+\\
+-S & S & 0
+\end{bmatrix} \rho
+\\
+\\
+&+
+\frac{1}{4\sqrt{2}}
+\begin{bmatrix}
+S & - S & 0
+\\
+-S & S & 0
+\end{bmatrix}^T
+\begin{bmatrix}
+\beta & -\beta
+\\
+-\beta & \beta
+\end{bmatrix}
+\begin{bmatrix}
+\tilde{c}
+\\
+\tilde{c}
+\end{bmatrix}
+\\
+\\
+&-
+\frac{1}{2}
+\begin{bmatrix}
+S^2 & -S^2 & 0 
+\\
+-S^2 & S^2 & 0
+\\
+0 & 0 & 0
+\end{bmatrix} \tilde{o}.
+\end{align*}
+
+Recall that $S \in \mathbf{R}^{d x d}$ is a diagonal matrix with entries $\sigma_j$. As desired, the spike matrix applied to $\tilde{o}$ implements fast coupling between antiparallel neurons.  When neuron $j$ spikes, it is decreased by $||\sigma_j||^2$, while its antiparallel counterpart $S_{j + d}$ is increased by $\sigma_j^2$. 
+
+\item To facilitate comparison between the self-coupled network and original PCF model, we will use this method (B) hereafter. Method A is a viable alternative, however it is fundamentally different than the original PCF model because antiparallel neurons do not interact in contrast with PCF and method B.  We investigate method A later. 
+\end{enumerate}
+
+
+\clearpage
 
 \subsection{Simulation of Basic Equations}
 Here we simulate the above equations (\ref{eq:rotated_voltage_dynamics}) and (\ref{eq:rho_dot}) with the $N = 2d$ neurons. The parameters are

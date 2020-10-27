@@ -2,7 +2,10 @@
 Plots for HSF Research
 '''
 
-
+from matplotlib.colors import LogNorm 
+from scipy.special import lambertw
+from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 unused import
+from matplotlib import cm
 # Add Base Directory for HSFNets and utils packages here.
 
 path_to_Misc_Research_Code = '/home/chris/Desktop/git_repos/Misc-Research-Code'
@@ -67,14 +70,31 @@ def rmse_sp_ksl(k,s,l):
 #     assert(False)
 
     return np.sqrt(t1 -2*t2 + t3 )
+  
+def phi_lam0(bk, y, s):
+        t1 = 1 / ( 2 * bk) * (s - 2*y)
+        arg = (y/bk) * np.exp(- (s/2 - y)/bk)
+        t2 =  t1 + lambertw(arg)
+        return 1/np.real(t2)
+  
+def sc_phi(bk, s, l):
+
+     #top = 2 * bk + np.abs(l) * s
+     #bot = 2 * bk - np.abs(l) * s
+
+     #return 1 / np.log(top / bot)
+
+    t1 = 1 / (bk/(s*np.abs(l))-0.5)
+    return 1/np.log(1 + t1)
+
+def pcf_phi(k, s, l):
+    return sc_phi(k, s, l)
     
-def rmse_sp_k(k):
-    p = phi_k(k)
-    top = 1 - np.exp( - 2 / p)
-    bot = 2 * (1 - np.exp(-1 / p) )**2
-    return np.sqrt(
-        k**2 + p * (top / bot - 2 * k)
-        )
+def phi_bk(s, bk):
+    result = np.log( (2*bk + s) / (2*bk - s))**-1
+    
+    
+    return result
 
 def phi(sk, lam=1):
     t1 = np.log( 1 + lam * sk / 2)
@@ -96,25 +116,16 @@ def rmse_t(xhat, xtru, ts):
 
 def rmse_phi_const_driving(phi):
 
-    vth = .5
-    a = np.exp( - 1 / phi)
 
-    #term 1  
-    top = vth + a / 2
-    bot = 1 - a
-    t1 = (top / bot)**2
+    ep= np.exp(-1/phi)
+    ep2 = np.exp(-2/phi)
 
-    #term 2
-    top = 1 - a**2
-    bot = 2 * ( 1 - a)**2
-    t2 = top / bot
 
-    #term 3
-    top = vth + a / 2
-    bot = 1 - a
-    t3 = top / bot
 
-    return np.sqrt( t1 + phi * ( t2 - 2 * t3) )
+
+
+
+    return np.sqrt( (4*ep - 2*ep2 - 1) / (4*(ep-1)**2))
 
 def rmse_phi_const_dynamics(phi):
     t1 =  np.tanh(
@@ -122,46 +133,22 @@ def rmse_phi_const_dynamics(phi):
          )
     return np.sqrt(1 - 2 * phi * t1)
 
-def rmse_phi_s_const_dynamics(s):
-    p = phi_s(s)
-    return np.sqrt( 1 - p / s)
- 
- 
+
+
 # Functions for PCF Network
 
-def pcf_phi(unit_norm_d, ks):  
-    c = np.asarray([1, 0])
-    if len(list_check(ks)) == 1:
-        d = unit_norm_d * ks
-        dtc = d.T @ c 
-        norm_d = np.linalg.norm(d) ** 2
-        logarg1 = dtc + (norm_d / 2)
-        logarg2 = dtc - (norm_d / 2)
-        return (  
-                np.log(logarg1)
-                -
-                np.log(logarg2)
-                )**-1
-    else:
-        phis = np.zeros((len(ks),))
-        for i, k in enumerate(ks):
-            d = unit_norm_d * k
-            dtc = d.T @ c  
-            norm_d = np.linalg.norm(d)**2
-            logarg1 = dtc + (norm_d / 2)
-            logarg2 = dtc - (norm_d / 2)
-            
-            phis[i] = (  
-                    np.log(logarg1)
-                    -
-                    np.log(logarg2)
-                    )**-1
-        return phis
-                       
+
 def per_spike_rmse_numerical(data, idx):
     ''' given data from a network sim, compute the average per-spike rmse of neuron indexed by idx'''
+
     num_spikes = data['spike_nums'][idx]
-    spikes = data['O'][idx,:num_spikes]
+
+    # se = np.square(data['error'][idx,:])
+    # delta_t = data['dt']
+    # mse = delta_t * np.sum(se) / (data['t'][-1] - data['t'][0])
+    # return np.sqrt(mse)
+
+    spikes = data['O'][idx,:num_spikes+1]
     
     if num_spikes < 6 :
         print('only {0} spikes occurred'.format(num_spikes))
@@ -169,30 +156,31 @@ def per_spike_rmse_numerical(data, idx):
     
     rmses = []
     
-    start_spike = 5
+    #num_trials = int(num_spikes//1)
+    num_trials = num_spikes
+    delta_t = data['dt']
+
+    start_spike = num_spikes-num_trials
     for trial in np.arange(start_spike, num_spikes - 1):
-        left_idx = np.argwhere(spikes[trial] < data['t'][:])[0][0]
-        right_idx = np.argwhere(spikes[trial + 1] <  data['t'][:])[0][0]
+        try:
+            left_idx = np.argwhere(spikes[trial] < data['t'][:])[0][0]
+            right_idx = np.argwhere(spikes[trial + 1] <  data['t'][:])[0][0]
+        except Exception as e:
+            return np.nan, np.nan
     
-        delta_t = data['t'][1] - data['t'][0]
     
 
-        e = data['x_hat'][0,left_idx:right_idx] - data['x_true'][0,left_idx:right_idx]
+        #e = data['x_hat'][0,left_idx:right_idx] - data['x_true'][0,left_idx:right_idx]
+        se = np.square(data['error'][0,left_idx:right_idx]) 
     
-        se = np.square(e)
+        
         mse =  delta_t * np.sum(se)  / (data['t'][right_idx]-data['t'][left_idx])
         rmses.append(np.sqrt(mse))
     return np.mean(np.asarray(rmses)), np.std(np.asarray(rmses))
 
-def x_hat_explicit_s(t, s): 
-            eq_pred_height = (
-                s**-1  / (1 - np.exp(- 1 / phi_s(s)))
-            )
-            return eq_pred_height * np.exp(- np.mod(t, phi_s(s)**-1))
-
 def run_sim(N, p=1, T = 20,  k = 1, dt = 1e-5, stim='const', D_scale = 1, D_type='none'):
 
-    A =  - np.eye(2)
+    A =  - .01*np.eye(2)
     B = np.eye(2)
     x0 = np.asarray([.5, 0])
     _, uA = np.linalg.eig(A)
@@ -242,22 +230,267 @@ def check_dir(name):
 
     return this_dir + '/' + name
 
-
-
 ## Plotting Functions
+def plot_raster(data):
+    '''
+    Given a simulation data of N neurons,
+    plot the spike raster. caller must call plt.show() afterward
+    '''
+    plt.figure()
+
+    for j in range(data['N']):
+        #nonzero spikes
+        spike_times = data['O'][j,:]
+        spike_times = spike_times[spike_times != 0]
+        nums = j * np.ones(spike_times.shape) + 1
+        plt.scatter(spike_times, nums,  c = 'k',marker='.')
+
+        plt.xlabel('Time (dimensionless)')
+        plt.ylabel('Neuron Number')
+        plt.ylim([.5, data['N'] + .5])
+        plt.yticks(ticks=np.arange(data['N']) + 1, labels=np.arange(data['N']) + 1)
+        plt.title('Spike Raster')
+
+
+
+
+def plot_test(show_plots=True,N = 4, k = 1, T = 10, dt = 1e-5):
+    def get_steady_state_sequence(k, D, x0, num_iter=30):
+        count = 1
+        sequence = []
+        while count < num_iter:
+            dtx = D.T @ x0
+            e_sps= np.zeros((len(dtx,)))
+            for i in np.arange(len(dtx)):
+                dtk_d2 = D[:,i].T @ k - .5 * (D[:,i].T @ D[:,i])
+                e_sps[i] =  dtx[i] / dtk_d2
+
+
+            e_sps[np.isclose(e_sps, 1) ] = np.inf
+            e_sps[e_sps <= 1 ] = np.inf
+
+
+
+            spike_idx = np.argmin(e_sps)
+            print(spike_idx)
+
+            sp_time = np.log(e_sps[spike_idx])
+
+            assert (sp_time >= 0), "Spike {3} time {0} not positive,  xhat = {1}, e_sps={2}".format(sp_time, x0, e_sps[spike_idx], spike_idx)
+
+
+            x0 = x0 * np.exp(-sp_time) + D[:,spike_idx]
+
+            sequence.append((spike_idx, sp_time, x0))
+            count += 1
+
+        return sequence
+
+
+
+
+
+    A = -np.eye(2)
+    B = -A
+
+    D = gen_decoder(A.shape[0], N,mode='2d cosine')
+    #D = gen_decoder(A.shape[0], N)
+
+    D = .5 * D
+
+    theta  = 90 * (np. pi / 180)  # in degrees
+
+    k = np.asarray([np.cos(theta), np.sin(theta)])
+    k /= 1 * np.linalg.norm(k)
+
+    sin_func = lambda t: k
+    x0 = k #np.asarray([-1, 1])
+
+    sequence = get_steady_state_sequence(sin_func(0), D, x0.copy(), num_iter = 30)
+
+
+    plt.figure()
+    for j in range(N):
+        plt.scatter(D[0,j], D[1,j],label='Neuron {0}'.format(j + 1))
+    plt.xlim([-1, 1])
+    plt.ylim([-1, 1])
+    plt.legend()
+
+    lds = sat.LinearDynamicalSystem(x0, A, B, u=sin_func, T=T, dt=dt)
+    #net = ClassicDeneveNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0, lam_v=0)
+    net = GapJunctionDeneveNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0)
+    data = net.run_sim()
+
+    plot_step = 10
+
+    plot_raster(data)
+    plt.title(r"Spike Raster, $\theta$ = {0} deg".format(theta * (180 / np.pi)))
+
+
+    vmin = -np.min(data['vth'])
+    vmax = np.max(data['vth'])
+    #
+    plt.figure()
+    for i in range(N):
+        plt.plot(data['t'], data['V'][i, :], label='Neuron %i Voltage' % i)
+        plt.axhline(y = data['vth'][i],color='k')
+
+
+    elapsed = 0
+    for idx, time, x_hat in sequence:
+        elapsed += time
+        plt.axvline(x=elapsed, ls='--',color='k')
+
+
+    plt.legend()
+    plt.title("Neuron Membrane Potentials")
+    plt.xlabel(r"Simulation Time (Dimensionless Units of $\tau$")
+    plt.ylabel('Membrane Potential')
+    #
+    #
+    # plt.figure()
+    # for j in range(N):
+    #     plt.plot(data['t'], data['r'][j,:],label="neuron {0}".format(j))
+    #
+    # plt.figure()
+    #
+    #
+    # num_spikes = np.max(data['spike_nums'])
+    # #plt.imshow(data['O'][:,:num_spikes]!=0,interpolation='none')
+    #
+    # last_spikes = np.zeros((N,))
+    #
+    # for j in range(N):
+    #     last_spikes[j] = data['O'][j, data['spike_nums'][j]-1]
+    #
+    # plt.scatter(np.arange(N)+1, last_spikes)
+    #
+
+
+    #cbar_ticks = np.linspace(start=vmin, stop=vmax, num=8, endpoint=True)
+    #plt.imshow(data['V'], extent=[0, data['t'][-1], 0, 3], vmax=vmax, vmin=vmin)
+    #plt.xlabel(r"Dimensionless Units of $\tau$")
+   # plt.axis('auto')
+    #cbar = plt.colorbar(ticks=cbar_ticks)
+    #cbar.set_label(r'$\frac{v_j}{v_{th}}$')
+    #cbar.ax.set_yticklabels(np.round(np.asarray([c / vmax for c in cbar_ticks]), 2))
+    #plt.title('Neuron Membrane Potentials')
+    #plt.ylabel('Neuron #')
+    #plt.yticks([.4, 1.15, 1.85, 2.6], labels=[1, 2, 3, 4])
+
+    plt.figure()
+    plt.plot(data['t'][0:-1:plot_step], data['x_hat'][0, 0:-1:plot_step], c='r',
+             label='Decoded Network Estimate (Dimension 0)')
+    plt.plot(data['t'][0:-1:plot_step], data['x_hat'][1, 0:-1:plot_step], c='g',
+              label='Decoded Network Estimate (Dimension 1)')
+    plt.plot(data['t_true'][0:-1:plot_step], data['x_true'][1, 0:-1:plot_step], c='k')
+    plt.plot(data['t_true'][0:-1:plot_step], data['x_true'][0, 0:-1:plot_step], c='k', label='True Dynamical System')
+    plt.title('Network Decode')
+    plt.legend()
+    plt.xlabel(r'Dimensionless Time $\tau_s$')
+    plt.ylabel('Decoded State')
+
+    print(data['O'][:,0:20])
+    elapsed = 0
+
+    print([(i, j) for i ,j ,k in sequence])
+    for idx, time, x_hat in sequence:
+        elapsed += time
+        plt.scatter(elapsed, x_hat[0],c='r',marker='x')
+        plt.scatter(elapsed, x_hat[1],c='g', marker='x')
+
+    # plot sequence
+
+    # one axis is time to spike
+    # other axis is neuron number
+    sequence = get_steady_state_sequence(sin_func(0), D, x0.copy(), num_iter=100)
+    plt.figure()
+    plt.ylabel("Time to Spike (dimensionless)")
+    plt.xlabel("Neuron Number")
+
+    for idx, time, x_hat in sequence:
+        plt.scatter(idx + 1, time, c='k',marker='.')
+    plt.xticks(ticks=np.arange(N))
+    plt.xlim([.5, N+.5])
+    plt.ylim([0, 1])
+
+    plt.figure()
+
+    ts = [time for idx, times, x_hat in sequence]
+    elapsed = 0
+    for i, t in enumerate(ts):
+        elapsed += t
+        ts[i] = elapsed
+
+
+    x_hats = [x_hat for idx, times, x_hat in sequence]
+    x_hats = np.asarray(x_hats)
+    cmap = cm.get_cmap('inferno', lut=len(ts))
+
+    plt.scatter(x_hats[:,0], x_hats[:,1], c=ts, cmap=cmap)
+    plt.scatter(k[0],k[1], marker='x')
+    plt.xlim([-2, 2])
+    plt.ylim([-2, 2])
+    plt.ylabel("Dimension 2")
+    plt.xlabel("Dimension 1")
+
+
+    # plt.figure()
+    # plt.plot(data['t'][0:-1:plot_step], data['x_hat'][0, 0:-1:plot_step] - data['x_true'][0, 0:-1:plot_step], c='r',
+    #          label='Estimation Error (Dimension 0)')
+    # plt.plot(data['t'][0:-1:plot_step], data['x_hat'][1, 0:-1:plot_step] - data['x_true'][1, 0:-1:plot_step], c='g',
+    #          label='Estimation Error (Dimension 1)')
+    # plt.title('Decode Error')
+    # plt.legend()
+    # plt.xlabel(r'Dimensionless Time $\tau_s$')
+    # plt.ylabel('Decode Error')
+
+    plt.show()
 
 def plot_basic_model(show_plots=True,N = 4, k = 1, T = 10, dt = 1e-5):
     
     name = 'basic_plots'
     this_dir =  check_dir(name)
     
-    data = run_sim(N, 1, k = k, T =  T, dt = dt, D_type='simple', stim='sinusoid', D_scale=.1)
-    
+
+    A = -np.eye(2)
+    A[0,1] = -.5
+    A[1,0] = -.5
+
+    #A = -np.eye(2)
+
+    B = np.eye(2)
+
+    D = gen_decoder(A.shape[0], N,mode='2d cosine')
+
+
+    D = .5 * D
+
+    theta  = 90 * (np. pi / 180)  # in degrees
+
+    k = np.asarray([np.cos(theta), np.sin(theta)])
+    k /= 1 * np.linalg.norm(k)
+
+
+    sin_func = lambda t: np.asarray([np.cos(t/4), np.sin(t/4)])
+
+
+    #sin_func = lambda t: np.asarray([1, 1])
+
+    x0 = sin_func(0)
+
+    lds = sat.LinearDynamicalSystem(x0, A, B, u=sin_func, T=T, dt=dt)
+    #net = ClassicDeneveNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0, lam_v=0)
+    net = SelfCoupledNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0)
+    #net = GapJunctionDeneveNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0)
+
+    data = net.run_sim()#
+
     plot_step = 10
-    
+
     vmin = -np.min(data['vth'])
     vmax = np.max(data['vth'])
-    
+
     plt.figure()
     for i in range(4):
         plt.plot(data['t'],data['V'][i,:], label='Neuron %i Voltage'%i)
@@ -266,10 +499,10 @@ def plot_basic_model(show_plots=True,N = 4, k = 1, T = 10, dt = 1e-5):
     plt.xlabel(r"Simulation Time (Dimensionless Units of $\tau$")
     plt.ylabel('Membrane Potential')
     plt.savefig('plots/basic_plots/membrane_potential_plot.png',bbox_inches='tight')
-    
+
     plt.figure()
     cbar_ticks = np.linspace( start = vmin, stop = vmax,  num = 8, endpoint = True)
-    plt.imshow(data['V'],extent=[0,data['t'][-1], 0,3],vmax=vmax, vmin=vmin)
+    plt.imshow(data['V'],extent=[0,data['t'][-1], 0,3],vmax=vmax, vmin=vmin,interpolation='none')
     plt.xlabel(r"Dimensionless Units of $\tau$")
     plt.axis('auto')
     cbar = plt.colorbar(ticks=cbar_ticks)
@@ -278,8 +511,7 @@ def plot_basic_model(show_plots=True,N = 4, k = 1, T = 10, dt = 1e-5):
     plt.title('Neuron Membrane Potentials')
     plt.ylabel('Neuron #')
     plt.yticks([.4,1.15,1.85,2.6], labels=[1, 2, 3, 4])
-    plt.savefig(this_dir + '/' + 'membrane_potential_image.png',bbox_inches='tight')
-    
+
     plt.figure()
     plt.plot(data['t'][0:-1:plot_step], data['x_hat'][0,0:-1:plot_step],c='r',label='Decoded Network Estimate (Dimension 0)' )
     plt.plot(data['t'][0:-1:plot_step], data['x_hat'][1,0:-1:plot_step],c='g',label='Decoded Network Estimate (Dimension 1)' )
@@ -287,20 +519,19 @@ def plot_basic_model(show_plots=True,N = 4, k = 1, T = 10, dt = 1e-5):
     plt.plot(data['t_true'][0:-1:plot_step], data['x_true'][1,0:-1:plot_step],c='k',label='True Dynamical System')
     plt.title('Network Decode')
     plt.legend()
-    plt.ylim([-1.1, 1.1])
+    plt.ylim([-2, 2])
     plt.xlabel(r'Dimensionless Time $\tau_s$')
     plt.ylabel('Decoded State')
-    plt.savefig(this_dir + '/' + 'network_decode.png',bbox_inches='tight')
-    
+
+
     plt.figure()
     plt.plot(data['t'][0:-1:plot_step], data['x_hat'][0,0:-1:plot_step] - data['x_true'][0,0:-1:plot_step],c='r',label='Estimation Error (Dimension 0)' )
     plt.plot(data['t'][0:-1:plot_step], data['x_hat'][1,0:-1:plot_step] - data['x_true'][1,0:-1:plot_step],c='g',label='Estimation Error (Dimension 1)' )
     plt.title('Decode Error')
     plt.legend()
-    plt.ylim([-1.1, 1.1])
+    plt.ylim([-2, 2])
     plt.xlabel(r'Dimensionless Time $\tau_s$')
     plt.ylabel('Decode Error')
-    plt.savefig(this_dir + '/' + 'decode_error.png',bbox_inches='tight')
 
 #     plt.figure()
 #     for i in range(4):
@@ -313,12 +544,18 @@ def plot_basic_model(show_plots=True,N = 4, k = 1, T = 10, dt = 1e-5):
 
 def plot_const_driving(show_plots=True,N = 4, T = 10, dt = 1e-5):
       
-    def run_plots():
-        #plot_voltage_prediction() 
+    def run_plots(T):
+        #plot_voltage_prediction()   
         #plot_rate_vs_k()
-        #plot_xhat_estimate_explicit()
-        plot_per_spike_rmse_vs_k_phi() 
-        
+        #plot_rate_vs_l()
+        #plot_xhat_estimate_explicit() 
+        plot_per_spike_rmse_vs_phi(T)
+        #plot_per_spike_rmse_vs_phi_const_s(T) 
+        #plot_per_spike_rmse_vs_phi_const_sk(T)
+        #plot_rate_sweep(T)
+        #plot_per_spike_rmse_vs_phi_const_k(T) 
+        #plot_rmse_sweep()
+        #plot_lambda_0()
         if show_plots:
             plt.show()
 
@@ -366,224 +603,872 @@ def plot_const_driving(show_plots=True,N = 4, T = 10, dt = 1e-5):
         plt.savefig(this_dir + '/' + 'predited_neuron_voltage.png', bbox_inches='tight')
       
     def plot_rate_vs_k():
+
+        def nrmse(phi):
+            t1 = (1 + np.exp(-1 / phi)) / (1 - np.exp(-1 / phi))
+            return np.sqrt(.25 * t1 ** 2 - phi * .5 * t1)
+            
+            
+
+        
+        B = np.eye(2)
+        x0 = np.asarray([1, 0])
+        
+
+        d=2
+        
+        
         print('\t\tPlotting Rate vs Drive Strength k\n')
-        ks = np.logspace(0, 4, num=10)
-        rates =np.zeros(ks.shape)
+        ks = np.logspace(-5, -.0001, num = 20)
+        ks = np.hstack((ks, np.logspace(0,5,num=20)))
+
+        rates = np.zeros(ks.shape)
         ss = np.zeros(ks.shape)
-        for i, k in enumerate(ks):
-            print('{0} / {1}'.format(i + 1, len(ks)))
-            data = run_sim(N, 1, k = k, dt = dt)
-            rates[i] = data['spike_nums'][0]   /  data['t'][-1]  
-            ss[i] = (data['D'][0,0])
-        
-        print(phi(sk=ss/ks, lam=-1))
-        
+        lams = -np.asarray([10, 1, .1])
         plt.figure()
-        plt.loglog(ks/ss, phi(sk=ss/ks, lam=-1), label='Derived Expression',linewidth=4)
-        plt.loglog(ks/ss, rates, 'x', label='Numerical Simulation')
-        plt.xlabel(r'Drive Strength Ratio $\frac{||S_1||}{||k||}$')
+
+        for l in lams:
+            for i, k in enumerate(ks):
+                A = l * np.eye(2)
+
+                sin_func = lambda t: k * np.asarray([1, 0])
+                lds = sat.LinearDynamicalSystem(x0, A, B, u=sin_func, T=T, dt=dt)
+
+                print('{0} / {1}'.format(i + 1, len(ks)))
+                D =   1 * np.hstack((
+                                np.eye(d),
+                                np.zeros((d, N - d))
+                                ))
+                net = SelfCoupledNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0, spike_trans_prob = 1)
+                data = net.run_sim()
+
+                midtime = data['t'][int(len(data['t']) * (3/4))]
+                rates[i] = np.sum(data['O'][0, :] >= midtime) / (T - midtime)
+                #spikes = data['O'][0,:data['spike_nums'][0]]
+                #isis = np.diff(spikes)
+                #misi = np.mean(isis)
+                #rates[i] = 1/misi
+                ss[i] = 1
+                #rmses[i] = per_spike_rmse_numerical(data, 0)[0] / k
+
+            # plt.figure()
+            # plt.loglog(rates, nrmse_phi(rates), label='Derived Expression',linewidth=4)
+            # plt.loglog(rates, rmses, 'x', label='Numerical Simulation')
+            # plt.ylabel(r'NRMSE$')
+            # plt.xlabel(r'Neuron Firing Rate $\phi$')
+            # plt.title('Normalized per-Spike RMSE vs Firing Rate')
+            # plt.legend()
+            # plt.savefig(this_dir + '/' + 'ps_rmse_const_driving.png', bbox_inches='tight')
+            #
+
+            plt.loglog(ks, sc_phi(ks, 1, l), label='Derived Expression, $\Lambda = {0}$'.format(l),linewidth=4)
+            plt.loglog(ks, rates, 'x')
+        plt.xlabel(r'Drive Strength Ratio $\frac{(\beta k)_j}{\sigma_j}$')
         plt.ylabel(r'Neuron Firing Rate $\phi$')
         plt.title('Neuron Firing Rate Response to Constant Driving')
         plt.legend()
+        plt.axhline(y=1/dt, ls='--')
         plt.savefig(this_dir + '/' + 'phi_const_driving.png', bbox_inches='tight')
+        
+    def plot_rate_vs_l_sweep_s():
+        
+        B = np.eye(2)
+        x0 = np.asarray([.5, 0])
+        d=2
+        s = 1
+        
+        sin_func = lambda t :  np.asarray([1, 1])
+        
     
+        lams = -np.logspace(-1, -.5, num=10)
+        
+        print('\t\tPlotting Rate vs Drive Strength k\n')
+        rates =np.zeros(lams.shape)
+        ss = np.logspace(-1, 0 , num = 5)
+        rmses=np.zeros(lams.shape)
+        plt.figure()
+        count=1
+        for s in ss:
+            for i, l in enumerate(lams):
+                print('{0} / {1}'.format(count, len(lams)*len(ss)))
+                
+                D =  s * np.hstack((
+                            np.eye(d),
+                            np.zeros((d, N - d))
+                            ))
+                A =  - l * np.eye(2)
+    
+                lds = sat.LinearDynamicalSystem(x0, A, B, u = sin_func , T = T, dt = dt)
+    
+                net = SelfCoupledNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0, spike_trans_prob = 1)
+                data = net.run_sim()
+                
+             
+                rates[i] = data['spike_nums'][0]   /  data['t'][-1]  
+                rmses[i] = per_spike_rmse_numerical(data, 0)[0] 
+                count+=1
+            plt.loglog(np.abs(lams), rates,'x-', label='$\sigma_j={0}$'.format(s))
+        plt.xlabel(r'$|\Lambda_j|$')
+        plt.ylabel(r'Neuron Firing Rate $\phi$')
+        plt.title('Neuron Firing Rate vs $\Lambda_j$')
+        plt.legend()
+        plt.savefig(this_dir + '/' + 'firing_rate_const_driving_s_sweep.png', bbox_inches='tight')
+        
+    def plot_rate_vs_l_sweep_k():
+        
+        B = np.eye(2)
+        x0 = np.asarray([.5, 0])
+        d=2
+        s = 1
+        D =  s * np.hstack((
+            np.eye(d),
+            np.zeros((d, N - d))
+            ))
+        
+    
+        lams = -np.logspace(-1, -.5, num=10)
+        
+        print('\t\tPlotting Rate vs Drive Strength k\n')
+        rates =np.zeros(lams.shape)
+        rmses=np.zeros(lams.shape)
+        
+        ks = np.logspace(-1, 0, num=5)
+        plt.figure()
+        count=1
+        for k in ks:
+            for i, l in enumerate(lams):
+                print('{0} / {1}'.format(count, len(lams)*len(ks)))
+                sin_func = lambda t : k * np.asarray([1, 1])
+
+
+                A =  - l * np.eye(2)
+    
+                lds = sat.LinearDynamicalSystem(x0, A, B, u = sin_func , T = T, dt = dt)
+    
+                net = SelfCoupledNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0, spike_trans_prob = 1)
+                data = net.run_sim()
+                
+             
+                rates[i] = data['spike_nums'][0]   /  data['t'][-1]  
+                count+=1
+            plt.loglog(np.abs(lams), rates,'x-', label='$(\beta k)_j={0}$'.format(k))
+        plt.xlabel(r'$|\Lambda_j|$')
+        plt.ylabel(r'Neuron Firing Rate $\phi$')
+        plt.title('Neuron Firing Rate vs $\Lambda_j$')
+        plt.legend()
+        plt.savefig(this_dir + '/' + 'firing_rate_const_driving_k_sweep.png', bbox_inches='tight')
+        
     def plot_xhat_estimate_explicit():
         print('\t\tPlotting Network Estimate Comparison to Explicit Equation\n')
         
-        def x_hat_explicit_phi(t, phi): 
-            eq_pred_height = 1 / (1 - np.exp(-1/phi)) 
-            return eq_pred_height * np.exp(- np.mod(t, 1/phi))
+        def y_hat_explicit(t, phis, s, xi_0s):  
+            
+            
+            y_hats = np.zeros((len(phis), len(t)))
+            
+            for j in range(len(phis)):
+                eq_pred_height = s[j] / (1 - np.exp(-1/phis[j])) 
+                y_hats[j,:] = np.exp(- np.mod(t - xi_0s[j], 1/phis[j])) * eq_pred_height
+            
+            return y_hats
+    
+     
+            
+
+        A = -np.eye(2)
+        B = np.eye(2)
+        x0 = np.asarray([.5, .5])
+        d = A.shape[0]
+        sigma = .5
         
-        def x_hat_explicit(t, s, k, l):
-            p = phi(s/k, l)
-            return x_hat_explicit_phi(t, p) 
-            
-            
-        k = 1
+        D =  sigma * np.eye(N)[:d,:]
         T = 10
-        s = 1
-        for k in np.logspace(0,2,num=10):
-            data = run_sim(N, k = k, T =  T, dt=dt, stim='const')
-            lam, _ = np.linalg.eig(data['lds'].A)
-            lam = lam[0]
-            idx = 0 
+        s = np.ones((N,)) * sigma
         
-            plt.figure()
-            plt.plot(data['t'],s * x_hat_explicit(data['t'] - data['O'][0,0], s,k,lam),'--', label='Derived Expression',linewidth=2)
-            plt.plot(data['t'],data['x_hat'][idx,:],'r',label='Simulated Network Estimate',linewidth=2,alpha=.5)
-            plt.plot(data['t'],data['x_true'][idx,:],'k', label = 'Target System', linewidth=2)                
-            plt.xlabel(r"Simulation Time (Dimensionless Units of $\tau$)")
-            plt.ylabel('Network Decode Dimension 0')
-            plt.legend()
-            plt.title('Predicted Network Decode Comparison')
+        k = np.asarray([1, 1])
+        sin_func = lambda t :  k 
+        
+        lds = sat.LinearDynamicalSystem(x0, A, B, u = sin_func , T = T, dt = dt)
+        net = SelfCoupledNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0, spike_trans_prob = 1)
+        data = net.run_sim()
+        
+        
+        rates = data['spike_nums'] / data['t'][-1]
+        rates = phi_bk(sigma, 1) * np.ones((N,))
+        idx = 0  
+        plt.figure()
+        plt.plot(data['t'], y_hat_explicit(data['t'], rates, s, data['O'][:,0])[0,:],'--', label='Derived Expression',linewidth=2)
+        plt.plot(data['t'],data['x_hat'][idx,:],'r',label='Simulated Network Estimate',linewidth=2,alpha=.5)
+        plt.plot(data['t'],data['x_true'][idx,:],'k', label = 'Target System', linewidth=2)                
+        plt.xlabel(r"Simulation Time (Dimensionless Units of $\tau$)")
+        plt.ylabel('Network Decode Dimension 0')
+        plt.legend()
+        plt.title('Predicted Network Decode Comparison')
         plt.savefig(this_dir + '/' + 'network_decode_long_term_estimate.png', bbox_inches='tight')
 
-    def plot_per_spike_rmse_vs_k_phi():
-        print('\t\tPlotting Per Spike RMSE vs k and phi')    
-        T = 80
-        
-        ks = np.logspace(0.001,2, num = 50)
-        ks_continuous = np.logspace(0.001,2, num = 1000)
-        ss = np.zeros(ks.shape)
+    def plot_rate_sweep(T):
+        def sweep_ls_ss_k_const(T):
+            # keep l constant, sweep ks vs ss
+            bks = np.logspace(-3, 3, num=1000)
+            ss = np.logspace(-3, 3, num=1000)
+            ls = -np.logspace(-3, 3, num=1000)
 
-        rmses = np.zeros(ks.shape)
-        rmse_stds = np.zeros(ks.shape)
-        rates = np.zeros(ks.shape)
+            res = 30
+
+            ss_num = [.001, .005, .01, .1]
+            ls_num = -np.logspace(-3, 0, num=res)
+            # run sims
+            print("Fixing L sweeping bks and ss")
+            #theoretical plot
+            # # keep ks constant, sweep ls vs ss
+            plt.figure()
+            ls_grid, ss_grid = np.meshgrid(ls, ss)
+            Z = sc_phi(1 / (ss_grid * np.abs(ls_grid)) )
+            plt.pcolormesh(np.abs(ls_grid), ss_grid, Z, cmap='jet', norm=LogNorm())
+            plt.plot(np.abs(ls), 2 / np.abs(ls) , '--', label=r'$\frac{(\beta k)_j}{|\Lambda_j|} = \frac{\sigma}{2}$')
+            cbar = plt.colorbar()
+            plt.xscale('log')
+            plt.yscale('log')
+            cbar.set_label('$\phi_j$')
+            plt.xlabel('$\|\Lambda_j|$')
+            plt.ylabel(r'$\sigma_j$')
+            plt.title(r'Sweep $\Lambda_j$, $\sigma_j$, $(\beta k)_j = 1$')
+
+            B = np.eye(2)
+            x0 = np.asarray([1, 0])
+            k = 1 * np.asarray([1, 1])
+            d = 2
+            rates = np.empty((res, res))
+            count = 1
+
+            plt.figure()
+            rates_pred = np.zeros((len(ss_num), len(ls_num)))
+
+            for i, s in enumerate(ss_num):
+
+                for j, l in enumerate(ls_num):
+                    print('{0} / {1}'.format(count, len(ss_num) * len(bks_num)))
+
+                    rates_pred[i, j] = sc_phi(1, s, l)
+
+                    D = s * np.hstack((
+                        np.eye(d),
+                        np.zeros((d, N - d))
+                    ))
+                    A = -np.eye(2)
+
+                    lds = sat.LinearDynamicalSystem(x0, A, B, u=sin_func, T=T, dt=dt)
+                    net = SelfCoupledNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0, spike_trans_prob=1)
+                    data = net.run_sim()
+                    # spikes = data['O'][0, :data['spike_nums'][0]]
+                    # isis = np.diff(spikes)
+                    # misi = np.mean(isis)
+                    midtime = data['t'][int(len(data['t']) // 2)]
+                    rates[i, j] = data['spike_nums'][0] / data['t'][
+                        -1]  # np.sum(data['O'][0, :] >= midtime) / (T - midtime)
+
+                    count += 1
+
+                plt.plot(bks_num, rates_pred[i, :], label='$\sigma_j = ${0}'.format(s))
+                plt.plot(bks_num, rates[i, :], 'x')
+
+            plt.xscale('log')
+            plt.xlabel(r"$(\beta k)_j$")
+            plt.ylabel(r'$\phi_j$')
+            plt.title('Firing Rate with $|\Lambda_j| = 1$')
+            plt.legend()
+
+        def sweep_ks_ss_l_const(T):
+            # keep l constant, sweep ks vs ss
+            bks = np.logspace(-2, 0, num=1000)
+            ss = np.logspace(-2, 0, num=1000)
+            ls = -np.logspace(-2, 0, num=1000)
+
+            res = 30
+            bks_num = np.logspace(-2,0, num=res)
+            ss_num = [.001, .005, .01, .1]
+            ls_num = -np.logspace(-2, 0, num=res)
+            # run sims
+            print("Fixing L sweeping bks and ss")
+
+            # theoretical plot
+            ss_grid, bks_grid = np.meshgrid(ss, bks)
+            plt.figure()
+            ss_grid_num, bks_grid_num = np.meshgrid(ss_num, bks_num)
+            Z = sc_phi(bks_grid, ss_grid, 1)
+            plt.plot(ss, ss / 2, '--', label=r'$\frac{(\beta k)_j}{|\Lambda_j|} = \frac{\sigma}{2}$')
+            plt.pcolormesh(ss_grid, bks_grid, Z, cmap='jet', norm=LogNorm(vmax=2/dt))
+            plt.xlabel('$\sigma_j$')
+            cbar = plt.colorbar()
+            plt.ylabel(r'$(\beta k)_j$')
+            plt.xscale('log')
+            plt.yscale('log')
+            cbar.set_label('$\phi_j$')
+            plt.xlabel('$\sigma_j$')
+            plt.ylabel(r'$\frac{(\beta k)_j}{|\Lambda_j|}$')
+            plt.title(r'Sweep $\sigma_j$, $(\beta k)_j$, $\Lambda_j = -1$')
+
+            A = -np.eye(2)
+            B = np.eye(2)
+            x0 = np.asarray([1, 0])
+            d = A.shape[0]
+            T = T
+            rates = np.empty((res, res))
+            count = 1
+            bks_num = np.logspace(-3, np.log(.5), num=res)
+
+            plt.figure()
+            rates_pred = np.zeros((len(ss_num), len(bks_num)))
+
+
+
+            for i, s in enumerate(ss_num):
+
+                for j, k_scale in enumerate(bks_num):
+                    print('{0} / {1}'.format(count, len(ss_num)*len(bks_num)))
+
+                    rates_pred[i,j] = sc_phi(k_scale, s, -1)
+                    #rates[rates > 1 / dt] = np.nan
+                    #rates_pred[rates_pred > 1 / dt] = np.nan
+
+                    # if np.isnan(rates_pred[i,j]):
+                    #     rates[i,j] = np.nan
+                    #     continue
+
+                    # if s > k_scale / 2:
+                    #     count += 1
+                    #     continue
+
+                    k = k_scale * np.asarray([1, 1])
+                    sin_func = lambda t: k
+                    D = s * np.hstack((
+                        np.eye(d),
+                        np.zeros((d, N - d))
+                    ))
+
+                    lds = sat.LinearDynamicalSystem(x0, A, B, u=sin_func, T=T, dt=dt)
+                    net = SelfCoupledNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0, spike_trans_prob=1)
+                    data = net.run_sim()
+                    #spikes = data['O'][0, :data['spike_nums'][0]]
+                    #isis = np.diff(spikes)
+                    #misi = np.mean(isis)
+                    midtime = data['t'][int(len(data['t'])//2)]
+                    rates[i,j] = data['spike_nums'][0] / data['t'][-1]#np.sum(data['O'][0, :] >= midtime) / (T - midtime)
+
+                    count += 1
+
+                plt.plot(bks_num, rates_pred[i,:], label='$\sigma_j = ${0}'.format(s))
+                plt.plot(bks_num, rates[i,:], 'x')
+
+            plt.xscale('log')
+            plt.xlabel(r"$(\beta k)_j$")
+            plt.ylabel(r'$\phi_j$')
+            plt.title('Firing Rate with $|\Lambda_j| = 1$')
+            plt.legend()
+
+        # for a few values of lambda, sweep s vs bk numerically
+
+        # keep ss constant sweep bks ls
+        # plt.figure()
+        # ls_grid, bks_grid = np.meshgrid(ls, bks)
+        # Z = sc_phi(bks_grid / np.abs(ls_grid))
+        # plt.pcolormesh(np.abs(ls_grid), np.abs(bks_grid), Z, cmap='jet', norm=LogNorm())
+        # plt.plot(np.abs(ls),  np.abs(ls) / 2, '--', label=r'$\frac{(\beta k)_j}{|\Lambda_j|} = \frac{\sigma}{2}$')
+        # cbar = plt.colorbar()
+        # plt.xscale('log')
+        # plt.yscale('log')
+        # cbar.set_label('$\phi_j$')
+        # plt.xlabel('$\|\Lambda_j|$')
+        # plt.ylabel(r'$(\beta k)_j$')
+        # plt.title(r'Sweep $(\beta k)_j$, $\Lambda_j$, $\sigma_j,= 1$')
+        #
+        # # keep ks constant, sweep ls vs ss
+        # plt.figure()
+        # ls_grid, ss_grid = np.meshgrid(ls, ss)
+        # Z = sc_phi(1 / (ss_grid * np.abs(ls_grid)) )
+        # plt.pcolormesh(np.abs(ls_grid), ss_grid, Z, cmap='jet', norm=LogNorm())
+        # plt.plot(np.abs(ls), 2 / np.abs(ls) , '--', label=r'$\frac{(\beta k)_j}{|\Lambda_j|} = \frac{\sigma}{2}$')
+        # cbar = plt.colorbar()
+        # plt.xscale('log')
+        # plt.yscale('log')
+        # cbar.set_label('$\phi_j$')
+        # plt.xlabel('$\|\Lambda_j|$')
+        # plt.ylabel(r'$\sigma_j$')
+        # plt.title(r'Sweep $\Lambda_j$, $\sigma_j$, $(\beta k)_j = 1$')
+
+        sweep_ks_ss_l_const(T)
+    def plot_rmse_sweep():
+        def per_spike_rmse(bkl, s, phi):
+            return np.sqrt(
+                bkl**2 + 2*phi*bkl*s + .5*phi*(s**2) * (1 + np.exp(-1/phi)) / (1 - np.exp(-1/phi))
+                )
+
         
-        for i,k in enumerate(ks):
-            print('{0} / {1}'.format(i+1, len(ks)))
-            data = run_sim(N, 1, k = k, T =  T,  dt = dt, D_scale=1) 
-            
-            rates[i] = data['spike_nums'][0]   /  data['t'][-1]  
-            ss[i] = (data['D'][0,0])
-            (mean, std) = per_spike_rmse_numerical(data, 0)
-            rmses[i] = mean
-            rmse_stds[i] = std       
+        '''
+        Sweep two parameters, (Bk)j / lj and sigmaj, 
+        compute the per-spike rmse numericaly and via known equation
+        plot the results in a 2d scatter plot. 
+        '''
+        A = -np.eye(2)
+        B = np.eye(2)
+        x0 = np.asarray([.5, .5])
+        d = A.shape[0]
+        T = 10
+        res = 10
+        kres = res
+        sres = res
+        
+#        ss = np.logspace(-2,0, num=sres)
+        
+        rmses = np.zeros((kres,))
+        rates = np.zeros((kres,))
+        rmses_pred = np.zeros(rmses.shape)
+        
+        s = .01
+        
+        # k >= s^2/2
+        
+        ks = np.logspace(np.log10(s**2/2), 2, num=kres)
+        for i, k_scale in enumerate(ks):
+            k = k_scale * np.asarray([1, 1])
+            sin_func = lambda t :  k 
+            D = s * np.hstack((
+                        np.eye(d),
+                        np.zeros((d, N - d))
+                        ))
                 
-        l, _ = np.linalg.eig(data['lds'].A)
-        l = l[0]
+            lds = sat.LinearDynamicalSystem(x0, A, B, u = sin_func , T = T, dt = dt)
+            net = SelfCoupledNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0, spike_trans_prob = 1)
+            data = net.run_sim()
+            rates[i] = phi_bk(s, k_scale)
+            try:
+                rmses[i] = per_spike_rmse_numerical(data, 0)[0]
+            except Exception as e:
+                print("warning: ",e)
+                continue
+    
+            
+            rmses[i] = per_spike_rmse_numerical(data, 0)[0]
+            rmses_pred[i] = per_spike_rmse(-k_scale, s, rates[i])
+        plt.figure()
+        plt.loglog(ks,rmses,'x')
+        plt.loglog(ks,rmses_pred)
+        plt.show()
+
+        
+#         for i, k_scale in enumerate(ks):
+#             for j, s in enumerate(ss):
+#                 if k_scale < s/2:
+#                     continue
+#                 else:
+#                     k = k_scale * np.asarray([1, 1])
+#                     sin_func = lambda t :  k 
+#                 
+#                     D = s * np.hstack((
+#                         np.eye(d),
+#                         np.zeros((d, N - d))
+#                         ))
+#                 
+#                     lds = sat.LinearDynamicalSystem(x0, A, B, u = sin_func , T = T, dt = dt)
+#                     net = SelfCoupledNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0, spike_trans_prob = 1)
+#                     data = net.run_sim()              
+#                     try:
+#                         rmses[i,j] = per_spike_rmse_numerical(data, 0)[0]
+#                     except Exception as e:
+#                         print("warning: ",e)
+#                         continue
+#                     rates[i,j] = data['spike_nums'][0] / data['t'][-1]
+#                     rmses_pred[i,j] = per_spike_rmse(k_scale, s, rates[i,j])
+# 
+# 
+#         ks_m, ss_m = np.meshgrid(ks,ss)
+#         
+#         
+#         from matplotlib import colors 
+#         
+#         idx = 0
+#         
+# 
+#         
+#         plt.figure()
+#         #plt.imshow(rmses_pred, origin='lower',norm=LogNorm())
+#         plt.scatter(x=ks_m, y=ss_m, c=rmses, marker='x',s=200, )
+#         plt.scatter(x=ks_m, y=ss_m, c=rmses_pred)
+#         plt.plot(ks, ss/2 ,'--',label=r'$\frac{(\beta k)_j}{|\Lambda_j|}= \frac{\sigma_j}{2}$')
+#         ax = plt.gca()
+#         ax.set_yscale('log')
+#         ax.set_xscale('log')
+#         plt.legend(bbox_to_anchor=(1.33, 1.13), ncol=1)
+#         plt.xlabel(r'$\frac{(\beta k)_j}{|\Lambda_j|}$')
+#         plt.ylabel(r'$\sigma_j$')
+#         cbar = plt.colorbar()
+#         cbar.set_label("per-Spike RMSE")
+#         plt.title('Network Estimate RMSE per Spike')
+#         #plt.savefig(this_dir + '/' + 'rmse_sp_const_driving.png', bbox_inches='tight') 
+#         
+#         rmses_masked = np.zeros((rmses.shape))
+#         
+#         fig = plt.figure()
+#         ax = fig.gca(projection='3d')
+#         rmses_masked[~np.isnan(rmses)] =rmses[~np.isnan(rmses)] 
+#         
+#         rmses_masked[np.isnan(np.log(rmses_masked))] = np.exp(5)
+#         rmses_masked[np.isinf(np.log(rmses_masked))] = np.exp(5)
+        
+#        # Plot the surface.
+#         ax.plot_surface(ks_m, ss_m ,np.log(rmses_masked),zorder=1, cmap=cm.get_cmap('jet'))
+#         ax.plot3D(ks, ss/2, np.max(np.log(rmses_masked))*np.ones(ks.shape),'--',zorder=5)
+#         #ax = plt.gca()
+#         #ax.set_yscale('log')
+#         #ax.set_xscale('log')
+#         #plt.legend(bbox_to_anchor=(1.33, 1.13), ncol=1)
+#         plt.xlabel(r'$\frac{(\beta k)_j}{|\Lambda_j|}$')
+#         plt.ylabel(r'$\sigma_j$')
+#         #cbar = plt.colorbar()
+#         #cbar.set_label("Log per-Spike RMSE")
+#         plt.title('Network Estimate RMSE per Spike')        
   
-        rates_continuous = np.logspace(-1,3,num=1000)
-        
+
+
+    def plot_per_spike_rmse_vs_phi(T):
+        def nrmse(phi):
+            return np.sqrt(1 - 2*phi * np.tanh(1 / (2 * phi)) )
+
+
+        print('\t\tPlotting  RMSE vs phi')
+        SCALE = 1
+        ss = np.logspace(-4,4,num=50)
+        d=2
+        k_scale = 1
+
+        l = -1*SCALE
+        A = l*np.eye(2)
+        B = np.eye(2)*SCALE
+
+        rmses = np.zeros(ss.shape)
+        rmse_stds = np.zeros(rmses.shape)
+        rmse_preds = np.zeros(rmses.shape)
+        rates = np.zeros(rmses.shape)
+        count = 1
         plt.figure()
-        plt.loglog(ks_continuous, rmse_sp_ksl(ks_continuous, 1, l), linewidth=4, label = 'Derived Expression')
-        plt.loglog(ks, rmses, 'x', label='Numerical Simulation',linewidth=4,markersize=10)
-        plt.errorbar(ks, rmses, yerr = rmse_stds, fmt = 'none')
-        plt.xlabel(r'Drive Strength k')
-        plt.ylabel(r'per-Spike RMSE')
+
+
+
+        for i, s in enumerate(ss):
+            print('{0} / {1}'.format(count, len(ss)))
+            x0 = k_scale * np.asarray([1, 1])
+            k = k_scale * np.asarray([1, 1])
+            rate_pred = sc_phi(k_scale, s, np.abs(l))
+            num_cycles = 100
+            T = num_cycles / rate_pred
+
+            D = s * np.hstack((
+                np.eye(d),
+                np.zeros((d, N - d))
+            ))
+
+            if T <= dt * num_cycles:
+                T = 10
+
+            if np.isnan(T) or np.isinf(T):
+                T = 100
+            print('T = ',T)
+
+            lds = sat.LinearDynamicalSystem(x0, A, B, u=lambda t: k, T=T, dt=dt)
+            net = SelfCoupledNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0, spike_trans_prob=1)
+
+            if T >= 50:
+                lds = sat.LinearDynamicalSystem(x0, A, B, u=lambda t: k, T=T, dt=1e-3)
+                net = SelfCoupledNet(T=T, dt=1e-3, N=N, D=D, lds=lds, t0=0, spike_trans_prob=1)
+
+
+            data = net.run_sim()
+
+            # discard data before first spike
+            begin = data['O'][0,0]
+
+            mask  = data['t'] >= begin
+            data['t'] = data['t'][mask]
+            data['error'] = data['error'][:,mask]
+            data['x_hat'] = data['x_hat'][:,mask]
+            data['x_true'] = data['x_true'][:,mask]
+
+            #
+            # print(k_scale)
+            # plt.figure()
+            # plt.plot(data['t'],data['x_hat'][0,:])
+            # plt.xlim([0, 100])
+            # plt.plot(data['t'],data['x_true'][0,:])
+            # plt.show()
+
+            rates[i] = (data['spike_nums'][0]) / (data['t'][-1] - data['t'][0])
+
+            rmse_preds[i] = nrmse(rates[i])
+            mean, std = per_spike_rmse_numerical(data, 0)
+            rmses[i] = mean / k_scale
+            rmse_stds[i] = std
+            count += 1
+
+        #phis_cont = np.logspace(-2,5,num=100)
+        plt.plot(rates, rmse_preds,  label='Derived Expression')
+        plt.plot(rates, rmses, 'x',label='Numerical Simulation')
+       # plt.plot(phis_cont, nrmse(phis_cont), label='Derived Expression')
+        plt.xscale('log')
+        plt.yscale('log')
+        #plt.errorbar(rates, rmses,yerr=rmse_stds)
+        plt.xlabel(r'$\phi_j$')
+        plt.ylabel(r'NRMSE')
         plt.legend()
-        plt.title('Network Estimate RMSE per Spike vs Drive Strength k')
-        plt.savefig(this_dir + '/' + 'rmse_sp_vs_ksl_const_driving.png', bbox_inches='tight')
-        
-        plt.figure()
-        plt.loglog(rates_continuous, rmse_phi_const_driving(rates_continuous), linewidth=4, label = 'Derived Expression')
-        plt.loglog(rates, rmses, 'x', label='Numerical Simulation',linewidth=4,markersize=10)
-        plt.errorbar(rates, rmses, yerr = rmse_stds, fmt = 'none')
-        plt.xlabel(r'Spike Rate ($\phi$)')
-        plt.ylabel(r'per-Spike NRMSE')
-        plt.legend()
-        plt.title(r'Network Estimate NRMSE per Spike vs $\phi$')
+        #plt.plot(rates,np.sqrt(.25 - rates/2),'--')
+        plt.title(r'Network Estimate RMSE vs Firing Rate')
         plt.savefig(this_dir + '/' + 'rmse_sp_vs_phi_const_driving.png', bbox_inches='tight')
         
+    def plot_per_spike_rmse_vs_phi_const_sk(T): 
+        print('\t\tPlotting Per Spike RMSE vs k and phi')    
+        
+
+        def per_spike_rmse(bkl, s, phi): 
+            result = np.sqrt(
+                bkl**2 
+                + 
+                2*phi*bkl*s 
+                + 
+                .5*phi*(s**2) * 
+                (1 + np.exp(-1/phi)) / (1 - np.exp(-1/phi))
+                )
+            if np.isnan(result):
+                return -1
+            else:
+                return result
+        
+        def approx(phi,s):
+            p = phi
+            #return np.sqrt(s**2/2 * p / np.tanh(1/(2*p)))
+            return np.sqrt(1 + 2*p*s)
+            
+        
+        lams = -np.linspace(.1, 2,num=10)
+        # 0 
+        # bk / l > s / 2
+        # 2 bk / l > s
+        # 2 bk / s l > 1
+        # 2 bk / s > l
+
+        k = np.asarray([1, 1])
+        rmses = np.zeros(lams.shape)
+        rmse_stds = np.zeros(lams.shape)
+        rmse_preds = np.zeros(rmses.shape)
+        rmse_apps = np.zeros(rmses.shape)
+        rates = np.zeros(lams.shape)
+        s = 1
+        d = 2
+        D = s * np.hstack((
+                            np.eye(d),
+                            np.zeros((d, N - d))
+                            ))
+        bkls = np.zeros(rates.shape)
+        count = 1
+        sin_func = lambda t : k 
+
+        
+        for j,l in enumerate(lams):
+      
+            print('{0} / {1}'.format(count, len(lams)))
+            
+            
+            A =   l * np.eye(2)
+            B = np.eye(2)
+            x0 = np.asarray([.5, 0])        
+            bkl = 1 / l
+            bkls[j] = np.abs(bkl)
+            lds = sat.LinearDynamicalSystem(x0, A, B, u = sin_func , T = T, dt = dt)
+            net = SelfCoupledNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0, spike_trans_prob = 1)
+            data = net.run_sim()
+
+            rates[j] = data['spike_nums'][0] / data['t'][-1]
+            rmse_preds[j] = per_spike_rmse(bkl, 1, rates[j])
+            #rmse_apps[j] = approx(rates[j],s)
+            (mean, std) = per_spike_rmse_numerical(data, 0)
+            rmses[j] = mean 
+            rmse_stds[j] = std       
+            count += 1
+        
+            
+        
+    
+        plt.figure()
+        plt.plot(np.abs(lams), rmse_preds, linewidth=4, label = 'Derived Expression')
+        plt.plot(np.abs(lams), rmses,'x',label='Numerical Simulation',linewidth=4,markersize=10)
+        #plt.plot(np.abs(lams), rmse_apps,'--', label='Approximate Expression',linewidth=4,markersize=10)
+        #plt.errorbar(np.abs(lams), rmses, yerr = rmse_stds, fmt='none')
+
+
+               
+        plt.xlabel(r'$|\Lambda_j| / \frac{(\beta k)_j}{\sigma_j}$')
+        plt.ylabel(r'per-Spike RMSE')
+        plt.legend()
+        plt.title(r'Network Estimate RMSE per Spike vs $\Lambda_j$')
+        #plt.savefig(this_dir + '/' + 'rmse_sp_vs_phi_const_driving.png', bbox_inches='tight')    
+    
+    def plot_per_spike_rmse_vs_phi_const_k(T): 
+        print('\t\tPlotting Per Spike RMSE vs k and phi')    
+        
+
+        def per_spike_rmse(bkl, s, phi): 
+            result = np.sqrt(
+                bkl**2 
+                +
+                2*phi*bkl*s 
+                + 
+                .5*phi*(s**2) * 
+                (1 + np.exp(-1/phi)) / (1 - np.exp(-1/phi))
+                )
+            if np.isnan(result):
+                return -1
+            else:
+                return result
+        
+        
+        
+        
+        
+      
+        k = np.asarray([1, 1])
+        ss = np.linspace(.1, 1, num=3)
+        rmses = np.zeros(ss.shape)
+        rmse_stds = np.zeros(ss.shape)
+        rmse_preds = np.zeros(rmses.shape)
+        rates = np.zeros(ss.shape)
+        d = 2
+        lams = -np.asarray([.5, 1, 2])
+        bkls = np.zeros(rates.shape)
+        count = 1
+        for j,l in enumerate(lams):
+            for i, s in enumerate(ss):
+                print('{0} / {1}'.format(count, len(ss)*len(lams)))
+                
+                sin_func = lambda t : k 
+                D = s * np.hstack((
+                            np.eye(d),
+                            np.zeros((d, N - d))
+                            ))
+                
+           
+                
+                A =   l * np.eye(2)
+                B = np.eye(2)
+                x0 = np.asarray([.5, 0])        
+                #T = T / np.abs(l)
+                bkl = 1 / l
+                bkls[i] = np.abs(bkl)
+                lds = sat.LinearDynamicalSystem(x0, A, B, u = sin_func , T = T, dt = dt)
+                net = SelfCoupledNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0, spike_trans_prob = 1)
+                data = net.run_sim()
+ 
+                rates[i] = data['spike_nums'][0] / data['t'][-1]
+                rmse_preds[i] = per_spike_rmse(bkl, s, rates[i])
+    
+                (mean, std) = per_spike_rmse_numerical(data, 0)
+                rmses[i] = mean 
+                rmse_stds[i] = std       
+                count += 1
+            
+            if j==0:
+                plt.figure()
+                plt.semilogy(ss, rmse_preds, linewidth=4, label = r'$\Lambda_j={0}$'.format(l))
+                plt.semilogy(ss, rmses, 'x', c='g',label='Numerical Simulation',linewidth=4,markersize=10)
+                
+            else:
+                plt.semilogy(ss, rmse_preds, linewidth=4, label = r'$\Lambda_j={0}$'.format(l))
+                plt.semilogy(ss, rmses, 'x',c='g',linewidth=4,markersize=10)
+                
+                #1 / abs(l) > s/2
+                #abs(l) < 2 /s
+                # s < 2 / abs(l)
+                
+            #plt.axvline(x=2 / np.abs(l), ls='--',c='k')
+          
+        plt.xlabel(r'$\sigma_j$')
+        plt.ylabel(r'per-Spike RMSE')
+        plt.legend()
+        plt.title(r'Network Estimate RMSE per Spike vs $\frac{(\beta k)_j}{\Lambda_j}$')
+        plt.savefig(this_dir + '/' + 'rmse_sp_vs_phi_const_driving.png', bbox_inches='tight')    
+
+    def plot_lambda_0():
+        ks = np.logspace(-1,1,num=1000)
+        ss = np.logspace(-1,1,num=1000)
+        extent=(ss[0],ss[-1],ks[0],ks[-1])
+        y0= 1
+        
+      
+        ss, ks = np.meshgrid(ss, ks)
+        Z = phi_lam0(ks, y0, ss)
+        fig = plt.figure()
+        #ax = fig.gca(projection='3d')
+        # Plot the surface.
+        #surf = ax.plot_surface(ss,ks, Z, cmap='gray',
+        #                       linewidth=0, antialiased=False)
+                
+        rmax = np.max(Z)
+        rmin = np.min(Z)
+        plt.title(r'Firing Rate as $|\Lambda_j \to 0|$')
+        plt.imshow(Z, cmap='jet',origin='lower',norm=LogNorm(),extent=extent,vmax=rmax, vmin=rmin)
+        plt.xlabel('$\sigma_j$')
+        cbar = plt.colorbar()
+        plt.ylabel(r'$(\beta k)_j$')
+        cbar.set_label('$\phi_j$')
+        
+
+        
+        # now sweep through discrete set for particular lambda and plot image
+        res = 20
+        ks = np.logspace(-1,1,num=res)
+        ss = np.logspace(-1,1,num=res)
+        
+        B = np.eye(2)
+        x0 = np.asarray([1, 0])
+
+        d=2
+        rates =np.zeros((res,res))
+        
+        count = 1
+        
+        for i, k in enumerate(ks):
+            for j, s in enumerate(ss):
+                print('{0} / {1}'.format(count, len(ks)*len(ss)))
+                A =  - 1e-16*np.eye(2)
+                sin_func = lambda t : k * np.asarray([1, 0])
+                lds = sat.LinearDynamicalSystem(x0, A, B, u = sin_func , T = T, dt = dt)
+                
+                D =  s*np.hstack((
+                                np.eye(d),
+                                np.zeros((d, N - d))
+                                ))
+                net = SelfCoupledNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0, spike_trans_prob = 1)
+                data = net.run_sim()
+            
+         
+                rates[i,j] = data['spike_nums'][0]   /  data['t'][-1]   
+                count += 1
+        
+        ss, ks = np.meshgrid(ss, ks)
+                
+        fig = plt.figure()
+                
+        plt.title(r'Firing Rate as $|\Lambda_j \to 0|$')
+        plt.imshow(rates, cmap='jet',origin='lower',norm=LogNorm(),extent=extent,vmax=rmax, vmin=rmin)
+        plt.xlabel('$\sigma_j$')
+        cbar = plt.colorbar()
+        plt.ylabel(r'$(\beta k)_j$')
+        cbar.set_label('$\phi_j$')
+                
     name = 'const_drive_strength'
     this_dir =  check_dir(name)
     
     print('\tPlotting Constant Driving Strength\n')
     
-    
-    run_plots()
-             
-def plot_const_dynamical_system(show_plots=True,N = 4, T = 10, dt = 1e-5):
-   
-    def run_plots():
-        plot_rate_vs_s()
-        #plot_xhat_estimate_explicit()
-        #plot_per_spike_rmse_vs_phi_s()
-        #plot_xhat_estimate_explicit()
- 
-    def plot_rate_vs_s():
-        print('\t\tPlotting Rate Versus s\n')
-        ss = np.logspace(-1, 1, num=10)
-        ss_continuous = np.logspace(-1, 1, num=1000)
-        rates = []
-        plt.figure()
-        for i, s in enumerate(ss):
-            print('{0} / {1}'.format(i+1, len(ss)))
-            data = run_sim(N, 1, k = 1, T = T, D_scale = s, D_type='simple', dt = dt)
-            rates.append( data['spike_nums'][0]   /  data['t'][-1]  )
-            
-            #plt.plot(data['t'], data['x_hat'][0,:],label=s)
-            #plt.legend()
-        #plt.show()
-        rates = np.asarray(rates)
-        
-        plt.figure()
-        plt.loglog(1/ss_continuous, phi(ss_continuous, k=1), label='Derived Expression',linewidth=4)
-        plt.loglog(1/ss, rates, 'x', label='Numerical Simulation')
-        plt.xlabel(r'Drive Ratio $\frac{k}{S}$')
-        plt.ylabel(r'Neuron Firing Rate $\phi$')
-        plt.title('Neuron Firing Rate Response to Constant Driving')
-        plt.legend()
-        plt.savefig(this_dir + '/' + 'phi_vs_s_const_dynamical_system.png', bbox_inches='tight')
-        
-    def plot_xhat_estimate_explicit(): 
-        print('\t\tPlotting Network Estimate Comparison to Explicit Equation\n')
-        
-        ss = np.logspace(-1,3, num = 10)
-        idx =0 
-        for i,s in enumerate(ss):
-            print('Data point {0} / {1}'.format(i+1, len(ss)))
-            data = run_sim(N, 1, k = 1, T =  T, D_scale= s, dt = 1e-4, stim='const' ) 
-            
-              
-            plt.figure()
-            plt.plot(data['t'],x_hat_explicit_s(data['t'] - data['O'][0,0], s),'--', label='Derived Expression',linewidth=2)
-            plt.plot(data['t'],data['x_hat'][idx,:],'r',label='Simulated Network Estimate',linewidth=2,alpha=.5)
-            plt.plot(data['t'],data['x_true'][idx,:],'k', label = 'Target System', linewidth=2)
-            plt.xlabel(r"Simulation Time (Dimensionless Units of $\tau$)")
-            plt.ylabel('Network Decode Dimension 0')
-            plt.legend()
-            plt.title('Predicted Network Decode Comparison')
-            plt.savefig(this_dir + '/' + 'network_decode_long_term_estimate_const_dynamical_system.png', bbox_inches='tight')
-        
-    def plot_per_spike_rmse_vs_phi_s():
-        print('\t\tPlotting Per Spike RMSE vs s and phi\n')    
-        ss = np.logspace(-1,3, num = 50)
-        T = 80
-        
-        rmses = []
-        rmse_stds = []
-        rates = []
-        
-        for i,s in enumerate(ss):
-            print('Data point {0} / {1}'.format(i+1, len(ss)))
-            data = run_sim(N, 1, k = 1, T =  T, D_scale= s, dt = 1e-4 ) 
-            rates.append( data['spike_nums'][0]   /  data['t'][-1]  )
-            (mean, std) = per_spike_rmse_numerical(data, 0)
-            rmses.append(mean)
-            rmse_stds.append(std)
-            
-            
-        rmses = np.asarray(rmses)
-        rates =  np.asarray(rates)        
-        
-        phis = np.logspace(-1,3, num=1000)
-        
-        plt.figure(figsize=(16,9))
-        ss_continuous = np.logspace(-1,3, num = 1000)
-    
-        plt.loglog(ss_continuous, rmse_phi_s_const_dynamics(ss_continuous), linewidth=4, label = 'Derived Expression')
-        plt.loglog(ss, rmses, 'x', label='Numerical Simulation',linewidth=4,markersize=10)
-        plt.errorbar(rates, rmses, yerr = rmse_stds, fmt = 'none')
-        plt.xlabel(r'Decoder Scale $S_1$')
-        plt.ylabel(r'per-Spike RMSE')
-        plt.legend()
-        plt.title(r'Network Estimate RMSE per Spike vs $S_1$')
-        plt.savefig(this_dir + '/' +'per_spike_rmse_vs_s_constant_dynamics', bbox_inches='tight')
-        
-        
-        plt.figure(figsize=(16,9))
-        plt.loglog(phis, rmse_phi_const_dynamics(phis), linewidth=4, label = 'Derived Expression')
-        plt.loglog(rates, rmses, 'x', label='Numerical Simulation',linewidth=4,markersize=10)
-        plt.errorbar(rates, rmses, yerr = rmse_stds, fmt = 'none')
-        plt.xlabel(r'Spike Rate ($\phi$)')
-        plt.ylabel(r'per-Spike RMSE')
-        plt.legend()
-        plt.title(r'Network Estimate RMSE per Spike vs $\phi$')
-        plt.savefig(this_dir + '/' + 'per_spike_rmse_vs_phi_constant_dynamics.png', bbox_inches='tight')
-        
-     
-    name = 'const_dynamical_system'
-    this_dir =  check_dir(name)
-    
-    
-    print('\tPlotting Constant Dynamical System\n')
-    run_plots()
-    
+    run_plots(T)
 
-    if show_plots:
-            plt.show()
-    
 def plot_pcf_gj_sc_comparison(show_plots=True,N = 32, T = 1000, dt = 1e-3, num_sim_points = 10):   
      
     def run_plots(num_sim_points = 10):   
@@ -592,7 +1477,7 @@ def plot_pcf_gj_sc_comparison(show_plots=True,N = 32, T = 1000, dt = 1e-3, num_s
         #plot_pcf_gj_sc_rates(num_sim_points) 
         #plot_pcf_gj_sc_constant_stim_decode()
         #plot_pcf_gj_membrane_trajectories()
-        plot_pcf_gj_sc_per_spike_rmse(num_sim_points)
+        plot_pcf_gj_sc_per_spike_rmse(T)
         
     def pcf_estimate_explicit(d, t):
             phi = pcf_phi(d, 1) 
@@ -783,7 +1668,7 @@ def plot_pcf_gj_sc_comparison(show_plots=True,N = 32, T = 1000, dt = 1e-3, num_s
             
                 
             models = [
-                (sc_data, 'Self-Coupled',lambda t : x_hat_explicit_s(t, sD[0]), 'x', 'r', 20) , 
+               # (sc_data, 'Self-Coupled',lambda t : x_hat_explicit_s(t, sD[0]), 'x', 'r', 20) ,
                 (gj_data, 'Gap-Junction', lambda t : pcf_estimate_explicit(D[:,0], t),'d', 'g', 20),
                 (pcf_data, 'PCF', lambda t : pcf_estimate_explicit(D[:,0], t), '.', 'b', 10)
             ]
@@ -887,13 +1772,11 @@ def plot_pcf_gj_sc_comparison(show_plots=True,N = 32, T = 1000, dt = 1e-3, num_s
         plt.ylabel('Membrane Potential of Spiking Neuron')
         plt.savefig(this_dir + '/' + 'const_dynamics_voltage_trajectory_gj_vs_pcf.png',bbox_inches='tight')
     
-    def plot_pcf_gj_sc_per_spike_rmse(num_sim_points):
+    def plot_pcf_gj_sc_per_spike_rmse(T):
         def rmse_per_spike_pcf(phi):
-            t1 = 4 * phi * np.tanh(.5 * phi**-1)
-            t2 = (2 *phi)  * np.tanh(.5*phi**-1)**2 * (1 - np.exp(-2/phi))/ (1 - np.exp(-1/phi))**2
-            
-            return np.sqrt(1 - t1 + t2)
-        
+            return np.sqrt(1 - 2 * phi * np.tanh(1/ (2 * phi)))
+
+
 #             t1 = 1/phi
 #             t2 = (2 * d[0] )
 #             t3 =(d[0] / (1 - np.exp(-1/phi)) )**2 *  .5 * (1 - np.exp(-2/phi))
@@ -906,20 +1789,20 @@ def plot_pcf_gj_sc_comparison(show_plots=True,N = 32, T = 1000, dt = 1e-3, num_s
 #             t2 =  phi * (d1**2 / 2) * (1 + 1/d1 + (.25) * d1**-2 ) * (1 - np.exp(-2 / phi))
 #             
 #             return np.sqrt(1 - t1 + t2)
-#         
+#                   d
         
         print('\t\tPlotting Rate Versus per-spike RMSE\n')
         A =  - np.eye(2)
         B = np.eye(2)
-        x0 = np.asarray([.5, 0])
+        x0 = np.asarray([1, 0])
         
-        ks = np.logspace(-4, 4,num=num_sim_points)
+        ks = np.logspace(-5, 1,num=30 )
        
         pcf_rates = np.zeros(ks.shape)
         pcf_rmses_numerical = np.zeros(ks.shape)
         pcf_rmses_derived = np.zeros(ks.shape)
 
-                
+
         gj_rates = np.zeros(ks.shape)
         gj_rmses_numerical = np.zeros(ks.shape)
         gj_rmses_derived = np.zeros(ks.shape)
@@ -930,6 +1813,7 @@ def plot_pcf_gj_sc_comparison(show_plots=True,N = 32, T = 1000, dt = 1e-3, num_s
         
         for i, k in enumerate(ks):
             print('{0} / {1}'.format(i+1, len(ks)))
+
             sin_func = lambda t :  np.asarray([1, 0])
             lds = sat.LinearDynamicalSystem(x0, A, B, u = sin_func , T = T, dt = dt)
             
@@ -945,9 +1829,9 @@ def plot_pcf_gj_sc_comparison(show_plots=True,N = 32, T = 1000, dt = 1e-3, num_s
             
             sc_net = SelfCoupledNet(T=T, dt=dt, N=N, D=D, lds=lds)
             gj_net = GapJunctionDeneveNet(T=T, dt=dt, N=N, D=D, lds=lds)
-            pcf_net = ClassicDeneveNet(T=T, dt=dt, N=N, D=D, lds=lds, lam_v=1)
+            pcf_net = ClassicDeneveNet(T=T, dt=dt, N=N, D=D, lds=lds, lam_v=0)
             
-            sc_data = sc_net.run_sim() 
+            sc_data = sc_net.run_sim()
             gj_data = gj_net.run_sim()
             pcf_data= pcf_net.run_sim()
             
@@ -971,37 +1855,41 @@ def plot_pcf_gj_sc_comparison(show_plots=True,N = 32, T = 1000, dt = 1e-3, num_s
         models = [
             (sc_data, 'Self-Coupled', 'x', 'r', 20),
             (gj_data, 'Gap-Junction', 'd', 'g', 20),
-            (pcf_data, 'PCF', '.', 'b', 10)
+            (pcf_data, 'PCF', '.', 'b', 20)
         ]
                 
         rmses_derived = {
                 'PCF' : pcf_rmses_derived,
                 'Gap-Junction' : gj_rmses_derived,    
-                'Self-Coupled' : sc_rmses_derived 
+                'Self-Coupled' : sc_rmses_derived
             }
         
         rate_measurements = {
             'PCF' : pcf_rates,
-            'Gap-Junction' : gj_rates,    
-            'Self-Coupled' : sc_rates        
+            'Gap-Junction' : gj_rates,
+            'Self-Coupled' : sc_rates
             }
         
         rmses_numerical = {
             'PCF' : pcf_rmses_numerical,
-            'Gap-Junction' : gj_rmses_numerical,    
-            'Self-Coupled' : sc_rmses_numerical      
+            'Gap-Junction' : gj_rmses_numerical,
+            'Self-Coupled' : sc_rmses_numerical
             }
         
         plt.figure()
             
         for _, model_name, marker, color, msize in models:
-            plt.loglog(rate_measurements[model_name], rmses_derived[model_name], '--','k',c=color, alpha = .5)
+
             plt.loglog(rate_measurements[model_name], rmses_numerical[model_name], marker=marker, c=color, markersize= msize, label=model_name)
-        plt.ylabel(r'per-Spike RMSE')
+
+        rates_cont = np.logspace(-2, 4,num=1000)
+        plt.loglog(rates_cont, rmse_per_spike_pcf(rates_cont), '--',label='Derived Expression')
+
+        plt.ylabel(r' NRMSE')
         plt.xlabel(r'Neuron Firing Rate $\phi$')
-        plt.title('per-Spike RMSE vs Neuron Firing Rate')
+        plt.title('NRMSE vs Neuron Firing Rate')
         plt.legend()
-        plt.savefig(this_dir + '/' + 'per_spike_rmse_vs_phi.png', bbox_inches='tight')
+        plt.savefig(this_dir + '/' + 'sc_pcf_gj_nrmse_vs_phi.png', bbox_inches='tight')
         
     name = 'pcf_gj_sc_comparison'
     this_dir =  check_dir(name)

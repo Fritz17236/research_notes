@@ -1,0 +1,180 @@
+\section{Derivation: The Predictive Coding Framework and Gap-Junction Network}
+
+
+Here we derive the the predictive coding framework (PCF) as defined in Boerlin \& Deneve, 2013. We highlight an assumption in this model which we later show worsens the network estimate. The correction of this assumption produces a third model that directly coupled membrane voltages. We term this a model the \textit{gap-junction} (GJ) network.\\
+
+
+\subsection{Identical Initial Derivation for All Three Models (PCF, GJ, SC):}
+ The PCF and GJ derivations are initially identical to the SC model in section ({\ref{section:derivation:basic_model}). For all three models: 
+
+\begin{enumerate}
+    \item Let $\tau_s$ be the synaptic time constant of each synapse in the network. Define dimensionless time as:
+    \begin{equation*}
+        \xi \overset{\Delta}{=} \frac{t}{\tau_s}.
+    \end{equation*}\\
+    We now assume our Linear Dynamical System is expressed in dimensionless time, i.e
+    
+    \begin{equation}
+        \label{eq:derivation:pcf_gj:lds_dimensionless}
+        \frac{dx}{d\xi} = Ax(\xi) + B c(\xi).
+    \end{equation}
+    
+    The neuron encoding directions are given by 
+	$$
+	D = \begin{bmatrix}
+	d_1 & \hdots & d_N
+	\end{bmatrix}.
+	$$
+	   
+    To describe the neuron dynamics in dimensionless time, let $o(\xi) \in \mathbf{R}^{N}$ be the spike trains of N neurons composing the network with components
+    \begin{equation*}
+        o_j(\xi) = \sum_{k=1}^{\text{$n_j$ spikes}} \delta(\xi - \xi_{j}^{k}),
+    \end{equation*}
+    where $\xi_j^k$ is the time at which neuron $j$ makes its $k^{th}$ spike. 
+    Define the network's estimate of the state variable as
+    \begin{equation}
+        \label{eq:derivation:pcf_gj:xhat}
+        \hat{x}(\xi)
+        \overset{\Delta}{=} D r(\xi),
+    \end{equation}
+    where $D \in \mathbf{R}^{d \times N}$ and 
+    \begin{equation}
+    \label{eq:derivation:pcf_gj:rdot}
+        \frac{dr}{d \xi} = -r + o(\xi).
+    \end{equation}\\
+
+    The network estimation error is
+    \begin{equation}
+    \label{eq:derivation:pcf_gj:error_def}
+        e(\xi) \overset{\Delta}{=} x(\xi) - \hat{x}(\xi).
+    \end{equation}
+    
+
+    
+	\item Each network greedily minimizes the objective 
+	$$
+	\mathcal{L}(\xi) = || x(\xi+d\xi) - \hat{x}(\xi + d\xi)||^2.
+	$$
+	
+	When neuron $j$ spikes, the estimate becomes
+	
+	$$
+	\mathcal{L}_{spike} = ||x - \hat{x} - d_j||^2.
+	$$
+	
+	If $j$ does not spike the error is 
+	$$	
+   	\mathcal{L}_{ns} = ||x - \hat{x}||^2.
+    $$
+    
+	Neuron $j$ spikes when it decreases the objective, i.e.
+	
+	$$
+	\mathcal{L}_{sp} < \mathcal{L}_{ns},
+	$$
+	
+	which gives spiking condition
+	
+	$$
+	d_j^T e = \frac{||d_j||^2}{2}.
+	$$
+    
+	This leads us to define voltage as 
+	$$
+		v\overset{\Delta}{=}  D^T e.	
+	$$    
+    
+    \item From equations (\ref{eq:rdot}) and (\ref{eq:xhat}), we have
+    
+    \begin{align*}
+        D \dot{r} + D r &= Do \\
+        \\
+        \implies \dot{\hat{x}} + \hat{x} &= Do,
+    \end{align*}
+    where the dot denotes derivative w.r.t dimensionless time $\xi$.
+
+
+\end{enumerate}
+
+\subsection{PCF Derivation:}
+The voltage dynamics $v_{pcf}$ are given by 
+
+\begin{align*}
+\dot{v}_{pcf} &=
+D^T \dot{e}
+\\
+\\
+&= 
+D^T \left(\dot{x} - \dot{\hat{x}}\right)
+\\
+\\
+&=
+D^T \left( A x + B c - Do - \hat{x}\right).
+\end{align*}
+
+The PCF argues that when the network functions, $x = \hat{x}$. We then have
+\begin{align*}
+\dot{v}_{pcf} &=
+D^T \left( A \hat{x} + B c - Do - \hat{x}\right)
+\\
+\\
+&= 
+D^T \left( A - I\right)\hat{x} + D^T B c - D^T D o.
+\end{align*}
+
+With $\hat{x} = Dr$ PCF has voltage dynamics
+
+\begin{align}
+\label{eq:derivation:pcf_gj:voltage_dynamics_pcf}
+\dot{v}_{pcf} &= D^T \left( A - I\right)D r + D^T B c - D^T D o.
+\end{align}
+
+Derive the spiking condition with an identical method to the SC network in section (\ref{section:derivation:basic_model}) to get PCF threshold voltages
+
+$$
+v_{th} = \frac{1}{2} \begin{bmatrix}
+d_1^T d_1
+\\
+\vdots
+\\
+d_N^T d_N
+\end{bmatrix}.
+$$
+
+
+
+\subsection{GJ Derivation:}
+
+The voltage dynamics of the GJ model are 
+\begin{align*}
+\dot{v}_{GJ} &=
+D^T \left( A x + B c - Do - \hat{x}\right).
+\end{align*}
+
+The GJ model does not assume $x = \hat{x}$. Rather, it uses equations (\ref{eq:derivation:pcf_gj:error_def}) and (\ref{eq:derivation:pcf_gj:voltage_def}):
+
+\begin{align*}
+v_{gj} &= D^T e
+\\
+\\
+&= 
+D^T \left(x - \hat{x}\right)
+\\
+\\
+\implies 
+x &= 
+D^{T \dagger}v_{GJ}  + \hat{x}.
+\end{align*}
+
+Substitute this in the dynamics equation and simplify to get 
+\begin{align}
+\label{eq:derivation:pcf_gj:voltage_dynamics_gj}
+\dot{v}_{GJ} &=
+D^T A D^{T \dagger} v_{GJ}  + D^T\left(A-I\right)Dr  + D^T Bc - D^T D o.
+\end{align}
+
+The addition of the voltage coupling term $D^T A D^{T \dagger} v_{GJ}$ leads to the name Gap-Junction. 
+
+
+\clearpage
+

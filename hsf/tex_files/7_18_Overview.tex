@@ -20,10 +20,10 @@ synthesize a spiking neural network that implements the linear dynamical system.
 \begin{enumerate}
     \item \textbf{\textit{Long-Term Network Accuracy}} The Deneve network assumes $\hat{x}=x$. We show this assumption produces estimation error between the network and its target system that increases with time. By avoiding this assumption, the self-coupled network remains accurate over time. 
     
-    \item \textbf{\textit{Tuning Curve Rotation}} To most efficiently use neurons, we use orthogonal coding directions via SVD. The dynamics matrix $A$ is diagonalized by an orthonormal basis $\mathcal{U}$ in d-dimensional space, while the decoder matrix $D$ is chosen such that $\mathcal{U}$ gives its left singular vectors. This choice of coding directions eliminates the need for coupling. 
+    \item \textbf{\textit{Tuning Curve Rotation}} To most efficiently use neurons, we use orthogonal coding directions via SVD. The dynamics matrix $A$ is diagonalized by an orthonormal basis $\mathcal{U}$ in d-dimensional space, while the decoder matrix $D$ is chosen such that $\mathcal{U}$ gives its left singular vectors. This choice of coding directions eliminates connectivity between neurons with orthogonal encoding directions.
     
  	    
-	At least two neurons per dimension (2d in total) are required since voltage thresholds are strictly positive.
+	At least two neurons per dimension (2d in total) are required since spikes, the encoding quanta, have positive unit-area.
     N-neuron ensembles can thus represent systems with $\frac{N}{2}$ dimensions or less. 
     
     \item \textbf{\textit{Post-synaptic Spike Dropping}} At each synapse, neurotransmitter release due to an action potential is probabilistic.  We incorporate probabilistic spike transmission by thinning at every synaptic connection. The pre-synaptic neuron's membrane potential is still deterministically reset by an action potential. 

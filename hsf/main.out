@@ -1,13 +1,19 @@
 \BOOKMARK [1][-]{section.1}{The self-coupled SNN Model}{}% 1
-\BOOKMARK [1][-]{section.2}{Basic Model}{}% 2
-\BOOKMARK [2][-]{subsection.2.1}{Derivation}{section.2}% 3
-\BOOKMARK [2][-]{subsection.2.2}{Simulation of Basic Equations}{section.2}% 4
-\BOOKMARK [1][-]{section.3}{Analysis: RMSE vs Spike Rate for Constant Driving Force}{}% 5
-\BOOKMARK [1][-]{section.4}{Derivation: The Predictive Coding Framework and Gap-Junction Network}{}% 6
-\BOOKMARK [1][-]{section.5}{Analysis: PCF and Gap-Junction Response to Constant Stimulus}{}% 7
-\BOOKMARK [2][-]{subsection.5.1}{PCF Network Response to Constant Stimulus:}{section.5}% 8
-\BOOKMARK [2][-]{subsection.5.2}{Gap-Junction Network Response to Constant Stimulus:}{section.5}% 9
-\BOOKMARK [2][-]{subsection.5.3}{Per-spike RMSE of the PCF and Gap-Junction Networks for a Constant Stimulus}{section.5}% 10
-\BOOKMARK [2][-]{subsection.5.4}{Comparison of Self-Coupled, Gap-Junction, and PCF Networks for a Constant Stimulus}{section.5}% 11
-\BOOKMARK [1][-]{section.6}{Extensions of the Basic Model}{}% 12
-\BOOKMARK [2][-]{subsection.6.1}{Dynamical Systems with Complex Eigenvalues}{section.6}% 13
+\BOOKMARK [1][-]{section.2}{Derivation of the Basic Model}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Predecessor: PCF Voltage Dynamics}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{The Self-Coupled Model is PCF in an Orthonormal Basis}{section.2}% 4
+\BOOKMARK [2][-]{subsection.2.3}{Optimizing Spike-Timing: From PCF to Self-Coupled}{section.2}% 5
+\BOOKMARK [2][-]{subsection.2.4}{Consequences of Positive Unit-Area Spikes}{section.2}% 6
+\BOOKMARK [2][-]{subsection.2.5}{Simulation of Basic Equations}{section.2}% 7
+\BOOKMARK [1][-]{section.3}{Analysis: RMSE vs Spike Rate for Constant Driving Force}{}% 8
+\BOOKMARK [2][-]{subsection.3.1}{Neuron Trajectories}{section.3}% 9
+\BOOKMARK [2][-]{subsection.3.2}{Solution for the Periodically Spiking Network}{section.3}% 10
+\BOOKMARK [2][-]{subsection.3.3}{ RMSE for Periodic Spiking}{section.3}% 11
+\BOOKMARK [1][-]{section.4}{Derivation: The Predictive Coding Framework and Gap-Junction Network}{}% 12
+\BOOKMARK [2][-]{subsection.4.1}{Identical Initial Derivation for All Three Models \(PCF, GJ, SC\):}{section.4}% 13
+\BOOKMARK [2][-]{subsection.4.2}{PCF Derivation:}{section.4}% 14
+\BOOKMARK [2][-]{subsection.4.3}{GJ Derivation:}{section.4}% 15
+\BOOKMARK [1][-]{section.5}{PCF and Gap-Junction Response to Constant Stimulus}{}% 16
+\BOOKMARK [2][-]{subsection.5.1}{PCF Network Response to Constant Stimulus:}{section.5}% 17
+\BOOKMARK [2][-]{subsection.5.2}{Gap-Junction Network Response to Constant Stimulus:}{section.5}% 18
+\BOOKMARK [2][-]{subsection.5.3}{Comparison of Self-Coupled, Gap-Junction, and PCF Networks for a Constant Stimulus}{section.5}% 19

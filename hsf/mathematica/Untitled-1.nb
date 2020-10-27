@@ -1,0 +1,59 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      1507,         51]
+NotebookOptionsPosition[      1102,         36]
+NotebookOutlinePosition[      1465,         52]
+CellTagsIndexPosition[      1422,         49]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.8103851560362883`*^9, 3.810385157960837*^9}, {
+  3.8103852407993507`*^9, 
+  3.81038526418536*^9}},ExpressionUUID->"7e41dc37-7eff-4eef-b8c7-\
+cd3bd9f92ee7"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{"Solve", " ", "complex", " ", "LIF", " ", "Equation"}], "*)"}], 
+  "\[IndentingNewLine]"}]], "Input",
+ CellChangeTimes->{{3.810385275719962*^9, 3.810385276359404*^9}, {
+  3.810385321116384*^9, 
+  3.810385332583674*^9}},ExpressionUUID->"8e611d77-bc3c-4c2d-b217-\
+64a93a283908"]
+},
+WindowSize->{1684, 1372},
+WindowMargins->{{0, Automatic}, {0, Automatic}},
+Magnification:>2. Inherited,
+FrontEndVersion->"11.3 for Linux x86 (64-bit) (March 6, 2018)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 204, 4, 61, "Input",ExpressionUUID->"7e41dc37-7eff-4eef-b8c7-cd3bd9f92ee7"],
+Cell[765, 26, 333, 8, 106, "Input",ExpressionUUID->"8e611d77-bc3c-4c2d-b217-64a93a283908"]
+}
+]
+*)
+
