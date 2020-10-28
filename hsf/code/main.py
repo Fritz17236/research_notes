@@ -11,7 +11,7 @@ import plots
 
 
 
-plots.plot_basic_model(show_plots=True, N=4, k = 1, T = 30, dt = 1e-3)
+plots.plot_basic_model(show_plots=True, N=4, k = 1, T = 40, dt = 1e-3)
 
 
 #plots.plot_const_driving(show_plots=

@@ -457,36 +457,86 @@ def plot_basic_model(show_plots=True,N = 4, k = 1, T = 10, dt = 1e-5):
     A[0,1] = -.5
     A[1,0] = -.5
 
-    #A = -np.eye(2)
+    #A = -.5 * np.eye(2)
 
     B = np.eye(2)
 
-    D = gen_decoder(A.shape[0], N,mode='2d cosine')
+    D = .5*gen_decoder(A.shape[0], N,mode='2d cosine')
 
 
-    D = .5 * D
 
     theta  = 90 * (np. pi / 180)  # in degrees
 
     k = np.asarray([np.cos(theta), np.sin(theta)])
     k /= 1 * np.linalg.norm(k)
 
-
-    sin_func = lambda t: np.asarray([np.cos(t/4), np.sin(t/4)])
+    period = 10
+    sin_func = lambda t: np.asarray([np.cos(t*2 * np.pi / period), np.sin(t * 2 * np.pi / period )])
 
 
     #sin_func = lambda t: np.asarray([1, 1])
 
     x0 = sin_func(0)
 
+    x0 = np.asarray([1, 1])
+
     lds = sat.LinearDynamicalSystem(x0, A, B, u=sin_func, T=T, dt=dt)
-    #net = ClassicDeneveNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0, lam_v=0)
+    #pcf_net = ClassicDeneveNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0, lam_v=0)
     net = SelfCoupledNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0)
     #net = GapJunctionDeneveNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0)
 
-    data = net.run_sim()#
 
+
+    #pcf_data = pcf_net.run_sim()
+    #gj_data = gj_net.run_sim()
+    data = net.run_sim()
     plot_step = 10
+
+    uA, _ = np.linalg.eig(lds.A)
+
+
+
+    #plt.figure()
+    #plt.plot(data['t'], data['lds_data']['U'][0,:],label='orig')
+    #plt.plot(data['t'], data['U'][0,:], label='rotated')
+    #plt.plot(data['t'], (data['Mc'] @data['lds_data']['U'])[0, :], label='input')
+    #plt.legend()
+    #print(data['sD'])
+    #plt.show()
+    #assert(False)
+
+    #plot error trajectory as scatter, color with time
+
+    ts = data['t'][0:-1:plot_step]
+    e0 = data['x_hat'][0,0:-1:plot_step]
+    e1 = data['x_hat'][1, 0:-1:plot_step]
+    cmap = cm.get_cmap('inferno', lut=len(ts))
+
+
+    #plot v = s e --> e = s^-1 v
+    uA, sD, _ = np.linalg.svd(.5 * np.hstack((D, -D)))
+
+    v_est = 1 / sD[0] * (data['V'][0,:])
+
+    # plt.figure()
+    # plt.plot(data['t'],v_est)
+    # v_est = 1 / sD[1] * (data['V'][1, :])
+    # plt.plot(data['t'],v_est)
+
+    #plt.plot(data['t'],(( sD[0] * uA[0,0] * data['r'][0,:]) - (sD[0] * uA[0,0] * data['r'][2,:])) / np.sqrt(2))
+    #plt.plot(data['t'], data['x_hat'][0,:])
+
+    #plt.plot(data['t'], data['x_true'][0,:] - data['x_hat'][0,:])
+    #plt.plot(data['t'], 1 / sD[0] * data['x_hat'][0,:])
+    #plt.plot(data['t'], 1 / sD[0] * data['x_true'][0, :])
+    plt.show()
+    plt.scatter(e0,e1, c=ts, cmap=cmap)
+    for j in range(N):
+        #j_scale = D[:,j].T @ D[:,j] / 2
+        plt.scatter(D[0,j],  D[1,j], marker='x', label='Neuron {0}'.format(j))
+    plt.xlim([-2, 2])
+    plt.ylim([-2, 2])
+
 
     vmin = -np.min(data['vth'])
     vmax = np.max(data['vth'])
@@ -498,25 +548,28 @@ def plot_basic_model(show_plots=True,N = 4, k = 1, T = 10, dt = 1e-5):
     plt.title("Neuron Membrane Potentials")
     plt.xlabel(r"Simulation Time (Dimensionless Units of $\tau$")
     plt.ylabel('Membrane Potential')
-    plt.savefig('plots/basic_plots/membrane_potential_plot.png',bbox_inches='tight')
-
+    #
+    #
+    # plt.savefig('plots/basic_plots/membrane_potential_plot.png',bbox_inches='tight')
+    #
+    # plt.figure()
+    # cbar_ticks = np.linspace( start = vmin, stop = vmax,  num = 8, endpoint = True)
+    # plt.imshow(data['V'],extent=[0,data['t'][-1], 0,3],vmax=vmax, vmin=vmin,interpolation='none')
+    # plt.xlabel(r"Dimensionless Units of $\tau$")
+    # plt.axis('auto')
+    # cbar = plt.colorbar(ticks=cbar_ticks)
+    # cbar.set_label(r'$\frac{v_j}{v_{th}}$')
+    # cbar.ax.set_yticklabels(np.round(np.asarray([c / vmax for c in cbar_ticks]), 2))
+    # plt.title('Neuron Membrane Potentials')
+    # plt.ylabel('Neuron #')
+    # plt.yticks([.4,1.15,1.85,2.6], labels=[1, 2, 3, 4])
+    #
     plt.figure()
-    cbar_ticks = np.linspace( start = vmin, stop = vmax,  num = 8, endpoint = True)
-    plt.imshow(data['V'],extent=[0,data['t'][-1], 0,3],vmax=vmax, vmin=vmin,interpolation='none')
-    plt.xlabel(r"Dimensionless Units of $\tau$")
-    plt.axis('auto')
-    cbar = plt.colorbar(ticks=cbar_ticks)
-    cbar.set_label(r'$\frac{v_j}{v_{th}}$')
-    cbar.ax.set_yticklabels(np.round(np.asarray([c / vmax for c in cbar_ticks]), 2))
-    plt.title('Neuron Membrane Potentials')
-    plt.ylabel('Neuron #')
-    plt.yticks([.4,1.15,1.85,2.6], labels=[1, 2, 3, 4])
-
-    plt.figure()
-    plt.plot(data['t'][0:-1:plot_step], data['x_hat'][0,0:-1:plot_step],c='r',label='Decoded Network Estimate (Dimension 0)' )
-    plt.plot(data['t'][0:-1:plot_step], data['x_hat'][1,0:-1:plot_step],c='g',label='Decoded Network Estimate (Dimension 1)' )
-    plt.plot(data['t_true'][0:-1:plot_step], data['x_true'][0,0:-1:plot_step],c='k')
-    plt.plot(data['t_true'][0:-1:plot_step], data['x_true'][1,0:-1:plot_step],c='k',label='True Dynamical System')
+    ts = data['t'][0:-1:plot_step]
+    plt.plot(ts, data['x_hat'][0,0:-1:plot_step],c='r',label='Dimension 0' )
+    plt.plot(ts, data['x_hat'][1,0:-1:plot_step],c='g',label='Dimension 1' )
+    plt.plot(ts, data['x_true'][0,0:-1:plot_step],c='k',label='True Dynamical System')
+    plt.plot(ts, data['x_true'][1, 0:-1:plot_step], c='k')
     plt.title('Network Decode')
     plt.legend()
     plt.ylim([-2, 2])
@@ -525,19 +578,19 @@ def plot_basic_model(show_plots=True,N = 4, k = 1, T = 10, dt = 1e-5):
 
 
     plt.figure()
-    plt.plot(data['t'][0:-1:plot_step], data['x_hat'][0,0:-1:plot_step] - data['x_true'][0,0:-1:plot_step],c='r',label='Estimation Error (Dimension 0)' )
-    plt.plot(data['t'][0:-1:plot_step], data['x_hat'][1,0:-1:plot_step] - data['x_true'][1,0:-1:plot_step],c='g',label='Estimation Error (Dimension 1)' )
+    plt.plot(ts, data['x_hat'][0,0:-1:plot_step] - data['x_true'][0,0:-1:plot_step],c='r',label='Dimension 0' )
+    plt.plot(ts, data['x_hat'][1,0:-1:plot_step] - data['x_true'][1,0:-1:plot_step],c='g',label='Dimension 1' )
     plt.title('Decode Error')
     plt.legend()
     plt.ylim([-2, 2])
     plt.xlabel(r'Dimensionless Time $\tau_s$')
     plt.ylabel('Decode Error')
 
-#     plt.figure()
-#     for i in range(4):
-#         plt.plot(data['t'][0:-1:plot_step], data['r'][i,0:-1:plot_step])
-    
-    
+    # plt.figure()
+    # for i in range(4):
+    #     plt.plot(data['t'][0:-1:plot_step], data['r'][i,0:-1:plot_step])
+    #
+    #
 
     if show_plots:
         plt.show()
@@ -1901,7 +1954,6 @@ def plot_pcf_gj_sc_comparison(show_plots=True,N = 32, T = 1000, dt = 1e-3, num_s
     #plot_pcf_gj_sc_per_spike_rmse(20) 
     if show_plots:
         plt.show()
-        
         
         
         

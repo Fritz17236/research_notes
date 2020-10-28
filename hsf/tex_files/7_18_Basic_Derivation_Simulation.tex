@@ -881,244 +881,43 @@ $$
 The first and second $d$ neurons have encoding directions $\mathcal{U}$ and $-\mathcal{U}$ respectively. Before the first $d$ right eigenvectors $V_j$ were scaled by $\sigma_j$ and mapped to $\mathcal{U}_j$, with the remaining $V_j$ mapped to $0$. In adding $d$ antiparallel vectors, we scale an additional $d$ right eigenvectors $V_{j+d}$ by $\sigma_j$ and map them to $-\mathcal{U}_j$. 
 
 
-Note that our change of basis should be invertible by its transpose and norm-preserving. Before, this meant
-$$
-\mathcal{U} \mathcal{U}^T x = x.
-$$
-
-Now we require
-$$
-\begin{bmatrix}
-\mathcal{U} & -\mathcal{U}
-\end{bmatrix} \begin{bmatrix}
-\mathcal{U} & -\mathcal{U}
-\end{bmatrix}^T x = x,
-$$
-
-but 
-
+The dynamical system remains the same, i.e.
 \begin{align*}
-\begin{bmatrix}
-\mathcal{U} & -\mathcal{U}
-\end{bmatrix} \begin{bmatrix}
-\mathcal{U} & -\mathcal{U}
-\end{bmatrix}^T x
-&=
-\begin{bmatrix}
-\mathcal{U} & -\mathcal{U}
-\end{bmatrix}
-\begin{bmatrix}
-\mathcal{U}^T x \\ -\mathcal{U}^T x
-\end{bmatrix}
-\\
-\\
-&=
-\mathcal{U} \mathcal{U}^T x + \mathcal{U}\mathcal{U}^T x
-\\
-\\
-&=
-2x.
+\dot{y} &= \Lambda y + \beta \tilde{c}. 
 \end{align*}
 
-So our desired basis is actually
-$$
-\frac{1}{\sqrt{2}} 
-\begin{bmatrix}
-\mathcal{U} & -\mathcal{U}
-\end{bmatrix}.
-$$
 
-Therefore we write the decode matrix instead as 
-$$
-D = \frac{1}{\sqrt{2}}\begin{bmatrix}
-\mathcal{U} & -\mathcal{U}
-\end{bmatrix}^T \begin{bmatrix}
-S & 0 & 0
-\\
-0 & S & 0
-\end{bmatrix}
-V^T \in \mathbf{R}^{d \times N}.
-$$
-
-
-In terms of the basis $\frac{1}{\sqrt{2}} \begin{bmatrix} \mathcal{U} & -\mathcal{U}\end{bmatrix},$ the state becomes
-
-$$
-y = \mathcal{U}^T x \leftarrow \frac{1}{\sqrt{2}}\begin{bmatrix}
-\mathcal{U} & -\mathcal{U}
-\end{bmatrix}^T x = \frac{1}{\sqrt{2}} \begin{bmatrix}
-y\\-y
-\end{bmatrix} \in \mathbf{R}^{2d}.
-$$
-
-
-This gives the dynamical system
-\begin{align*}
-\dot{y} &= \frac{1}{\sqrt{2}} \begin{bmatrix}
-\mathcal{U} & -\mathcal{U}
-\end{bmatrix}^T \dot{x}
-\\
-\\
-&=
-\frac{1}{\sqrt{2}} \begin{bmatrix}
-\mathcal{U} & -\mathcal{U}
-\end{bmatrix}^T \mathcal{U} \Lambda \mathcal{U}^T x + \frac{1}{\sqrt{2}}  \begin{bmatrix}
-\mathcal{U} & -\mathcal{U}
-\end{bmatrix}^T B c.
-\end{align*}
-
-The first term becomes
-\begin{align*}
-\frac{1}{\sqrt{2}} \begin{bmatrix}
-\mathcal{U} & -\mathcal{U}
-\end{bmatrix}^T \mathcal{U} \Lambda \mathcal{U}^T x
-&=
-\frac{1}{\sqrt{2}} \begin{bmatrix}
-I \\ -I
-\end{bmatrix}
-\Lambda \mathcal{U}^T x
-\\
-\\
-&=
-\frac{1}{\sqrt{2}} \begin{bmatrix}
-\Lambda \mathcal{U}^T
-\\
--\Lambda \mathcal{U}^T 
-\end{bmatrix} x
-\\
-\\
-&=
-\frac{1}{\sqrt{2}}
-\begin{bmatrix}
-\Lambda & 0
-\\
-0 & \Lambda
-\end{bmatrix}
-\begin{bmatrix}
-\mathcal{U} & -\mathcal{U}
-\end{bmatrix}^T x
-\\
-\\
-&=
-\frac{1}{\sqrt{2}}
-\begin{bmatrix}
-\Lambda & 0 
-\\
-0 & \Lambda
-\end{bmatrix}
-\begin{bmatrix} y \\ -y \end{bmatrix} \in \mathbf{R}^{2d}.
-\end{align*}
-
-The latter input term which previously formed the drive term $\beta \tilde{c}$ becomes
-
-$$
-\tilde{c} = \mathcal{U}^T c \leftarrow \frac{1}{\sqrt{2}}\begin{bmatrix}
-\mathcal{U} & -\mathcal{U} 
-\end{bmatrix}^T \tilde{c} = 
-\frac{1}{\sqrt{2}}\begin{bmatrix}
-\tilde{c} \\ \tilde{c}
-\end{bmatrix} \in \mathbf{R}^{2d},
-$$
-
-$$
-\beta = \mathcal{U}^T B \mathcal{U} \leftarrow
-\frac{1}{2}\begin{bmatrix}
-\mathcal{U} & -\mathcal{U} 
-\end{bmatrix}^T
-B
-\begin{bmatrix}
-\mathcal{U} & -\mathcal{U} 
-\end{bmatrix}
-=
-\frac{1}{2}\begin{bmatrix}
-\beta & -\beta
-\\
--\beta & \beta
-\end{bmatrix} \in \mathbf{R}^{2d \times 2d}.
-$$
-
-The rotated dynamical system is thus
-$$
-\dot{y} = \frac{1}{\sqrt{2}} \begin{bmatrix}
-\Lambda & 0
-\\
-0 & \Lambda
-\end{bmatrix}
-\begin{bmatrix}
-y\\-y
-\end{bmatrix}
-+ 
-\frac{1}{2\sqrt{2}}
-\begin{bmatrix}
-\beta & -\beta
-\\
--\beta & \beta
-\end{bmatrix}
-\begin{bmatrix}
-\tilde{c}
-\\
-\tilde{c}
-\end{bmatrix}.
-$$
 
 
 
 
 \item The network estimation 
 $$
-\hat{y}  = \mathcal{U}^T \hat{x} = \mathcal{U}^T \begin{bmatrix}
+\hat{y}  = \mathcal{U}^T D \hat{x} = \begin{bmatrix}
 S & 0
-\end{bmatrix} 
-V^T r
+\end{bmatrix} \rho
 $$
 is now
 
 \begin{align*}
-\hat{y} = \frac{1}{\sqrt{2}}\begin{bmatrix}
+\hat{y} &= \mathcal{U}^T \begin{bmatrix}
 \mathcal{U} & -\mathcal{U}
-\end{bmatrix}^T
-\hat{x}
-&=
-\frac{1}{2}\begin{bmatrix}
-\mathcal{U} & -\mathcal{U}
-\end{bmatrix} ^T \begin{bmatrix}
-\mathcal{U} & -\mathcal{U}
-\end{bmatrix} \begin{bmatrix}
-S & 0 & 0
+\end{bmatrix}
+\begin{bmatrix}
+S & 0 & 0 
 \\
 0 & S & 0
 \end{bmatrix}
-V^T r
+\rho
 \\
 \\
 &=
-\frac{1}{2}\begin{bmatrix}
+\begin{bmatrix}
 S & -S & 0
-\\
--S & S & 0
 \end{bmatrix}
-\rho \in \mathbf{R}^{2d}.
+\rho.
 \end{align*}
 
-The error goes from 
-$$
-\epsilon = y - \hat{y} \in \mathbf{R}^d
-$$
-
-to
-
-$$
-\epsilon = \frac{1}{\sqrt{2}}\begin{bmatrix}
-y \\ - y
-\end{bmatrix}
--
-\frac{1}{2}\begin{bmatrix}
-S & -S & 0
-\\
--S & S & 0
-\end{bmatrix}
-\rho \in \mathbf{R}^{2d}.
-$$
 
 We rederive the error dynamics 
 \begin{align*}
@@ -1126,101 +925,50 @@ We rederive the error dynamics
 \\
 \\
 &=
-\frac{1}{\sqrt{2}} \begin{bmatrix}
-\Lambda & 0
-\\
-0 & \Lambda
-\end{bmatrix}
-\begin{bmatrix}
-y\\-y
-\end{bmatrix}
-+ 
-\frac{1}{2\sqrt{2}}
-\begin{bmatrix}
-\beta & -\beta
-\\
--\beta & \beta
-\end{bmatrix}
-\begin{bmatrix}
+\Lambda 
+y
++ \beta
 \tilde{c}
-\\
-\tilde{c}
-\end{bmatrix} -
-\frac{1}{2}\begin{bmatrix}
+-
+\begin{bmatrix}
 S & -S & 0
-\\
--S & S & 0
-\end{bmatrix} \left( -\rho + \tilde{o}\right)
+\end{bmatrix}
+\left( -\rho + \tilde{o}\right)
 \\
 \\
 &= 
+\Lambda 
+\left(\epsilon + \hat{y} \right)
++
 \begin{bmatrix}
-\Lambda & 0
-\\
-0 & \Lambda
-\end{bmatrix}
-\left(
-\epsilon + \hat{y}
-\right)
-+ 
-\frac{1}{2\sqrt{2}}
-\begin{bmatrix}
-\beta & -\beta
-\\
--\beta & \beta
-\end{bmatrix}
-\begin{bmatrix}
-\tilde{c}
-\\
-\tilde{c}
-\end{bmatrix} -
-\frac{1}{2}\begin{bmatrix}
 S & -S & 0
-\\
--S & S & 0
-\end{bmatrix} \left( -\rho + \tilde{o}\right)
+\end{bmatrix}
+\rho
++ \beta
+\tilde{c}
+-
+\begin{bmatrix}
+S & -S & 0
+\end{bmatrix}
+\tilde{o}
 \\
 \\
 &=
-\begin{bmatrix}
-\Lambda & 0
-\\
-0 & \Lambda
-\end{bmatrix}
-\epsilon
-+ 
-\frac{1}{2}
-\left(
-\begin{bmatrix}
-\Lambda & 0
-\\
-0 & \Lambda
-\end{bmatrix}
-+ I
-\right)
-\begin{bmatrix}
-S & -S & 0
-\\
--S & S & 0
-\end{bmatrix} \rho
+\Lambda 
+\epsilon 
 +
-\frac{1}{2\sqrt{2}}
+\left(I + \Lambda\right)
 \begin{bmatrix}
-\beta & -\beta
-\\
--\beta & \beta
-\end{bmatrix}
-\begin{bmatrix}
-\tilde{c}
-\\
-\tilde{c}
-\end{bmatrix}
--
-\frac{1}{2}\begin{bmatrix}
 S & -S & 0
-\\
--S & S & 0
-\end{bmatrix} \tilde{o}.
+\end{bmatrix}
+\rho
++ \beta
+\tilde{c}
+-
+\begin{bmatrix}
+S & -S & 0
+\end{bmatrix}
+\tilde{o}
 \end{align*}
 
 \item We previously obtained voltage by optimizing the objective
@@ -1229,316 +977,73 @@ $$
 \mathcal{L} = ||y - \hat{y}||^2. 
 $$
 
-When neuron $j$ spikes before, we added the $j^{th}$ column of the decoding matrix which mapped $\rho \to \hat{y}$. This was the matrix $\begin{bmatrix}S & 0 \end{bmatrix}$. It is now 
+
+For the first $d$ neurons this was 
+
 $$
-\frac{1}{2} \begin{bmatrix}
-S & -S & 0 
-\\
--S & S & 0
-\end{bmatrix}.
+v_j = S_j^T \epsilon \hspace{3mm}  \text{ if } j \in \left[1, \hdots, d\right].
 $$
 
-When neuron $j$ spikes we thus add $\frac{1}{2}\begin{bmatrix} S_j & -S_j \end{bmatrix}$ to the network estimate. I.e.
+We now add an addition $d$ neurons with antiparallel directions. For each neuron $j$ we add an additional neuron $j + d$ with oppositve encoding direction, and therefore opposite voltage. The voltage is now 
 
-\begin{align*}
-\mathcal{L}_{spike} &= || 
-\frac{1}{\sqrt{2}}
-\begin{bmatrix}
-y \\-y
-\end{bmatrix}
--
-\frac{1}{2}
-\begin{bmatrix}
-S & - S & 0 
+$$
+\begin{cases}
+v_j = 
+S_j^T \epsilon & \text{ for } j \in \left[1, \hdots, d \right]
 \\
--S & S & 0
-\end{bmatrix}\rho
--
-\frac{1}{2}
-\begin{bmatrix}
-S_j \\ -S_j
-\end{bmatrix}
-||^2
-\\
-\\
-&=
-\frac{1}{2}
-\begin{bmatrix}
-y \\-y
-\end{bmatrix}^T \begin{bmatrix}
-y \\-y
-\end{bmatrix}
-\\
- &- \frac{1}{\sqrt{2}}
- \begin{bmatrix}
-y \\-y
-\end{bmatrix}^T \begin{bmatrix}
-S & - S & 0 
-\\
-\\
--S & S & 0
-\end{bmatrix}\rho
-\\
-\\
-&+ 
-\frac{1}{4}
-\left(\begin{bmatrix}
-S & - S & 0 
-\\
-\\
--S & S & 0
-\end{bmatrix}\rho\right)^T \begin{bmatrix}
-S & - S & 0 
-\\
-\\
--S & S & 0
-\end{bmatrix}\rho
-\\
-\\
-&- 
-2\, \begin{bmatrix}
-S_j \\ -S_j
-\end{bmatrix}^T \left(\frac{1}{\sqrt{2}}
-\begin{bmatrix}
-y \\-y
-\end{bmatrix}
--
-\frac{1}{2}
-\begin{bmatrix}
-S & - S & 0 
-\\
--S & S & 0
-\end{bmatrix}\rho \right)
-\\
-\\
-&+
-\frac{1}{4}
-\begin{bmatrix}
-S_j \\ -S_j
-\end{bmatrix}^T\begin{bmatrix}
-S_j \\ -S_j
-\end{bmatrix}
-\\
-\\
-&=
-\mathcal{L}_{ns} - \begin{bmatrix}
-S_j \\ -S_j
-\end{bmatrix}^T \left( \frac{1}{\sqrt{2}}
-\begin{bmatrix}
-y \\-y
-\end{bmatrix}
--
-\frac{1}{2}
-\begin{bmatrix}
-S & - S & 0 
-\\
--S & S & 0
-\end{bmatrix}\rho \right)
-+
-\frac{1}{4}
-\begin{bmatrix}
-S_j \\ -S_j
-\end{bmatrix}^T\begin{bmatrix}
-S_j \\ -S_j
-\end{bmatrix}.
-\end{align*}
+-S_{j-d}^T \epsilon & \text{ for } j \in \left[d+1, \hdots, 2d \right]
+\end{cases}.
+$$
 
-The spiking rule becomes
-
-\begin{align*}
-- \begin{bmatrix}
-S_j \\ -S_j
-\end{bmatrix}^T \left( \frac{1}{\sqrt{2}}
-\begin{bmatrix}
-y \\-y
-\end{bmatrix}
--
-\frac{1}{2}
-\begin{bmatrix}
-S & - S & 0 
-\\
--S & S & 0
-\end{bmatrix}\rho \right)
-+
-\frac{1}{4}
-\begin{bmatrix}
-S_j \\ -S_j
-\end{bmatrix}^T\begin{bmatrix}
-S_j \\ -S_j
-\end{bmatrix} &< 0
-\\
-\\
-&\implies
--\begin{bmatrix}
-S_j \\
--S_j
-\end{bmatrix}^T
-\begin{bmatrix}
-\epsilon 
-\\
--\epsilon
-\end{bmatrix} + \frac{1}{2}||S_j||^2 &< 0
-\\
-\\
-&\implies
--2 \, S_j^T \epsilon < ||S_j||^2
-\\
-\\
-&\implies
-S_j^T \epsilon > \frac{||S_j||^2}{2}.
-\end{align*}
-
-Thus the voltage definition for neuron $j$ $v_j = S_j^T \epsilon$ remains unchanged. The matrix expression is changed however. Applying the decode matrix to the error $\epsilon$ gives
+In matrix form, 
 
 $$
 v = 
-\frac{1}{2}
 \begin{bmatrix}
-S & - S & 0
+S
 \\
--S & S & 0
-\end{bmatrix}^T \epsilon.
+-S
+\end{bmatrix}\epsilon.
 $$
 
-From the error dynamics, we arrive at the voltage dynamics using the above relation:
 
-\begin{align*}
+From the error dynamics above, we get
+
+\begin{align}
+\label{eq:expanded_voltage_dynamics}
 \dot{v} &= 
-\frac{1}{2}
 \begin{bmatrix}
-S & - S & 0
+\Lambda  & 0
 \\
--S & S & 0
-\end{bmatrix}^T
+0 & \Lambda 
+\end{bmatrix} 
+v
++
 \begin{bmatrix}
-\Lambda & 0
+S
 \\
-0 & \Lambda
-\end{bmatrix}
-\epsilon
-\\
-\\
-&+ 
-\frac{1}{4}
-\begin{bmatrix}
-S & - S & 0
-\\
--S & S & 0
-\end{bmatrix}^T
-\left(
-\begin{bmatrix}
-\Lambda & 0
-\\
-0 & \Lambda
-\end{bmatrix}
-+ I
-\right)
+-S
+\end{bmatrix} \left(I + \Lambda\right)
 \begin{bmatrix}
 S & -S & 0
-\\
--S & S & 0
-\end{bmatrix} \rho
-\\
-\\
-&+
-\frac{1}{4\sqrt{2}}
-\begin{bmatrix}
-S & - S & 0
-\\
--S & S & 0
-\end{bmatrix}^T
-\begin{bmatrix}
-\beta & -\beta
-\\
--\beta & \beta
 \end{bmatrix}
-\begin{bmatrix}
+\rho
++ \begin{bmatrix}
+S
+\\
+-S
+\end{bmatrix} \beta
 \tilde{c}
-\\
-\tilde{c}
-\end{bmatrix}
-\\
-\\
-&-
-\frac{1}{4}
+-
 \begin{bmatrix}
-S & - S & 0
-\\
--S & S & 0
-\end{bmatrix}^T
-\begin{bmatrix}
-S & -S & 0
-\\
--S & S & 0
-\end{bmatrix} \tilde{o}
-\\
-\\
-\end{align*}
-
-This gives
-\begin{align*}
-\dot{v}
-&=
-\begin{bmatrix}
-\Lambda & 0
-\\
-0 & \Lambda
-\end{bmatrix} v 
-\\
-\\
-&+ 
-\frac{1}{4}
-\begin{bmatrix}
-S & - S & 0
-\\
--S & S & 0
-\end{bmatrix}^T
-\left(
-\begin{bmatrix}
-\Lambda & 0
-\\
-0 & \Lambda
-\end{bmatrix}
-+ I
-\right)
-\begin{bmatrix}
-S & -S & 0
-\\
--S & S & 0
-\end{bmatrix} \rho
-\\
-\\
-&+
-\frac{1}{4\sqrt{2}}
-\begin{bmatrix}
-S & - S & 0
-\\
--S & S & 0
-\end{bmatrix}^T
-\begin{bmatrix}
-\beta & -\beta
-\\
--\beta & \beta
-\end{bmatrix}
-\begin{bmatrix}
-\tilde{c}
-\\
-\tilde{c}
-\end{bmatrix}
-\\
-\\
-&-
-\frac{1}{2}
-\begin{bmatrix}
-S^2 & -S^2 & 0 
+S^2 & -S^2 & 0
 \\
 -S^2 & S^2 & 0
-\\
-0 & 0 & 0
-\end{bmatrix} \tilde{o}.
-\end{align*}
+\end{bmatrix}
+\tilde{o}.
+\end{align}
 
-Recall that $S \in \mathbf{R}^{d x d}$ is a diagonal matrix with entries $\sigma_j$. As desired, the spike matrix applied to $\tilde{o}$ implements fast coupling between antiparallel neurons.  When neuron $j$ spikes, it is decreased by $||\sigma_j||^2$, while its antiparallel counterpart $S_{j + d}$ is increased by $\sigma_j^2$. 
+Equation (\ref{eq:expanded_voltage_dynamics}) gives the voltage dynamics of $2d$ neurons. 
 
 \item To facilitate comparison between the self-coupled network and original PCF model, we will use this method (B) hereafter. Method A is a viable alternative, however it is fundamentally different than the original PCF model because antiparallel neurons do not interact in contrast with PCF and method B.  We investigate method A later. 
 \end{enumerate}
