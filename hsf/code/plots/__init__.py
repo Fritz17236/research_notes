@@ -16,7 +16,8 @@ import sys
 sys.path.append(path_to_Misc_Research_Code)
 import os
 
-
+import matplotlib.patches as patches
+import matplotlib
 
 # Import Network Simulation Tools
 import_success = True
@@ -43,7 +44,7 @@ plt.rcParams['font.weight'] = 'bold'
 plt.rcParams['figure.figsize'] = (16, 9)
 plt.rcParams['figure.dpi'] = 100
 plt.rcParams['lines.markersize'] = 10
-plt.rcParams['lines.linewidth'] = 4
+plt.rcParams['lines.linewidth'] = 3
 
 # Functions for Self-Coupled Network
 def rmse_sp_ksl(k,s,l):
@@ -251,9 +252,6 @@ def plot_raster(data):
         plt.yticks(ticks=np.arange(data['N']) + 1, labels=np.arange(data['N']) + 1)
         plt.title('Spike Raster')
 
-
-
-
 def plot_test(show_plots=True,N = 4, k = 1, T = 10, dt = 1e-5):
     def get_steady_state_sequence(k, D, x0, num_iter=30):
         count = 1
@@ -298,7 +296,7 @@ def plot_test(show_plots=True,N = 4, k = 1, T = 10, dt = 1e-5):
 
     D = .5 * D
 
-    theta  = 90 * (np. pi / 180)  # in degrees
+    theta  = 80 * (np. pi / 180)  # in degrees
 
     k = np.asarray([np.cos(theta), np.sin(theta)])
     k /= 1 * np.linalg.norm(k)
@@ -403,14 +401,14 @@ def plot_test(show_plots=True,N = 4, k = 1, T = 10, dt = 1e-5):
 
     # one axis is time to spike
     # other axis is neuron number
-    sequence = get_steady_state_sequence(sin_func(0), D, x0.copy(), num_iter=100)
+    sequence = get_steady_state_sequence(sin_func(0), D, x0.copy(), num_iter=1000)
     plt.figure()
     plt.ylabel("Time to Spike (dimensionless)")
     plt.xlabel("Neuron Number")
 
     for idx, time, x_hat in sequence:
         plt.scatter(idx + 1, time, c='k',marker='.')
-    plt.xticks(ticks=np.arange(N))
+    plt.xticks(ticks=np.arange(N)+1)
     plt.xlim([.5, N+.5])
     plt.ylim([0, 1])
 
@@ -447,6 +445,223 @@ def plot_test(show_plots=True,N = 4, k = 1, T = 10, dt = 1e-5):
 
     plt.show()
 
+def plot_complex_eigvals(show_plots=True, N=4, k=1, T=10, dt=1e-5):
+    A = -np.zeros((2,2))
+    A[0,1] = -1
+    A[1,0] = 1
+    B = np.zeros(A.shape)
+    x0 = np.asarray([-1 , 1])
+
+    la, uA = np.linalg.eig(A)
+
+    theta = np.angle(la[0]-la[1])
+    print(la[0], la[1], la[0]-la[1])
+
+    print(theta)
+
+    D = .5 * gen_decoder(A.shape[0], N, mode='2d cosine')
+
+
+
+    lds = sat.LinearDynamicalSystem(x0, A, B, u=None, T=T, dt=dt)
+    net = CSelfCoupledNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0)
+
+    data = net.run_sim()
+    plot_step = 10
+
+
+
+
+
+    vmin = -np.min(data['vth'])
+    vmax = np.max(data['vth'])
+
+    plt.figure()
+    a = 0
+    b = 2
+    plt.plot(data['t'], np.real(data['V'][a, :]), label='Real Neuron %i Voltage' % a)
+    plt.plot(data['t'], np.imag(data['V'][a, :]), label='imag Neuron %i Voltage' % a)
+
+    plt.plot(data['t'], np.real(data['V'][b, :]),'x',label='Real Neuron %i Voltage' % b)
+    plt.plot(data['t'], np.imag(data['V'][b, :]),'x', label='imag Neuron %i Voltage' % b)
+
+    plt.legend()
+    plt.title("Neuron Membrane Potentials")
+    plt.xlabel(r"Simulation Time (Dimensionless Units of $\tau$")
+    plt.ylabel('Membrane Potential')
+
+
+
+
+    plt.figure()
+    cbar_ticks = np.linspace( start = vmin, stop = vmax,  num = 8, endpoint = True)
+    plt.imshow(np.real(data['V']),extent=[0,data['t'][-1], 0,3],vmax=vmax, vmin=vmin,interpolation='none')
+    plt.xlabel(r"Dimensionless Units of $\tau$")
+    plt.axis('auto')
+    cbar = plt.colorbar(ticks=cbar_ticks)
+    cbar.set_label(r'$\frac{v_j}{v_{th}}$')
+    cbar.ax.set_yticklabels(np.round(np.asarray([c / vmax for c in cbar_ticks]), 2))
+    plt.title('Neuron Membrane Potentials')
+    plt.ylabel('Neuron #')
+    plt.yticks([.4,1.15,1.85,2.6], labels=[1, 2, 3, 4])
+
+    _, uA = np.linalg.eig(A)
+
+    plt.figure()
+    ts = data['t'][0:-1:plot_step]
+    plt.plot(ts, np.real(uA @ data['x_hat'])[0, 0:-1:plot_step], c='r', label='Dimension 0')
+    plt.plot(ts, np.real(uA @ data['x_hat'])[1, 0:-1:plot_step], 'x', c='g', label='Dimension 1')
+    plt.plot(ts, np.real( data['x_true'])[0, 0:-1:plot_step], c='k', label='True Dynamical System')
+    plt.plot(ts, np.real( data['x_true'])[1, 0:-1:plot_step], c='k')
+    plt.title('Network Decode (Real Component)')
+    plt.legend()
+    plt.ylim([-2, 2])
+    plt.xlabel(r'Dimensionless Time $\tau_s$')
+    plt.ylabel('Decoded State')
+
+
+    plt.figure()
+    plt.plot(ts, np.real(uA @ data['x_hat'])[0, 0:-1:plot_step] - np.real( data['x_true'])[0, 0:-1:plot_step], c='r',
+             label='Dimension 0')
+    plt.plot(ts, np.real(uA @ data['x_hat'])[1, 0:-1:plot_step] - np.real( data['x_true'])[1, 0:-1:plot_step],'x', c='g',
+             label='Dimension 1')
+    plt.title('Decode Error')
+    plt.legend()
+    plt.ylim([-2, 2])
+    plt.xlabel(r'Dimensionless Time $\tau_s$')
+    plt.ylabel('Decode Error')
+
+    if show_plots:
+        plt.show()
+
+def plot_basic_model_gj(show_plots=True, N=4, k=1, T=10, dt=1e-5):
+    name = 'basic_plots'
+    this_dir = check_dir(name)
+
+    A = -np.eye(2)
+    A[0, 1] = -.5
+    A[1, 0] = -.5
+
+    # A = -.5 * np.eye(2)
+
+    B = np.eye(2)
+
+    D = .5 * gen_decoder(A.shape[0], N, mode='2d cosine')
+
+    theta = 90 * (np.pi / 180)  # in degrees
+
+    k = np.asarray([np.cos(theta), np.sin(theta)])
+    k /= 1 * np.linalg.norm(k)
+
+    period = 10
+    sin_func = lambda t: np.asarray([np.cos(t * 2 * np.pi / period), np.sin(t * 2 * np.pi / period)])
+
+    # sin_func = lambda t: np.asarray([-1, 1])
+
+    x0 = sin_func(0)
+
+    # x0 = np.asarray([-1, 1])
+
+    lds = sat.LinearDynamicalSystem(x0, A, B, u=sin_func, T=T, dt=dt)
+    # pcf_net = ClassicDeneveNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0, lam_v=0)
+    net = SelfCoupledNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0)
+    gj_net = GapJunctionDeneveNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0)
+
+
+
+    # pcf_data = pcf_net.run_sim()
+    gj_data = gj_net.run_sim()
+    data = net.run_sim()
+    plot_step = 10
+
+    uA, _ = np.linalg.eig(lds.A)
+
+    # plot error trajectory as scatter, color with time
+    _, uA = np.linalg.eig(A)
+
+    ts = data['t'][0:-1:plot_step]
+    e =  -uA @ (data['x_hat'][:, 0:-1:plot_step] -   uA.T @ data['x_true'][:, 0:-1:plot_step])
+    gj_e =  -(gj_data['x_hat'][:, 0:-1:plot_step] - gj_data['x_true'][:, 0:-1:plot_step])
+    gj_ts = gj_data['t'][0:-1:plot_step]
+
+
+
+
+    cmapsc = cm.get_cmap('Reds', lut=len(ts))
+    cmapgj = cm.get_cmap('Greens', lut=len(ts))
+
+    mask = np.arange(0, 200)
+    plt.show()
+    plt.scatter(e[0, mask], e[1, mask], c=ts[mask],marker='s', cmap=cmapsc)
+    cbar = plt.colorbar()
+    plt.scatter(gj_e[0, mask], gj_e[1, mask], c=gj_ts[mask],marker='.', cmap=cmapgj)
+    cbar2 = plt.colorbar()
+    plt.title('Error Trajectory in State Space')
+    plt.xlabel(r'$\hat{x}_0$')
+    plt.ylabel(r'$\hat{x}_1$')
+
+    for j in range(4):
+        if j==0:
+            plt.scatter(.5*D[0,j],.5*D[1,j], c = 'g', marker= 'x', label=r'$ \frac{d_{j}}{2}$,  $e_{GJ} = \hat{x}-x$')
+        else:
+            plt.scatter(.5 * D[0, j], .5 * D[1, j], c='g', marker='x')
+
+    _, uA = np.linalg.eig(A)
+    uAs = uA
+    uA = np.hstack((uA, -uA))
+
+    _, sD, _ = np.linalg.svd(D)
+
+    # Add the patch to the Axes
+
+
+    plt.gca().add_patch(
+     patches.Rectangle((-D[0,0]/2 , -D[1,1]/2 ), D[0,0], D[1,1],linewidth=2, edgecolor='g', facecolor='none',
+
+
+                          ))
+    S = uAs @ (np.hstack((np.diag(sD), np.diag(-sD))) / (2 * np.sqrt(2)))
+    sD = np.diag(np.hstack((sD, -sD)))
+
+    sD = uA @ sD
+    cos_theta = (sD[0:2,0]).T @ uA[:,1]
+    angle = np.arccos(cos_theta) * (180 / (2 * np.pi))
+    print(angle)
+
+    rect = patches.Rectangle((-sD[0, 0] / 2, -sD[1, 1] / 2), sD[0, 0], sD[1, 1], linewidth=2, edgecolor='r', facecolor='none')
+
+    t=matplotlib.transforms.Affine2D().rotate_deg_around(0, 0, angle)
+    rect.set_transform(t + plt.gca().transData)
+    plt.gca().add_patch(rect)
+
+    print(np.cos(2), np.sin(2))
+    for j in range(4):
+        if j==0:
+
+            plt.scatter(S[0, j]  , S[1, j] , c='r', marker='x', label=r'$ U \frac{S_{j}}{2}$,  $e_{SC} = U \hat{y} - x$')
+        else:
+            plt.scatter( S[0, j] , S[1, j] , c='r', marker='x')
+
+
+
+    # for each vector in d, plot the line, uA @    (e.^T d = ||d||^2)
+    #  for d in D
+    # e0 d0 + e1 d1 = (d0**2 + d1**2) / 2
+    # e1 = ( (d0**2 + d1**2) / 2 - e0 d0 ) / d1
+    es0 = np.linspace(-np.linalg.norm(D[:, 0] ** 2 / 2), np.linalg.norm(D[:, 0] ** 2 / 2), num=1000)
+
+    bb0 = ((D[0, 0] ** 2 + D[1, 0] ** 2) / 2 - es0 * D[0, 0])  # / D[1,0]
+    #plt.plot(es0, bb0)
+
+    S = np.hstack((np.eye(2), - np.eye(2)))
+
+    plt.xlim([-.5, .5])
+    plt.ylim([-.5, .5])
+    cbar.set_label('Time Elapsed (Dimensionless)')
+    plt.legend()
+    if show_plots:
+        plt.show()
+
 def plot_basic_model(show_plots=True,N = 4, k = 1, T = 10, dt = 1e-5):
     
     name = 'basic_plots'
@@ -474,21 +689,21 @@ def plot_basic_model(show_plots=True,N = 4, k = 1, T = 10, dt = 1e-5):
     sin_func = lambda t: np.asarray([np.cos(t*2 * np.pi / period), np.sin(t * 2 * np.pi / period )])
 
 
-    #sin_func = lambda t: np.asarray([1, 1])
+    #sin_func = lambda t: np.asarray([-1, 1])
 
     x0 = sin_func(0)
 
-    x0 = np.asarray([1, 1])
+    #x0 = np.asarray([-1, 1])
 
     lds = sat.LinearDynamicalSystem(x0, A, B, u=sin_func, T=T, dt=dt)
     #pcf_net = ClassicDeneveNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0, lam_v=0)
     net = SelfCoupledNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0)
-    #net = GapJunctionDeneveNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0)
+    gj_net = GapJunctionDeneveNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0)
 
 
 
     #pcf_data = pcf_net.run_sim()
-    #gj_data = gj_net.run_sim()
+    gj_data = gj_net.run_sim()
     data = net.run_sim()
     plot_step = 10
 
@@ -506,21 +721,25 @@ def plot_basic_model(show_plots=True,N = 4, k = 1, T = 10, dt = 1e-5):
     #assert(False)
 
     #plot error trajectory as scatter, color with time
+    _, uA = np.linalg.eig(A)
 
     ts = data['t'][0:-1:plot_step]
-    e0 = data['x_hat'][0,0:-1:plot_step]
-    e1 = data['x_hat'][1, 0:-1:plot_step]
-    cmap = cm.get_cmap('inferno', lut=len(ts))
+    e = data['x_hat'][:,0:-1:plot_step] - uA.T @ data['x_true'][:,0:-1:plot_step]
+    gj_e = uA.T @ gj_data['x_hat'][:,0:-1:plot_step] - uA.T @ gj_data['x_true'][:,0:-1:plot_step]
+    gj_ts = gj_data['t'][0:-1:plot_step]
+
+    print(e.shape, gj_e.shape)
+    cmapsc = cm.get_cmap('Reds', lut=len(ts))
+    cmapgj = cm.get_cmap('Greens', lut=len(ts))
 
 
-    #plot v = s e --> e = s^-1 v
-    uA, sD, _ = np.linalg.svd(.5 * np.hstack((D, -D)))
 
-    v_est = 1 / sD[0] * (data['V'][0,:])
+
 
     # plt.figure()
     # plt.plot(data['t'],v_est)
-    # v_est = 1 / sD[1] * (data['V'][1, :])
+    # plt.ylim([-2, 2])
+    #v_est = 1 / sD[1] * (data['V'][1, :])
     # plt.plot(data['t'],v_est)
 
     #plt.plot(data['t'],(( sD[0] * uA[0,0] * data['r'][0,:]) - (sD[0] * uA[0,0] * data['r'][2,:])) / np.sqrt(2))
@@ -529,20 +748,54 @@ def plot_basic_model(show_plots=True,N = 4, k = 1, T = 10, dt = 1e-5):
     #plt.plot(data['t'], data['x_true'][0,:] - data['x_hat'][0,:])
     #plt.plot(data['t'], 1 / sD[0] * data['x_hat'][0,:])
     #plt.plot(data['t'], 1 / sD[0] * data['x_true'][0, :])
+    mask = np.arange(0,200)
     plt.show()
-    plt.scatter(e0,e1, c=ts, cmap=cmap)
-    for j in range(N):
-        #j_scale = D[:,j].T @ D[:,j] / 2
-        plt.scatter(D[0,j],  D[1,j], marker='x', label='Neuron {0}'.format(j))
-    plt.xlim([-2, 2])
-    plt.ylim([-2, 2])
+    plt.scatter(e[0,mask],e[1,mask], c=ts[mask], cmap=cmapsc)
+    cbar = plt.colorbar()
+    plt.scatter(gj_e[0,mask], gj_e[1, mask],c=gj_ts[mask], cmap=cmapgj)
+    cbar2 = plt.colorbar()
+    plt.title('Error Trajectory in State Space')
+    plt.xlabel(r'$y_0$')
+    plt.ylabel(r'$y_1$')
 
+    _, uA = np.linalg.eig(A)
+    uAs = uA
+    uA = np.hstack((uA, -uA))
+
+    _, sD, _ = np.linalg.svd(D)
+
+
+
+
+    # Add the patch to the Axes
+    plt.gca().add_patch(patches.Rectangle((-sD[0]**2/2,-sD[1]**2/2), sD[0]**2, sD[1]**2,  edgecolor='r', facecolor='none',label='+/- $||S_{0/1}||^2 / 2$'))
+    # for each vector in d, plot the line, uA @    (e.^T d = ||d||^2)
+    #  for d in D
+        # e0 d0 + e1 d1 = (d0**2 + d1**2) / 2
+        #e1 = ( (d0**2 + d1**2) / 2 - e0 d0 ) / d1
+    es0 = np.linspace(-np.linalg.norm(D[:,0]**2/2), np.linalg.norm(D[:,0]**2/2), num = 1000)
+
+
+    bb0 = ( (D[0,0]**2 + D[1,0]**2) / 2 - es0 * D[0,0] ) #/ D[1,0]
+    plt.plot(es0, bb0)
+
+
+    S = np.hstack((np.eye(2), - np.eye(2)))
+    #for j in range(N):
+        #plt.scatter(S[0, j], S[1, j], marker='o', label='Neuron {0}'.format(j))
+
+        #j_scale = D[:,j].T @ D[:,j] / 2
+        #plt.scatter(D[0,j],  D[1,j], marker='x', label='Neuron {0}'.format(j))
+    plt.xlim([-1, 1])
+    plt.ylim([-1, 1])
+    cbar2.set_label('Time Elapsed (Dimensionless)')
+    plt.legend()
 
     vmin = -np.min(data['vth'])
     vmax = np.max(data['vth'])
 
     plt.figure()
-    for i in range(4):
+    for i in [0, 2]:
         plt.plot(data['t'],data['V'][i,:], label='Neuron %i Voltage'%i)
     plt.legend()
     plt.title("Neuron Membrane Potentials")
@@ -564,12 +817,16 @@ def plot_basic_model(show_plots=True,N = 4, k = 1, T = 10, dt = 1e-5):
     # plt.ylabel('Neuron #')
     # plt.yticks([.4,1.15,1.85,2.6], labels=[1, 2, 3, 4])
     #
+    _, uA = np.linalg.eig(A)
+    uAs = uA
+    uA = np.hstack((uA, -uA))
+
     plt.figure()
     ts = data['t'][0:-1:plot_step]
-    plt.plot(ts, data['x_hat'][0,0:-1:plot_step],c='r',label='Dimension 0' )
-    plt.plot(ts, data['x_hat'][1,0:-1:plot_step],c='g',label='Dimension 1' )
-    plt.plot(ts, data['x_true'][0,0:-1:plot_step],c='k',label='True Dynamical System')
-    plt.plot(ts, data['x_true'][1, 0:-1:plot_step], c='k')
+    plt.plot(ts, (data['x_hat'])[0,0:-1:plot_step],c='r',label='Dimension 0' )
+    plt.plot(ts, ( data['x_hat'])[1,0:-1:plot_step],c='g',label='Dimension 1' )
+    plt.plot(ts, ( uA.T @ data['x_true'])[0,0:-1:plot_step],c='k',label='True Dynamical System')
+    plt.plot(ts, ( uA.T @ data['x_true'])[1, 0:-1:plot_step], c='k')
     plt.title('Network Decode')
     plt.legend()
     plt.ylim([-2, 2])
@@ -578,8 +835,8 @@ def plot_basic_model(show_plots=True,N = 4, k = 1, T = 10, dt = 1e-5):
 
 
     plt.figure()
-    plt.plot(ts, data['x_hat'][0,0:-1:plot_step] - data['x_true'][0,0:-1:plot_step],c='r',label='Dimension 0' )
-    plt.plot(ts, data['x_hat'][1,0:-1:plot_step] - data['x_true'][1,0:-1:plot_step],c='g',label='Dimension 1' )
+    plt.plot(ts, (data['x_hat'])[0,0:-1:plot_step] - (uA.T @ data['x_true'])[0,0:-1:plot_step],c='r',label='Dimension 0' )
+    plt.plot(ts, (data['x_hat'])[1,0:-1:plot_step] - (uA.T @ data['x_true'])[1,0:-1:plot_step],c='g',label='Dimension 1' )
     plt.title('Decode Error')
     plt.legend()
     plt.ylim([-2, 2])
