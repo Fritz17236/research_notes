@@ -1,17 +1,18 @@
-\section{Extensions of the Basic Model}
+\section{Second Order Network for Oscillatory Dynamics}
 
 
-The basic model presented in section (\ref{section:derivation:basic_model}) currently has the following limitations
-\begin{enumerate}
-\item Dynamical systems with complex eigenvalues are ill-defined
-\item Only $2d$ of $N$ neurons have nontrivial dynamics. 
-\item Network dynamics are inherently periodic and deterministic, not asynchronous. 
-\end{enumerate}
-
-We extend the basic model to address these limitations. 
-
-\subsection{Dynamical Systems with Complex Eigenvalues}
-Recall the basic self-coupled network equations:
+In section (\ref{section:derivation:basic_model}) the basic model assumes that the dynamics matrix $A$ is diagonalizable such that 
+$$
+A = \mathcal{U} \Lambda \mathcal{U}^T, 
+$$
+where $\Lambda$ is real and diagonal. This decomposition does not exist in general as only a subset of matrices in $\mathbf{R}^{d \times d}$ are diagonalizable with real eigenvalues. Equivalently, the characteristic polynomial of a matrix $A$
+$$
+P(A) = det(A - \lambda I) = 0
+$$
+can have complex roots even when $A \in \mathbf{R}^{d \times d}$. 
+\\
+\\
+Recall the voltage equations:
 
 $$
 \dot{v}
@@ -50,7 +51,23 @@ S & 0
 $$
 
 
-When the dynamical system $\dot{x} = Ax + Bc$ is oscillatory, the eigenvalues $\Lambda$ of $A=\mathcal{U} \, \Lambda \, \mathcal{U}^T$ are complex, implying $\dot{v}$ is a system of complex equations. Currently, all network quantities are only defined for real-values. Here we generalize the self-coupled network to complex vector space so that it is well defined when $A$ has complex eigenvalues.
+If $\Lambda \in \mathbf{C}^{d \times d}$, then $\dot{v}$ is a system of complex differential equations. Two problems arise with the added complexity:
+\begin{itemize}
+\item The voltage equations aren't necessarily complex-differentiable, i.e. we haven't shown they satisfy the d-dimensional Cauchy-Riemann equations. 
+
+\item Spikes are real-valued: $
+\tilde{o} \in \mathbf{R}^N.
+$
+Since $S \in \mathbf{R}^{d \times d}$, spikes can only alter the real-valued voltage component of a neuron. Equivalently, a real-valued spike can only correct the real-valued component of the networks error ($v = S \epsilon$).
+
+\end{itemize}
+
+
+We circumvent these problems by restriction to real vector spaces $\mathbf{R}^d$ and $\mathbf{R}^N$. To simultaneously obtain a self-coupled network, i.e. diagonal voltage coupling matrices, we derive voltage dynamics described by second order differential equations.
+
+
+
+
 
 
 \begin{enumerate}

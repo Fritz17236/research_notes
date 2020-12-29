@@ -18,3 +18,4 @@
 \contentsline {subsection}{\numberline {5.1}PCF Network Response to Constant Stimulus:}{34}{subsection.5.1}%
 \contentsline {subsection}{\numberline {5.2}Gap-Junction Network Response to Constant Stimulus:}{37}{subsection.5.2}%
 \contentsline {subsection}{\numberline {5.3}Comparison of Self-Coupled, Gap-Junction, and PCF Networks for a Constant Stimulus}{39}{subsection.5.3}%
+\contentsline {section}{\numberline {6}Second Order Network for Oscillatory Dynamics}{41}{section.6}%

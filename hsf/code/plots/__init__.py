@@ -2,10 +2,11 @@
 Plots for HSF Research
 '''
 
-from matplotlib.colors import LogNorm 
-from scipy.special import lambertw
-from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 unused import
 from matplotlib import cm
+from matplotlib.colors import LogNorm
+from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 unused import
+from scipy.special import lambertw
+
 # Add Base Directory for HSFNets and utils packages here.
 
 path_to_Misc_Research_Code = '/home/chris/Desktop/git_repos/Misc-Research-Code'
@@ -135,9 +136,7 @@ def rmse_phi_const_dynamics(phi):
     return np.sqrt(1 - 2 * phi * t1)
 
 
-
 # Functions for PCF Network
-
 
 def per_spike_rmse_numerical(data, idx):
     ''' given data from a network sim, compute the average per-spike rmse of neuron indexed by idx'''
@@ -267,8 +266,6 @@ def plot_test(show_plots=True,N = 4, k = 1, T = 10, dt = 1e-5):
             e_sps[np.isclose(e_sps, 1) ] = np.inf
             e_sps[e_sps <= 1 ] = np.inf
 
-
-
             spike_idx = np.argmin(e_sps)
             print(spike_idx)
 
@@ -276,17 +273,12 @@ def plot_test(show_plots=True,N = 4, k = 1, T = 10, dt = 1e-5):
 
             assert (sp_time >= 0), "Spike {3} time {0} not positive,  xhat = {1}, e_sps={2}".format(sp_time, x0, e_sps[spike_idx], spike_idx)
 
-
             x0 = x0 * np.exp(-sp_time) + D[:,spike_idx]
 
             sequence.append((spike_idx, sp_time, x0))
             count += 1
 
         return sequence
-
-
-
-
 
     A = -np.eye(2)
     B = -A
@@ -305,7 +297,6 @@ def plot_test(show_plots=True,N = 4, k = 1, T = 10, dt = 1e-5):
     x0 = k #np.asarray([-1, 1])
 
     sequence = get_steady_state_sequence(sin_func(0), D, x0.copy(), num_iter = 30)
-
 
     plt.figure()
     for j in range(N):
@@ -446,90 +437,473 @@ def plot_test(show_plots=True,N = 4, k = 1, T = 10, dt = 1e-5):
     plt.show()
 
 def plot_complex_eigvals(show_plots=True, N=4, k=1, T=10, dt=1e-5):
-    A = -np.zeros((2,2))
-    A[0,1] = -1
-    A[1,0] = 1
-    B = np.zeros(A.shape)
-    x0 = np.asarray([-1 , 1])
+    #A0 = -np.zeros((3,3))
+    A0 = np.zeros((2, 2))
+    A0[0,1] = -1
+    A0[1,0] = 1
+    A, P = real_jordan_form(A0)
+    B = 0*np.eye(A.shape[0])
+    x0 = np.asarray([1, 0])
+    input = lambda t : np.ones(x0.shape)
+    D = gen_decoder(A.shape[0], N, mode='2d cosine')
+    #D = .1 * gen_decoder(A.shape[0], N)
 
-    la, uA = np.linalg.eig(A)
+    lds = sat.LinearDynamicalSystem(x0, A, B, u=input, T=T, dt=dt)
 
-    theta = np.angle(la[0]-la[1])
-    print(la[0], la[1], la[0]-la[1])
+    # gjNet = GapJunctionDeneveNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0)
+    # dNet = ClassicDeneveNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0, lam_v=0)
+    # net = SecondOrderSymSCNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0)
+    #net = SecondOrderSCNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0)
+    #net = CSelfCoupledNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0)
+    #data = net.run_sim()
+    # gjData= gjNet.run_sim()
+    # dData = dNet.run_sim()
+    num_pts = 30
+    ss = np.logspace(-4,0,num=num_pts)
+    rates_sc = np.zeros((num_pts,))
+    rmses_sc = np.zeros((num_pts,))
+    rates_gj = np.zeros((num_pts,))
+    rmses_gj = np.zeros((num_pts,))
+    rates_dn = np.zeros((num_pts,))
+    rmses_dn = np.zeros((num_pts,))
 
-    print(theta)
 
-    D = .5 * gen_decoder(A.shape[0], N, mode='2d cosine')
+    def rmse_numerical(data):
+        ''' compute rmse averaged over simulation duration'''
+        e = data['x_true'] - data['x_hat']
+        se = [e[:,i].T @ e[:,i] for i in range(len(data['t']))]
+        assert(len(se)==len(data['t']))
+        mse = (dt / T) * np.sum(se)
+        return np.sqrt(mse)
+
+
+    for i, s in enumerate(ss):
+        print("{0} / {1}".format(i + 1, num_pts ))
+        Ds = s * D
+        net = SecondOrderSymSCNet(T=T, dt=dt, N=N, D=Ds, lds=lds, t0=0)
+        gjNet = GapJunctionDeneveNet(T=T, dt=dt, N=N, D=Ds, lds=lds, t0=0)
+        dNet = ClassicDeneveNet(T=T, dt=dt, N=N, D=Ds, lds=lds, t0=0, lam_v=0)
+        gjData = gjNet.run_sim()
+        dData = dNet.run_sim()
+        data = net.run_sim()
+        rates_sc[i] = np.sum(data['spike_nums']) / T
+        rmses_sc[i] = rmse_numerical(data)
+
+        rates_gj[i] = np.sum(gjData['spike_nums']) / T
+        rmses_gj[i] = rmse_numerical(gjData)
+
+        rates_dn[i] = np.sum(dData['spike_nums']) / T
+        rmses_dn[i] = rmse_numerical(dData)
 
 
 
-    lds = sat.LinearDynamicalSystem(x0, A, B, u=None, T=T, dt=dt)
-    net = CSelfCoupledNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0)
 
-    data = net.run_sim()
+
+    plt.figure("rmses")
+    plt.loglog(rates_sc, rmses_sc,c='r', label=r'Second Order SC', alpha =.5)
+    plt.loglog(rates_gj, rmses_gj,c='g', label=r'GJ')
+    plt.loglog(rates_dn, rmses_dn,c='b', label=r'Deneve')
+
+    #plt.loglog(rates_sc, 1 / rates, label=r'$\frac{1}{\phi}$')
+    #plt.loglog(rates_sc, 1 / np.square(rates), label=r'$\frac{1}{\phi^2}$')
+    plt.xlabel(r"$\phi$")
+    plt.legend()
+    plt.ylabel(r"RMSE")
+    #plt.axhline(dt)
+
+
+    #
+    # plt.figure('rates')
+    # plt.loglog(ss, rates,label='total spike / T')
+    # plt.loglog(ss, 1/ss,label='1/s')
+    # plt.loglog(ss, 1 / (ss*ss), label='(1/s)^2')
+    # plt.xlabel("s")
+    # plt.legend()
+    # plt.ylabel(r"$\phi$")
+
+    plt.show()
+
+    #
+    #
+    #
+    # assert(False)
     plot_step = 10
-
-
-
-
-
     vmin = -np.min(data['vth'])
     vmax = np.max(data['vth'])
+    ts = data['t']
+    dim = data['dim']
 
-    plt.figure()
-    a = 0
-    b = 2
-    plt.plot(data['t'], np.real(data['V'][a, :]), label='Real Neuron %i Voltage' % a)
-    plt.plot(data['t'], np.imag(data['V'][a, :]), label='imag Neuron %i Voltage' % a)
 
-    plt.plot(data['t'], np.real(data['V'][b, :]),'x',label='Real Neuron %i Voltage' % b)
-    plt.plot(data['t'], np.imag(data['V'][b, :]),'x', label='imag Neuron %i Voltage' % b)
+    def instantaneous_spike_rate(data, idx,  t_width):
+        ''' Given a dataset with neuron index idx, compute the instantaneous spike rate over a width t_width'''
+        N = int(t_width / dt)
+        rates = np.zeros((len(data['t']),))
+        n_spikes = data['spike_nums'][idx]
+        spike_train = data['O'][idx, 0:n_spikes]
+        for j in np.arange(N, len(rates), step = 1):
+            curr_time = data['t'][j]
+            lookback = data['t'][j - N]
+            rates[j] = np.sum([1 for t_spike in spike_train if t_spike <= curr_time and t_spike >= lookback])
 
+        return rates / t_width
+    # from j = N to len(T):
+        # rate[j] = num_spikes / t_width
+
+    rates = instantaneous_spike_rate(data, 0, 10)
+    plt.plot(data['t'], rates)
+    plt.plot(data['t'][1:],np.diff(rates))
+
+
+
+
+    def u_pred(data, idx):
+        '''given simualation data, predict the trajectory of tilde{u}_j where j=idx '''
+        t = data['t']
+        u_true = data['us'][idx,:]
+        u0 = u_true[0]
+
+        # get array of spike times
+        n_spikes = data['spike_nums'][idx]
+        spike_train = data['O'][idx, 0:n_spikes]
+        u_predicted = np.zeros(t.shape)
+        for t_spike in spike_train:
+            spike_trajectory =  np.exp(-t + t_spike)
+            spike_trajectory[t < (t_spike - data['dt'])] = 0
+            u_predicted += spike_trajectory
+        return u_predicted + np.exp(-t) * u0
+
+
+    def rho_pred(data, idx):
+        '''
+        given simulation data, predict trajectory of rho_j where j = idx
+        '''
+        t = data['t']
+        u0 = data['us'][idx, 0]
+        rho0 = data['r'][idx, 0]
+        n_spikes = data['spike_nums'][idx]
+        spike_train = data['O'][idx, 0:n_spikes]
+        t1 = spike_train[0]
+        rho_predicted = np.zeros(t.shape)
+
+        # index of time when spike occurs
+        spike_idxs = np.squeeze(np.asarray([np.nonzero(np.isclose(t_spike, t)) for t_spike in spike_train]))
+        u_preds = u_pred(data, idx)
+        for idx_spike, t_spike in enumerate(spike_train):
+            if idx_spike == 0:
+                t_last_spike = 0
+                t_idx_last_spike = 0
+            else:
+                t_last_spike = spike_train[idx_spike - 1]
+                t_idx_last_spike = spike_idxs[idx_spike - 1]
+            t_window = (t - t_last_spike)
+            t_window[t < t_last_spike] = 0
+            t_window[t > t_spike] = t_spike - t_last_spike
+            up_last_spike = u_preds[t_idx_last_spike]
+
+            term = t_window * np.exp(-t + t_last_spike) * up_last_spike
+            rho_predicted += term
+
+        t_win_1 = t.copy()
+        t_win_1[t > t1] = t1
+        init_term = np.exp(-t) * (rho0)
+        rho_predicted += init_term
+
+
+
+
+        #pred[t > t1] = pred[t > t1] -  t[t > t1] * u0
+        return rho_predicted
+        # for t_spike in spike_train[1,:]:
+        #
+        #     spike_trajectory = np.exp(-t + t_spike)
+        #     spike_trajectory[t < (t_spike - data['dt'])] = 0
+        #     u_predicted += spike_trajectory
+        # return u_predicted + np.exp(-t) * u0
+
+
+    plt.figure("u-prediction")
+    plt.plot(data['t'], u_pred(data, 0),'--', c='r',label='predicted')
+    plt.plot(data['t'], data['us'][0,:], c='g',alpha=.5,label='actual')
     plt.legend()
-    plt.title("Neuron Membrane Potentials")
-    plt.xlabel(r"Simulation Time (Dimensionless Units of $\tau$")
-    plt.ylabel('Membrane Potential')
+
+    plt.figure("rho-prediction")
+    plt.plot(data['t'], rho_pred(data, 0),'--',c='r',label='predicted')
+    plt.plot(data['t'], data['r'][0, :], c='g', alpha=.5,label='actual')
+    plt.legend()
+    plt.show()
+
+    assert(False)
 
 
+    # plot error trajectory as scatter, color with time
+    # plt.figure("error_trajectory")
+    # num_pts = 30000
+    # e = (data['x_hat']- data['x_true'])
+    # e = np.diff(e) / data['dt']
+    # cmapsc = cm.get_cmap('Reds', lut=len(ts))
+    # mask = np.arange(0, num_pts)
+    # plt.scatter(e[0, mask], e[1, mask], c=ts[mask], marker='s', cmap=cmapsc)
+    # cbar = plt.colorbar()
+    # plt.title('Error Trajectory in State Space')
+    # plt.xlabel(r'$\hat{x}_0$')
+    # plt.ylabel(r'$\hat{x}_1$')
+    # s = data['s']
+    # rect = patches.Rectangle((-s / 2, -s / 2), s, s, linewidth=2, edgecolor='r',
+    #                          facecolor='none',label=r" $\pm \frac{s}{2}$")
+    # plt.gca().add_patch(rect)
+    # cbar.set_label("Time Elapsed")
+    # plt.xlim([-.5, .5])
+    # plt.ylim([-.5, .5])
+    # plt.legend()
+
+    cols = cm.get_cmap('plasma',lut=N)
+    for i in range(N):
+        if i % 2 == 1:
+            plt.figure("us")
+            plt.plot(ts, data['us'][i,:],label='neuron %i'%i,linestyle='--')
+            plt.ylabel(r"$u(\xi)$")
+            plt.title(r"$u(\xi)$")
+            plt.xlabel(r"$\xi$")
+            plt.legend()
+
+            plt.figure("rs")
+            plt.plot(ts, data['r'][i, :], label='neuron %i' % i,linestyle='--')
+            plt.ylabel(r"$r(\xi)$")
+            plt.xlabel(r"$\xi$")
+            plt.title(r"$r(\xi)$")
+            plt.legend()
+
+            plt.figure("[Ca]")
+            plt.plot(ts, data['V'][i, :], label='neuron %i' % i,linestyle='--')
+            plt.ylabel(r"$[Ca](\xi)$")
+            plt.xlabel(r"$\xi$")
+            plt.title(r"$[Ca](\xi)$")
+            plt.legend()
+
+            plt.figure(r"$V(\xi)$")
+            plt.plot(ts, data['v_dots'][i, :], label='neuron %i' % i,linestyle='--',c=cols(i/N))
+            plt.ylabel(r"$V(\xi)$")
+            plt.xlabel(r"$\xi$")
+            plt.title(r"$V(\xi)$")
+            plt.legend()
+            plt.axhline(data['vth'][i],c=cols(0/N))
+            plt.axhline(-data['vth'][i], c=cols(0/N))
+
+        else:
+            plt.figure("us")
+            plt.plot(ts, data['us'][i,:],label='neuron %i'%i,alpha=.5)
+            plt.ylabel(r"$u(\xi)$")
+            plt.title(r"$u(\xi)$")
+            plt.xlabel(r"$\xi$")
+            plt.legend()
+
+            plt.figure("rs")
+            plt.plot(ts, data['r'][i, :], label='neuron %i' % i,alpha=.5)
+            plt.ylabel(r"$r(\xi)$")
+            plt.xlabel(r"$\xi$")
+            plt.title(r"$r(\xi)$")
+            plt.legend()
+
+            plt.figure("[Ca]")
+            plt.plot(ts, data['V'][i, :], label='neuron %i' % i,alpha=.5)
+            plt.ylabel(r"$[Ca](\xi)$")
+            plt.xlabel(r"$\xi$")
+            plt.title(r"$[Ca](\xi)$")
+            plt.legend()
+
+            plt.figure(r"$V(\xi)$")
+            plt.plot(ts, data['v_dots'][i, :], label='neuron %i' % i,alpha=.5,c=cols(i/N))
+            plt.ylabel(r"$V(\xi)$")
+            plt.xlabel(r"$\xi$")
+            plt.title(r"$V(\xi)$")
+            plt.legend()
+
+    #cmapsc = cm.get_cmap('Reds', lut=len(ts))
+    #cmapgj = cm.get_cmap('Greens', lut=len(ts))
+    #cmapsc2 = cm.get_cmap('Blues', lut=len(ts))
+    #mask = np.arange(1, int(len(ts)//4))
+    #plt.show()
+    #plt.scatter(e[0, mask], e[1, mask], c=ts[mask], marker='s', cmap=cmapsc)
+    #cbar = plt.colorbar()
+    #plt.scatter(gj_e[0, mask], gj_e[1, mask], c=gj_ts[mask], marker='.', cmap=cmapgj)
+    #sD = np.diag(data['sD']) * 1.01
+    #plt.title('Error Trajectory in State Space')
+    #plt.xlabel(r'$\hat{x}_0$')
+    #plt.ylabel(r'$\hat{x}_1$')
+    # for t in ts:
+
+    #     sD = np.diag(data['sD'])
+    #rect = patches.Rectangle((-sD[0, 0] / 2 , -sD[1, 1] / 2 ), sD[0, 0], sD[1, 1], linewidth=2, edgecolor='r', facecolor='none')
+    #     rect2 = patches.Rectangle((- np.sqrt(2) * sD[1, 1] / 2, -np.sqrt(2) * sD[1, 1] / 2), np.sqrt(2) * sD[1, 1], np.sqrt(2) * sD[1, 1], linewidth=2, edgecolor=cmapsc2(t / ts[-1]), facecolor='none')
+    #     circ = patches.Circle((0,0), radius=np.sqrt(sD[0,0])/2, facecolor='none',edgecolor='b')
+    #     t=matplotlib.transforms.Affine2D().rotate_deg_around(0, 0, angle)
+    #     t2 = matplotlib.transforms.Affine2D().rotate_deg_around(0, 0, -angle)
+    #     rect.set_transform(t + plt.gca().transData)
+    #     rect2.set_transform(t2 + plt.gca().transData)
+    #plt.gca().add_patch(rect)
+    #     plt.gca().add_patch(rect2)
+    #     plt.gca().add_patch(circ)
+    #
+    #plt.xlim([-.5, .5])
+    #plt.ylim([-.5 ,.5])
+    #cbar.set_label('Time Elapsed')
+    #data['V'] = np.real(data['V'])
+    # plt.figure()
+    # for i in range(N):
+    #     plt.plot(data['t'], (data['v_dots'][i, :]), label='Neuron %i Voltage' % i)
+    #     #plt.plot(data['t'], np.max(data['V'][i,:])/(2*np.pi) * np.unwrap(2*np.pi*data['V'][i, :]/np.max(data['V'][i,:]),discont = .1), label='Neuron %i Unwrapped' % i)
+    #     #e = np.real((uAi @ data['x_true'] - data['x_hat'])[i,:])
+    #     #em = np.max(e)
+    #
+    #     #plt.plot(data['t'], (em / (2 * np.pi)) * np.unwrap(2 * np.pi * (e / em), discont=.1), label='Network Error%i'%i)
 
 
     plt.figure()
     cbar_ticks = np.linspace( start = vmin, stop = vmax,  num = 8, endpoint = True)
-    plt.imshow(np.real(data['V']),extent=[0,data['t'][-1], 0,3],vmax=vmax, vmin=vmin,interpolation='none')
+    plt.imshow((data['v_dots']),extent=[0,data['t'][-1], 0,3],vmax=vmax, vmin=vmin,interpolation='none')
     plt.xlabel(r"Dimensionless Units of $\tau$")
     plt.axis('auto')
     cbar = plt.colorbar(ticks=cbar_ticks)
     cbar.set_label(r'$\frac{v_j}{v_{th}}$')
     cbar.ax.set_yticklabels(np.round(np.asarray([c / vmax for c in cbar_ticks]), 2))
-    plt.title('Neuron Membrane Potentials')
+    plt.title(r'$V(\xi)$')
     plt.ylabel('Neuron #')
     plt.yticks([.4,1.15,1.85,2.6], labels=[1, 2, 3, 4])
 
-    _, uA = np.linalg.eig(A)
+    plt.figure()
+    cbar_ticks = np.linspace(start=vmin, stop=vmax, num=8, endpoint=True)
+    plt.imshow((data['V']), extent=[0, data['t'][-1], 0, 3], interpolation='none')
+    plt.xlabel(r"Dimensionless Units of $\tau$")
+    plt.axis('auto')
+    cbar = plt.colorbar(ticks=cbar_ticks)
+    #cbar.set_label(r'$$')
+    cbar.ax.set_yticklabels(np.round(np.asarray([c / vmax for c in cbar_ticks]), 2))
+    plt.title(r'$[Ca](\xi)$')
+    plt.ylabel('Neuron #')
+    plt.yticks([.4, 1.15, 1.85, 2.6], labels=[1, 2, 3, 4])
+
 
     plt.figure()
     ts = data['t'][0:-1:plot_step]
-    plt.plot(ts, np.real(uA @ data['x_hat'])[0, 0:-1:plot_step], c='r', label='Dimension 0')
-    plt.plot(ts, np.real(uA @ data['x_hat'])[1, 0:-1:plot_step], 'x', c='g', label='Dimension 1')
-    plt.plot(ts, np.real( data['x_true'])[0, 0:-1:plot_step], c='k', label='True Dynamical System')
-    plt.plot(ts, np.real( data['x_true'])[1, 0:-1:plot_step], c='k')
-    plt.title('Network Decode (Real Component)')
+    true = data['x_true'][0, 0:-1:plot_step]
+    plt.plot(ts,  ( gjData['x_hat'])[0, 0:-1:plot_step], c='g', label='GJ Net')
+    plt.plot(ts, (dData['x_hat'])[0, 0:-1:plot_step], c='b', label='Deneve Net')
+    plt.plot(ts, (data['x_hat'])[0, 0:-1:plot_step], c='r', label='Second Order Net')
+    # plt.plot(ts, (P @ data['x_hat'])[2, 0:-1:plot_step], c='b', label='Dimension 2')
+    #plt.plot(ts, ( data['x_true'])[0, 0:-1:plot_step], c='k', label='True Dynamical System')
+    plt.plot(ts, true, c='k', label='True Dynamical System')
+    #plt.plot(ts, ( data['x_true'])[1, 0:-1:plot_step], c='k')
+    plt.title('Network Decode')
     plt.legend()
     plt.ylim([-2, 2])
-    plt.xlabel(r'Dimensionless Time $\tau_s$')
+    plt.xlabel(r'$\xi$')
     plt.ylabel('Decoded State')
 
 
     plt.figure()
-    plt.plot(ts, np.real(uA @ data['x_hat'])[0, 0:-1:plot_step] - np.real( data['x_true'])[0, 0:-1:plot_step], c='r',
-             label='Dimension 0')
-    plt.plot(ts, np.real(uA @ data['x_hat'])[1, 0:-1:plot_step] - np.real( data['x_true'])[1, 0:-1:plot_step],'x', c='g',
-             label='Dimension 1')
+    plt.plot(ts,
+             ( gjData['x_hat'])[0, 0:-1:plot_step] -(true),
+             c='g',
+             label='Gap Junction')
+    plt.plot(ts,
+             (dData['x_hat'])[0, 0:-1:plot_step] - (true),
+             c='b',
+             label='Deneve')
+    plt.plot(ts,
+             ( data['x_hat'])[0, 0:-1:plot_step] - (true),
+             c='r',
+             label='Second Order ')
     plt.title('Decode Error')
     plt.legend()
     plt.ylim([-2, 2])
-    plt.xlabel(r'Dimensionless Time $\tau_s$')
+    plt.xlabel(r' $\xi$')
     plt.ylabel('Decode Error')
+
+    # plt.figure('edot')
+    # plt.plot(ts,
+    #          (1 / dt) * np.squeeze(np.diff((data['x_hat']-true)[0:-1:plot_step])),
+    #          c='r',
+    #          label='Second Order ')
+    # plt.axhline(y=-data['s']/2,c='k',label='+/- vth')
+    # plt.axhline(y=data['s']/2,c='k')
+    #
+    # plt.title(r'$\dot{\epsilon}$')
+    # plt.legend()
+    # plt.ylim([-2, 2])
+    # plt.xlabel(r' $\xi$')
+    # plt.ylabel(r'$\dot{\epsilon}$')
+
+    # plt.figure("Mv")
+    # plt.imshow(data["Mv"], norm=colors.SymLogNorm(1))
+    # cbar = plt.colorbar()
+    # plt.title("Voltage Coupling")
+    # cbar.set_label("Coupling Strength")
+    #
+    #
+    # plt.figure("MCa")
+    # plt.imshow(data["MCa"],norm=colors.SymLogNorm(1))
+    # cbar = plt.colorbar()
+    # cbar.set_label("Coupling Strength")
+    # plt.title("Calcium Coupling")
+    #
+    # plt.figure("Mo")
+    # plt.imshow(data["Mo"])
+    # cbar = plt.colorbar()
+    # cbar.set_label("Coupling Strength")
+    # plt.title("Voltage Fast Coupling")
+    #
+    # plt.figure("Mr")
+    # plt.imshow(data["Mr"])
+    # cbar = plt.colorbar()
+    # cbar.set_label("Coupling Strength")
+    # plt.title("Voltage Slow Coupling")
+
+
+    #plot isi vs t
+    # n_spikes = data['spike_nums'][0]
+    # #isis = np.diff(data['O'][0,0:n_spikes])
+    # plt.figure("ttls")
+    # ts = data['t'] + data['O'][0,0]
+    # ttls = np.zeros(ts.shape)
+    # spike_train = data['O'][0, 0:n_spikes-1]
+
+
+    # for i in range(N):
+    #     n_spikes = data['spike_nums'][i]
+    #     spike_train = data['O'][i, 0:n_spikes]
+    #
+    #     for j, t in enumerate(ts):
+    #         try:
+    #             last_spike = np.max(spike_train[spike_train <= t])  # get the greatest spike time less than current
+    #             ttls[j] = t - last_spike
+    #         except Exception as e:
+    #             ttls[j] = 0
+    #
+    #     if i==0:
+    #         plt.figure("ttls")
+    #         plt.plot(ts, ttls, label='neuron {0}'.format(i) )
+    #         plt.title("Time Since Last Spike")
+    #         plt.xlabel(r"$\xi$")
+    #         plt.ylabel("Time Since Last Spike")
+    #         plt.legend()
+    #
+    #     num_spikes = [np.sum(spike_train[spike_train <= t] !=0 ) for j,t in enumerate(ts)]
+    #     plt.figure("sat's")
+    #     plt.ylabel("Number of Spikes")
+    #     plt.xlabel(r"$\xi$")
+    #     plt.plot(ts, num_spikes,label='neuron {0}'.format(i),)
+    #     plt.title("Number of Spikes vs Time Elapsed")
+    #     plt.legend()
+    #
+    #
+    #     # if i==0:
+    #     rates = np.diff(num_spikes) / data['dt']
+    #     plt.figure("isis")
+    #     plt.ylabel("Time Between Successive Spikes")
+    #     plt.xlabel(r"$Spike Number$")
+    #     plt.plot(np.diff(data['O'][i,0:n_spikes]), label='neuron {0}'.format(i))
+    #     plt.title("Interspike Intervals vs Spike Number")
+    #     plt.legend()
 
     if show_plots:
         plt.show()
@@ -539,14 +913,14 @@ def plot_basic_model_gj(show_plots=True, N=4, k=1, T=10, dt=1e-5):
     this_dir = check_dir(name)
 
     A = -np.eye(2)
-    A[0, 1] = -.5
-    A[1, 0] = -.5
+    A[0, 1] = -1
+    A[1, 0] = -1
 
     # A = -.5 * np.eye(2)
 
     B = np.eye(2)
 
-    D = .5 * gen_decoder(A.shape[0], N, mode='2d cosine')
+    D = .1 * gen_decoder(A.shape[0], N, mode='2d cosine')
 
     theta = 90 * (np.pi / 180)  # in degrees
 
@@ -626,15 +1000,12 @@ def plot_basic_model_gj(show_plots=True, N=4, k=1, T=10, dt=1e-5):
     sD = uA @ sD
     cos_theta = (sD[0:2,0]).T @ uA[:,1]
     angle = np.arccos(cos_theta) * (180 / (2 * np.pi))
-    print(angle)
 
     rect = patches.Rectangle((-sD[0, 0] / 2, -sD[1, 1] / 2), sD[0, 0], sD[1, 1], linewidth=2, edgecolor='r', facecolor='none')
-
     t=matplotlib.transforms.Affine2D().rotate_deg_around(0, 0, angle)
     rect.set_transform(t + plt.gca().transData)
     plt.gca().add_patch(rect)
 
-    print(np.cos(2), np.sin(2))
     for j in range(4):
         if j==0:
 
@@ -669,14 +1040,14 @@ def plot_basic_model(show_plots=True,N = 4, k = 1, T = 10, dt = 1e-5):
     
 
     A = -np.eye(2)
-    A[0,1] = -.5
-    A[1,0] = -.5
+    A[0,1] = -1
+    A[1,0] =  1
 
     #A = -.5 * np.eye(2)
 
     B = np.eye(2)
 
-    D = .5*gen_decoder(A.shape[0], N,mode='2d cosine')
+    D = .1 * gen_decoder(A.shape[0], N,mode='2d cosine')
 
 
 
@@ -728,7 +1099,6 @@ def plot_basic_model(show_plots=True,N = 4, k = 1, T = 10, dt = 1e-5):
     gj_e = uA.T @ gj_data['x_hat'][:,0:-1:plot_step] - uA.T @ gj_data['x_true'][:,0:-1:plot_step]
     gj_ts = gj_data['t'][0:-1:plot_step]
 
-    print(e.shape, gj_e.shape)
     cmapsc = cm.get_cmap('Reds', lut=len(ts))
     cmapgj = cm.get_cmap('Greens', lut=len(ts))
 
