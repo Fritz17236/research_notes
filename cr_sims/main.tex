@@ -1,0 +1,46 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{fullpage,enumitem,amsmath,amssymb,graphicx, caption, hyperref}
+\usepackage{subcaption, multicol}
+\newcommand\labelAndRemember[2]
+  {\expandafter\gdef\csname labeled:#1\endcsname{#2}%
+   \label{#1}#2}
+\newcommand\recallLabel[1]
+   {\csname labeled:#1\endcsname\tag{\ref{#1}}}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,   
+    urlcolor=cyan,
+}
+
+\numberwithin{equation}{section}
+
+\title{Stimulation of Plastic, Efficient Balanced Networks}
+\author{Chris Fritz} 
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+
+Purpose: Numerically Investigate Decoupling Stimulation Techniques on Efficient Balanced Networks with Plastic Weights. 
+
+Methods: 
+
+Generate a Network of LIF Neurons using the Efficient Balanced Networks (EBN) Framework (cite deneve).  
+\\
+\\
+Model Synaptic Plasticity via STDP on synaptic connections between neurons. 
+\\
+Include Coordinated Reset and Random Reset Stimulation Techniques as Input Signal to EBN Networks
+\\
+\\
+Study the resulting neuron voltage dynamics, the network's readout by:  1) Measuring the Synchrony of the Neuron Voltages  2) Measuring the RMSE of the Network Readout vs The EBN 
+
+\clearpage
+
+\end{document}
+
