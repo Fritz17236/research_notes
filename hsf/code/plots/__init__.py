@@ -439,7 +439,7 @@ def plot_test(show_plots=True,N = 4, k = 1, T = 10, dt = 1e-5):
 def plot_complex_eigvals(show_plots=True, N=4, k=1, T=10, dt=1e-5):
     #A0 = -np.zeros((3,3))
     A0 = np.zeros((2, 2))
-    A0[0,1] = -1
+    A0[0,1] = 1
     A0[1,0] = 1
     A, P = real_jordan_form(A0)
     B = 0*np.eye(A.shape[0])
@@ -453,9 +453,9 @@ def plot_complex_eigvals(show_plots=True, N=4, k=1, T=10, dt=1e-5):
     # gjNet = GapJunctionDeneveNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0)
     # dNet = ClassicDeneveNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0, lam_v=0)
     # net = SecondOrderSymSCNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0)
-    #net = SecondOrderSCNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0)
+    net = SecondOrderSCNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0)
     #net = CSelfCoupledNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0)
-    #data = net.run_sim()
+    data = net.run_sim()
     # gjData= gjNet.run_sim()
     # dData = dNet.run_sim()
     num_pts = 30
@@ -467,7 +467,7 @@ def plot_complex_eigvals(show_plots=True, N=4, k=1, T=10, dt=1e-5):
     rates_dn = np.zeros((num_pts,))
     rmses_dn = np.zeros((num_pts,))
 
-
+    #
     def rmse_numerical(data):
         ''' compute rmse averaged over simulation duration'''
         e = data['x_true'] - data['x_hat']
@@ -500,9 +500,9 @@ def plot_complex_eigvals(show_plots=True, N=4, k=1, T=10, dt=1e-5):
 
 
     plt.figure("rmses")
-    plt.loglog(rates_sc, rmses_sc,c='r', label=r'Second Order SC', alpha =.5)
-    plt.loglog(rates_gj, rmses_gj,c='g', label=r'GJ')
-    plt.loglog(rates_dn, rmses_dn,c='b', label=r'Deneve')
+    plt.loglog(rates_sc, rmses_sc,c='r', label=r'Second Order Net', alpha =.5)
+    plt.loglog(rates_gj, rmses_gj,c='g', label=r'EBN Corrected')
+    plt.loglog(rates_dn, rmses_dn,c='b', label=r'EBN')
 
     #plt.loglog(rates_sc, 1 / rates, label=r'$\frac{1}{\phi}$')
     #plt.loglog(rates_sc, 1 / np.square(rates), label=r'$\frac{1}{\phi^2}$')
@@ -512,7 +512,7 @@ def plot_complex_eigvals(show_plots=True, N=4, k=1, T=10, dt=1e-5):
     #plt.axhline(dt)
 
 
-    #
+
     # plt.figure('rates')
     # plt.loglog(ss, rates,label='total spike / T')
     # plt.loglog(ss, 1/ss,label='1/s')
@@ -549,10 +549,10 @@ def plot_complex_eigvals(show_plots=True, N=4, k=1, T=10, dt=1e-5):
     # from j = N to len(T):
         # rate[j] = num_spikes / t_width
 
-    rates = instantaneous_spike_rate(data, 0, 10)
-    plt.plot(data['t'], rates)
-    plt.plot(data['t'][1:],np.diff(rates))
-
+    # rates = instantaneous_spike_rate(data, 0, 10)
+    # plt.plot(data['t'], rates)
+    # plt.plot(data['t'][1:],np.diff(rates))
+    #
 
 
 
@@ -621,18 +621,18 @@ def plot_complex_eigvals(show_plots=True, N=4, k=1, T=10, dt=1e-5):
         # return u_predicted + np.exp(-t) * u0
 
 
-    plt.figure("u-prediction")
-    plt.plot(data['t'], u_pred(data, 0),'--', c='r',label='predicted')
-    plt.plot(data['t'], data['us'][0,:], c='g',alpha=.5,label='actual')
-    plt.legend()
-
-    plt.figure("rho-prediction")
-    plt.plot(data['t'], rho_pred(data, 0),'--',c='r',label='predicted')
-    plt.plot(data['t'], data['r'][0, :], c='g', alpha=.5,label='actual')
-    plt.legend()
-    plt.show()
-
-    assert(False)
+    # plt.figure("u-prediction")
+    # plt.plot(data['t'], u_pred(data, 0),'--', c='r',label='predicted')
+    # plt.plot(data['t'], data['us'][0,:], c='g',alpha=.5,label='actual')
+    # plt.legend()
+    #
+    # plt.figure("rho-prediction")
+    # plt.plot(data['t'], rho_pred(data, 0),'--',c='r',label='predicted')
+    # plt.plot(data['t'], data['r'][0, :], c='g', alpha=.5,label='actual')
+    # plt.legend()
+    # plt.show()
+    #
+    # assert(False)
 
 
     # plot error trajectory as scatter, color with time
@@ -786,8 +786,8 @@ def plot_complex_eigvals(show_plots=True, N=4, k=1, T=10, dt=1e-5):
     plt.figure()
     ts = data['t'][0:-1:plot_step]
     true = data['x_true'][0, 0:-1:plot_step]
-    plt.plot(ts,  ( gjData['x_hat'])[0, 0:-1:plot_step], c='g', label='GJ Net')
-    plt.plot(ts, (dData['x_hat'])[0, 0:-1:plot_step], c='b', label='Deneve Net')
+#    plt.plot(ts,  ( gjData['x_hat'])[0, 0:-1:plot_step], c='g', label='GJ Net')
+   # plt.plot(ts, (dData['x_hat'])[0, 0:-1:plot_step], c='b', label='Deneve Net')
     plt.plot(ts, (data['x_hat'])[0, 0:-1:plot_step], c='r', label='Second Order Net')
     # plt.plot(ts, (P @ data['x_hat'])[2, 0:-1:plot_step], c='b', label='Dimension 2')
     #plt.plot(ts, ( data['x_true'])[0, 0:-1:plot_step], c='k', label='True Dynamical System')
@@ -801,14 +801,14 @@ def plot_complex_eigvals(show_plots=True, N=4, k=1, T=10, dt=1e-5):
 
 
     plt.figure()
-    plt.plot(ts,
-             ( gjData['x_hat'])[0, 0:-1:plot_step] -(true),
-             c='g',
-             label='Gap Junction')
-    plt.plot(ts,
-             (dData['x_hat'])[0, 0:-1:plot_step] - (true),
-             c='b',
-             label='Deneve')
+    # plt.plot(ts,
+    #          ( gjData['x_hat'])[0, 0:-1:plot_step] -(true),
+    #          c='g',
+    #          label='Gap Junction')
+    # plt.plot(ts,
+    #          (dData['x_hat'])[0, 0:-1:plot_step] - (true),
+    #          c='b',
+    #          label='Deneve')
     plt.plot(ts,
              ( data['x_hat'])[0, 0:-1:plot_step] - (true),
              c='r',
@@ -1060,7 +1060,7 @@ def plot_basic_model(show_plots=True,N = 4, k = 1, T = 10, dt = 1e-5):
     sin_func = lambda t: np.asarray([np.cos(t*2 * np.pi / period), np.sin(t * 2 * np.pi / period )])
 
 
-    #sin_func = lambda t: np.asarray([-1, 1])
+    sin_func = lambda t: np.asarray([-1, 1])
 
     x0 = sin_func(0)
 
@@ -1069,12 +1069,12 @@ def plot_basic_model(show_plots=True,N = 4, k = 1, T = 10, dt = 1e-5):
     lds = sat.LinearDynamicalSystem(x0, A, B, u=sin_func, T=T, dt=dt)
     #pcf_net = ClassicDeneveNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0, lam_v=0)
     net = SelfCoupledNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0)
-    gj_net = GapJunctionDeneveNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0)
+    #gj_net = GapJunctionDeneveNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0)
 
 
 
     #pcf_data = pcf_net.run_sim()
-    gj_data = gj_net.run_sim()
+    #gj_data = gj_net.run_sim()
     data = net.run_sim()
     plot_step = 10
 
@@ -1096,8 +1096,8 @@ def plot_basic_model(show_plots=True,N = 4, k = 1, T = 10, dt = 1e-5):
 
     ts = data['t'][0:-1:plot_step]
     e = data['x_hat'][:,0:-1:plot_step] - uA.T @ data['x_true'][:,0:-1:plot_step]
-    gj_e = uA.T @ gj_data['x_hat'][:,0:-1:plot_step] - uA.T @ gj_data['x_true'][:,0:-1:plot_step]
-    gj_ts = gj_data['t'][0:-1:plot_step]
+    #gj_e = uA.T @ gj_data['x_hat'][:,0:-1:plot_step] - uA.T @ gj_data['x_true'][:,0:-1:plot_step]
+    #gj_ts = gj_data['t'][0:-1:plot_step]
 
     cmapsc = cm.get_cmap('Reds', lut=len(ts))
     cmapgj = cm.get_cmap('Greens', lut=len(ts))
@@ -1194,9 +1194,9 @@ def plot_basic_model(show_plots=True,N = 4, k = 1, T = 10, dt = 1e-5):
     plt.figure()
     ts = data['t'][0:-1:plot_step]
     plt.plot(ts, (data['x_hat'])[0,0:-1:plot_step],c='r',label='Dimension 0' )
-    plt.plot(ts, ( data['x_hat'])[1,0:-1:plot_step],c='g',label='Dimension 1' )
+    #plt.plot(ts, ( data['x_hat'])[1,0:-1:plot_step],c='g',label='Dimension 1' )
     plt.plot(ts, ( uA.T @ data['x_true'])[0,0:-1:plot_step],c='k',label='True Dynamical System')
-    plt.plot(ts, ( uA.T @ data['x_true'])[1, 0:-1:plot_step], c='k')
+    #plt.plot(ts, ( uA.T @ data['x_true'])[1, 0:-1:plot_step], c='k')
     plt.title('Network Decode')
     plt.legend()
     plt.ylim([-2, 2])
@@ -1229,7 +1229,7 @@ def plot_const_driving(show_plots=True,N = 4, T = 10, dt = 1e-5):
         #plot_rate_vs_k()
         #plot_rate_vs_l()
         #plot_xhat_estimate_explicit() 
-        plot_per_spike_rmse_vs_phi(T)
+        #plot_per_spike_rmse_vs_phi(T)
         #plot_per_spike_rmse_vs_phi_const_s(T) 
         #plot_per_spike_rmse_vs_phi_const_sk(T)
         #plot_rate_sweep(T)
@@ -2582,7 +2582,151 @@ def plot_pcf_gj_sc_comparison(show_plots=True,N = 32, T = 1000, dt = 1e-3, num_s
     if show_plots:
         plt.show()
         
-        
+def plot_sho(show=['pcf', 'gj', 'sc'], show_plots=True,N = 32, T = 100, dt = 1e-3):
+    '''
+    Plot network estimates vs. true output for simple harmonic oscillator 2d
+    '''
+
+    A0 = np.zeros((2, 2))
+    A0[0, 1] = -1
+    A0[1, 0] = 1
+    A, P = real_jordan_form(A0)
+    B = 0 * np.eye(A.shape[0])
+    x0 = np.asarray([1, 0])
+    input = lambda t: 0 * np.ones(x0.shape)
+    D = gen_decoder(A.shape[0], N, mode='2d cosine')
+    lds = sat.LinearDynamicalSystem(x0, A, B, u=input, T=T, dt=dt)
+
+
+
+
+    true_sim = lds.run_sim()
+
+    plot_step = 10
+
+    plt.figure('decode')
+    plt.plot(true_sim['t'][0:-1:plot_step], true_sim['X'][0, 0:-1:plot_step],  c='k', label='True Dynamical System')
+    plt.title('Network Decode Dimension 0')
+    plt.xlabel(r'Dimensionless Time $\tau_s$')
+    plt.ylabel('Decoded State')
+
+    plt.figure('r')
+    plt.title('Post-synaptic Current')
+    plt.xlabel(r'Dimensionless Time $\tau_s$')
+    plt.ylabel('r(t)')
+
+    N_disp = 2
+
+    if 'pcf' in show:
+        pcf_net = ClassicDeneveNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0, lam_v=0)
+        pcf_data = pcf_net.run_sim()
+        plt.figure('decode')
+        plt.plot(pcf_data['t'][0:-1:plot_step], pcf_data['x_hat'][0, 0:-1:plot_step], c='b',
+                 label='EBN')
+
+        plt.figure('r')
+        for j in range(N_disp):
+            plt.plot(pcf_data['t'][0:-1:plot_step], pcf_data['r'][j, 0:-1:plot_step], c='b',
+                     label='EBN')
+
+    if 'gj' in show:
+        gj_net = GapJunctionDeneveNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0)
+        gj_data = gj_net.run_sim()
+        plt.figure('decode')
+        plt.plot(gj_data['t'][0:-1:plot_step], gj_data['x_hat'][0, 0:-1:plot_step], c='g',
+                 label='Corrected EBN')
+
+        plt.figure('r')
+        for j in range(N_disp):
+            plt.plot(gj_data['t'][0:-1:plot_step], gj_data['r'][j, 0:-1:plot_step], c='g',
+                     label='Corrected EBN')
+
+    if 'sc' in show:
+        sc_net = SecondOrderSCNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0)
+        sc_data = sc_net.run_sim()
+        plt.figure('decode')
+        plt.plot(sc_data['t'][0:-1:plot_step], sc_data['x_hat'][0, 0:-1:plot_step], c='r',
+                 label='Second Order Self-Coupled')
+
+    plt.legend()
+    plt.show()
+
+
+    # gjNet = GapJunctionDeneveNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0)
+    # dNet = ClassicDeneveNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0, lam_v=0)
+    # net = SecondOrderSymSCNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0)
+   # net = SecondOrderSCNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0)
+    # net = CSelfCoupledNet(T=T, dt=dt, N=N, D=D, lds=lds, t0=0)
+   # data = net.run_sim()
+    # gjData= gjNet.run_sim()
+    # dData = dNet.run_sim()
+
+    #
+    #
+    # def rmse_numerical(data):
+    #     ''' compute rmse averaged over simulation duration'''
+    #     e = data['x_true'] - data['x_hat']
+    #     se = [e[:,i].T @ e[:,i] for i in range(len(data['t']))]
+    #     assert(len(se)==len(data['t']))
+    #     mse = (dt / T) * np.sum(se)
+    #     return np.sqrt(mse)
+    #
+    #
+    # for i, s in enumerate(ss):
+    #     print("{0} / {1}".format(i + 1, num_pts ))
+    #     Ds = s * D
+    #     net = SecondOrderSymSCNet(T=T, dt=dt, N=N, D=Ds, lds=lds, t0=0)
+    #     gjNet = GapJunctionDeneveNet(T=T, dt=dt, N=N, D=Ds, lds=lds, t0=0)
+    #     dNet = ClassicDeneveNet(T=T, dt=dt, N=N, D=Ds, lds=lds, t0=0, lam_v=0)
+    #     gjData = gjNet.run_sim()
+    #     dData = dNet.run_sim()
+    #     data = net.run_sim()
+    #     rates_sc[i] = np.sum(data['spike_nums']) / T
+    #     rmses_sc[i] = rmse_numerical(data)
+    #
+    #     rates_gj[i] = np.sum(gjData['spike_nums']) / T
+    #     rmses_gj[i] = rmse_numerical(gjData)
+    #
+    #     rates_dn[i] = np.sum(dData['spike_nums']) / T
+    #     rmses_dn[i] = rmse_numerical(dData)
+    #
+    #
+    #
+    #
+    #
+    # plt.figure("rmses")
+    # plt.loglog(rates_sc, rmses_sc,c='r', label=r'Second Order SC', alpha =.5)
+    # plt.loglog(rates_gj, rmses_gj,c='g', label=r'GJ')
+    # plt.loglog(rates_dn, rmses_dn,c='b', label=r'Deneve')
+    #
+    # #plt.loglog(rates_sc, 1 / rates, label=r'$\frac{1}{\phi}$')
+    # #plt.loglog(rates_sc, 1 / np.square(rates), label=r'$\frac{1}{\phi^2}$')
+    # plt.xlabel(r"$\phi$")
+    # plt.legend()
+    # plt.ylabel(r"RMSE")
+    # #plt.axhline(dt)
+
+    #
+    # plt.figure('rates')
+    # plt.loglog(ss, rates,label='total spike / T')
+    # plt.loglog(ss, 1/ss,label='1/s')
+    # plt.loglog(ss, 1 / (ss*ss), label='(1/s)^2')
+    # plt.xlabel("s")
+    # plt.legend()
+    # plt.ylabel(r"$\phi$")
+
+    # plt.show()
+
+    #
+    #
+    #
+    # assert(False)
+    plot_step = 10
+    # vmin = -np.min(data['vth'])
+    # vmax = np.max(data['vth'])
+    # ts = data['t']
+    # dim = data['dim']
+
         
         
         

@@ -1,0 +1,538 @@
+\section{Second Order Network for Oscillatory Dynamics}
+
+\begin{itemize}
+
+
+\item In section (\ref{section:derivation:basic_model}) the basic model assumes that the dynamics matrix $A$ is diagonalizable such that 
+$$
+A = \mathcal{U} \Lambda \mathcal{U}^T, 
+$$
+where $\Lambda$ is real and diagonal. This decomposition does not exist in general as only a subset of matrices in $\mathbf{R}^{d \times d}$ are diagonalizable with real eigenvalues. Equivalently, the characteristic polynomial of a matrix $A$
+
+$$
+P(A) = det(A - \Lambda I)
+$$
+
+can have complex roots in $\Lambda$ even when $A \in \mathbf{R}^{d \times d}$. Note that for $A = \mathcal{U}\Lambda \mathcal{U}^T$,
+
+$$
+\Lambda \in \mathbf{C}^{d \times d} \implies \mathcal{U}\in \mathbf{C}^{d \times d}.
+$$
+\\
+\\
+Consider the basic voltage equations of the self-coupled network with $d = N$:
+
+$$
+\dot{v}
+= 
+\Lambda
+v +
+S \left(\Lambda + I_2 \right)
+  \rho 
++ \beta \tilde{c}  
+  - 
+S^2 
+    \tilde{o},
+$$
+
+$$
+\dot{\rho} = -\rho + \tilde{o},
+$$
+
+$$
+\hat{y} = 
+S
+\rho.
+$$
+
+
+If $\Lambda \in \mathbf{C}^{d \times d}$, then $\dot{v}$ is a system of complex-valued differential equations of a real variable (time). The network estimation error is also complex:
+$$
+\epsilon = \mathcal{U}^* e \in \mathbf{C}^d.
+$$
+
+This network is deficient in that its estimate only minimizes real-valued errors, leaving imaginary components uncorrected. To see why, note that while $v \in \mathbf{C}^N$, the spikes are real-valued: 
+$$
+\tilde{o} \in \mathbf{R}^N,
+$$
+as well as $S \in \mathbf{R}^{d \times d}$. Therefore a spike in neuron $j$ will update the estimate by a real-valued vector:
+$$
+\epsilon'  = \epsilon + S,
+$$
+
+and update the complex-valued voltage of neuron $j$ by $s^2 \in \mathbf{R}$.
+
+
+To avoid this deficiency, we restrict all quantities to real vector spaces $\mathbf{R}^d$, meaning $A$ is no longer diagonalizable. To proceed, divide and conquer: Any real, square, full-rank matrix $A$ can be rotated into a real orthonormal basis $\mathcal{U}$ such that it is block diagonal with the form:
+
+$$
+\mathcal{U}^{-1}A\mathcal{U} = 
+\begin{bmatrix}
+\Lambda_1 & & & & & 
+\\
+& \ddots & & & & 
+\\
+& & \Lambda_n &  & & 
+\\
+& & & \mu_1 & &
+\\
+& & & & \ddots &
+\\
+& & & & & & \mu_m
+\end{bmatrix}, 
+$$
+
+where $n$ and $m$ are the number of distinct complex and real roots of $P(A)$ respectively. The blocks $\mu \in \mathbf{R}$ are scalars, while the blocks $\Lambda = a + i b$ have the form
+
+$$
+\Lambda = 
+\begin{bmatrix}
+a & -b
+\\
+b & a
+\end{bmatrix}.
+$$
+
+For the scalar blocks $\mu$ and eigenvectors $\mathcal{U}$, we can use the SC net already described with $N \geq 2m$. We need only focus on implementing the remaining blocks $\Lambda$. For simplicity, we handle just one $2 \times 2$ block by dropping the subscript $j$.
+
+First we obtain the block and basis vectors from $A \in \mathbf{R}^{2 \times 2}$. We have a complex eigenvector:
+$$
+A(u_r + i u_i) = (a + ib) (u_r + i u_i), 
+$$
+
+where $u_r$ and $u_i$ are the real and imaginary parts of the eigenvector $u$. Both real and imaginary part of this equation hold, so 
+
+\begin{align*}
+A 
+\begin{bmatrix}
+u_r & u_i
+\end{bmatrix}
+&=
+\begin{bmatrix}
+a u_r - b u_i  & b u_r + a u_i
+\end{bmatrix}
+\\
+\\
+&=
+\begin{bmatrix}
+a & -b
+\\
+b & a
+\end{bmatrix}
+\begin{bmatrix}
+u_r & u_i
+\end{bmatrix}
+\\
+\\
+\implies
+\begin{bmatrix}
+u_r & u_i
+\end{bmatrix}^{-1}
+A  
+\begin{bmatrix}
+u_r & u_i
+\end{bmatrix}
+&= \begin{bmatrix}
+a & -b
+\\
+b & a
+\end{bmatrix}.
+\end{align*}
+
+Recognizing that $\begin{bmatrix}
+u_r & u_i
+\end{bmatrix}$ are an othornormal basis for $\mathbf{R}^2$, we have our desired block form of $A$.
+
+ The rotated dynamics matrix is no longer guaranteed to be diagonal, thus our network is no longer self-coupled. Rather, the network voltages may split into pairs of connected voltages with coupling $\Lambda$. This is physically unrealistic, since coupling between voltages is not symmetric as conductance-based models such as Hodgkin-Huxley suggest. From the uniqueness of the eigenvalues, this unrealistic outcome always occurs when rotating to an orthonormal basis  while $P(A)$ has complex roots. Therefore our first order differential equations will always produce either a degenerate or unrealistic network. From first principles we've shown that the first order self coupled network is deficient for all but a small subset of dynamical systems, necessitating a second order approach.
+\\
+
+
+\item We seek a set of second order differential equations that capture the dynamics
+$$
+\dot{x} = Ax + B c,
+$$
+and that permits a diagonalizable coupling matrix between neuron voltages. For simplicity, assume that $A$ is already in real the block diagonal form above. We find a second order system that gives diagonal state transition matrices by exploiting the structure of the $2 \times 2$ block $\Lambda$: 
+
+
+First we use the symmetric-skew symmetric decomposition of a square matrix:
+
+$$
+\Lambda = L + K,
+$$
+
+where 
+
+$$
+L =  \frac{1}{2}\left(\Lambda + \Lambda^T\right)  =\begin{bmatrix}
+a & 0
+\\
+0 & a
+\end{bmatrix} = a\, I,
+$$
+
+and
+
+$$
+K =  \frac{1}{2}\left(\Lambda - \Lambda^T\right) = \begin{bmatrix}
+0 & -b
+\\
+b & 0
+\end{bmatrix}.
+$$
+
+
+From the second derivative of $x$, we find
+\begin{align*}
+\dot{x} &= \left(L + K\right)x  + Bc\notag
+\\
+\notag
+\\
+\implies
+\ddot{x}
+&= 
+\left(L + K\right) \dot{x} + B\dot{c}
+\\
+\\
+&=
+2 L \dot{x} + \left[ K^2 - L^2 - \left(LK + \left(LK\right)^T\right)\right]x + B\dot{c} + (K - L)Bc.
+\end{align*}
+
+Recognizing that 
+
+\begin{align*}
+\left[ K^2 - L^2 - \left(LK + \left(LK\right)^T\right)\right]
+&= -\Lambda^T \Lambda
+\\
+\\
+&=
+\begin{bmatrix}
+a & - b
+\\
+b & a
+\end{bmatrix}^T
+\begin{bmatrix}
+a & - b
+\\
+b & a
+\end{bmatrix}
+\\
+\\
+&=
+(a^2 + b^2)I
+\end{align*}
+
+we have 
+
+\begin{equation}
+\label{eq:second_order_system:second_order_dynamics}
+\ddot{x} = 2 L \dot{x} - \Lambda^T \Lambda x + B\dot{c} + (K - L)Bc.
+\end{equation}
+
+Equation (\ref{eq:second_order_system:second_order_dynamics})is a second order differential equation that gives both the target dynamics in the first order, and decouples the variables of state ($x$, $\dot{x}$) as desired.  
+
+\item For the network implementation of the seconder order block in equation (\ref{eq:second_order_system:second_order_dynamics}), we must compute 
+$$
+\ddot{e} = \ddot{x} - \ddot{\hat{x}}.
+$$
+
+However to do so would give 
+
+\begin{align*}
+\ddot{\hat{x}} 
+&= 
+(D\ddot{r})
+\\
+&= 
+\frac{d}{d\xi}D \left[-r + o\right],
+\end{align*}
+
+where $D \in \mathbf{R}^{d \times d}$. We'd need the derivative of $o = \sum_k\delta(\xi-\xi^k)$. Since $\frac{d}{d\xi}\delta(\xi)$ is undefined, we must modify our definition of $r$ so that its second derivative exists. We do this via cascading two leaky integrations together in a \textit{second order synapse}. Let $r$ now be the second order post-synaptic state described by
+
+$$
+\dot{r} = -r + u,
+$$
+
+where
+
+$$
+\dot{u} = -u + o.
+$$
+
+Since $r$ and $u$ are strictly nonnegative, we will again need to add a second set of anti-parallel neurons to ensure that the network estimate spans all of $\mathbf{R}^2$. The original encoding direction matrix is
+$$
+D = \mathcal{U} S V^T,
+$$
+
+where each of $U$, $S = sI$, and $V$ $\in \mathbf{R}^{2 \times 2}$.  We replace this with 
+$$
+D = s\begin{bmatrix}
+\mathcal{U}  & 
+\\
+& \mathcal{U}
+\end{bmatrix}
+\begin{bmatrix}
+V^T &  
+\\
+& -V^T
+\end{bmatrix},
+$$
+
+to obtain an augmented $D \in \mathbf{R}^{4 x 4}$. With the doubled number neurons, we now have $r, o \in \mathbf{R}^{4}$, and the network estimate is:
+
+
+\begin{align*}
+\hat{x} 
+&= 
+\begin{bmatrix} I_2 &  -I_2\end{bmatrix} Dr
+\\
+\\
+\implies
+\ddot{\hat{x}} 
+&=
+\begin{bmatrix} I_2 &  -I_2\end{bmatrix} Dr
+- 
+2
+\begin{bmatrix} I_2 &  -I_2\end{bmatrix} Du
++
+\begin{bmatrix} I_2 &  -I_2\end{bmatrix} Do
+\\
+\\
+\implies
+\dot{e}
+&=
+(L + K)x + Bc + \begin{bmatrix}
+I_2 & -I_2
+\end{bmatrix}Dr
+- 
+\begin{bmatrix}
+I_2 & -I_2
+\end{bmatrix}
+Du
+\\
+\\
+\implies
+\ddot{e}
+&= 
+2 L \dot{e} + (I_2-\Lambda^T \Lambda - 2L) \left(\begin{bmatrix} I_2 &  -I_2\end{bmatrix} Dr\right)
++
+2 (L + I_2) \begin{bmatrix} I_2 &  -I_2\end{bmatrix} Du
+-
+\begin{bmatrix} I_2 &  -I_2\end{bmatrix} Do + B\dot{c} + (K-L)Bc.
+\end{align*}
+
+
+The first order network greedily minimized 
+
+$$
+\mathcal{L}(\xi) = ||e(\xi)||.
+$$
+
+A spike of neuron $k$ at time $\xi$ updated the estimate by 
+
+$$
+e(\xi + d\xi) = e(\xi) - d_k \hspace{4mm} \text{(First Order Network)},
+$$
+
+where $d_k$ was the $k^{th}$ column of $D$. With the second order network, the estimate does not change over the interval $d\xi$, i.e
+$$
+e(\xi + d\xi) \simeq e(\xi) \hspace{4mm} \text{(Second Order Network)}.
+$$
+
+Thus a greedy optimization of $e$ over the interval $d\xi$ will perform poorly, since each possible choice of spike time and neuron leads to no change in the network estimate. However, minimizing the derivative $||\dot{e}||$ works similarly to minimizing $||e||$ in the first order case: Let the network minimize
+
+$$
+\mathcal{L}(\xi) = ||\dot{e}||
+$$
+
+When neuron $k$ spikes, the $k_{th}$ column of the augmented $D$, $d_k \in \mathbf{R}^{4}$ is premultiplied by $\begin{bmatrix} I_2 & I_2\end{bmatrix}$ then added to the network estimate:
+
+\begin{align*}
+\mathcal{L}_{sp} &= ||\dot{x} - \left( \dot{\hat{x}} + 
+\begin{bmatrix}
+I_2& -I
+\end{bmatrix}
+d_k
+\right)
+||
+\\
+\\
+&=
+\mathcal{L}_{ns} - 2 \dot{e}^T\left(\begin{bmatrix}
+I_2& -I
+\end{bmatrix}
+d_k
+\right) + d_k^T \begin{bmatrix}
+I_2 & -I_2 \\
+-I_2 & I_2
+\end{bmatrix}
+d_k
+\end{align*}
+
+
+The spiking condition $\mathcal{L}_{sp} < \mathcal{L}_{ns}$ gives 
+\begin{align*}
+d_k^T \begin{bmatrix}
+\dot{e}
+\\
+-\dot{e}
+\end{bmatrix} > 
+\frac{1}{2}
+d_k
+\begin{bmatrix}
+I_2& -I_2
+\\
+-I_2& I_2
+\end{bmatrix}
+d_k
+\\
+\\
+\implies 
+v_k > \frac{1}{2}
+d_k
+\begin{bmatrix}
+I_2& -I_2
+\\
+-I_2& I_2
+\end{bmatrix}
+d_k,
+\end{align*}
+
+where
+
+\begin{align*}
+v_k &= d_k^T \begin{bmatrix}
+\dot{e}
+\\
+-\dot{e}
+\end{bmatrix}  \hspace{4mm} k \in [1, \ldots, 4]
+\\
+\\
+\implies
+\dot{v} &=
+D^T \begin{bmatrix}
+\ddot{e}
+\\
+-\ddot{e}
+\end{bmatrix},
+\end{align*}
+
+where $v \in \mathbf{R}^{4}, e \in \mathbf{R}^2$.
+
+Using the expression for $\ddot{e}$ above, we arrive at the second order voltage equations for a given $2 \times 2 $ block $j$:
+
+\begin{align*}
+\dot{v} = 2\, \begin{bmatrix}
+L & 
+\\
+& L
+\end{bmatrix}
+v
+-
+\begin{bmatrix}
+\Lambda^T \Lambda &
+\\
+&\Lambda^T \Lambda
+\end{bmatrix}
+\int v(\tau) d\tau 
++
+D^T 
+\begin{bmatrix}
+I_2 - \Lambda^T \Lambda - 2L &
+\\
+& I_2 - \Lambda^T \Lambda - 2L &
+\end{bmatrix}
+\begin{bmatrix}
+I_2& -I_2
+\\
+-I_2 & I_2
+\end{bmatrix}
+D r
++ 
+\\
+\\
+2 D^T
+\begin{bmatrix}
+I + L &
+\\
+&I + L
+\end{bmatrix}
+\begin{bmatrix}
+I_2& -I_2
+\\
+-I_2& I_2
+\end{bmatrix}
+D u
+-
+D^T
+\begin{bmatrix}
+I_2& -I_2
+\\
+-I_2& I_2
+\end{bmatrix}
+D o
++ D^T B\dot{c} 
++ D^T(K - L)Bc
+\end{align*}
+
+
+Because we've assumed $A$ was already in block diagonal form, we can get the self-coupled network voltage equations by simple substitution of the rotated quantities $\rho$, $\epsilon$,  $\tilde{o}$, $S = sI$, and now  $\tilde{u}$ for u:
+
+\begin{align*}
+\dot{v} = 2\, \begin{bmatrix}
+L & 
+\\
+& L
+\end{bmatrix}
+v
+-
+\begin{bmatrix}
+\Lambda^T \Lambda &
+\\
+&\Lambda^T \Lambda
+\end{bmatrix}
+\int v(\tau) d\tau 
++
+s^2
+\begin{bmatrix}
+I_2 - \Lambda^T \Lambda - 2L &
+\\
+& I_2 - \Lambda^T \Lambda - 2L &
+\end{bmatrix}
+\begin{bmatrix}
+I_2& -I_2
+\\
+-I_2 & I_2
+\end{bmatrix}
+r
++ 
+\\
+\\
+2 s^2
+\begin{bmatrix}
+I + L &
+\\
+&I + L
+\end{bmatrix}
+\begin{bmatrix}
+I_2& -I_2
+\\
+-I_2& I_2
+\end{bmatrix}
+u
+-
+s^2
+\begin{bmatrix}
+I_2& -I_2
+\\
+-I_2& I_2
+\end{bmatrix}
+o
++ s \beta \dot{\tilde{c}} + s(K - L)\beta \tilde{c}
+\end{align*}
+
+Note $v \in \mathbf{R}^4$ is the voltage of the four neurons associated with the $j^{th}$ block of $A$'s normal form. The integral $\int v d\tau$ physically describes the Calcium concentration of the four neurons.
+\end{itemize}
+
+
+
+

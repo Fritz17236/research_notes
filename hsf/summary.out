@@ -1,0 +1,5 @@
+\BOOKMARK [1][-]{section.1}{Mathematical Properties of Neurons}{}% 1
+\BOOKMARK [1][-]{section.2}{Efficient Balanced Networks}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Network Readout and Error}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{Membrane Voltage from Error Optimization}{section.2}% 4
+\BOOKMARK [2][-]{subsection.2.3}{Separating Voltage from Given System Dynamics}{section.2}% 5

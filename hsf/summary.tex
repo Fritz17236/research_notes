@@ -1,0 +1,202 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{fullpage,enumitem,amsmath,amssymb,graphicx, caption, hyperref}
+\usepackage{subcaption, multicol}
+\newcommand\labelAndRemember[2]
+  {\expandafter\gdef\csname labeled:#1\endcsname{#2}%
+   \label{#1}#2}
+\newcommand\recallLabel[1]
+   {\csname labeled:#1\endcsname\tag{\ref{#1}}}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,   
+    urlcolor=cyan,
+}
+
+
+\begin{document}
+\section{Mathematical Properties of Neurons}
+We use leaky integrate-and-fire neurons. Let $v(t)$ denote the membrane voltage. The neuron input current is  $I_{in}(t)$ and its leak current is $I_{leak}$:
+
+\begin{equation}
+\dot{v} = I_{in}(t) - I_{leak}(t).
+\end{equation}
+
+The neuron spikes when it reaches threshold voltage $v_{th}$ at spike time $t_{spike}$.
+\begin{equation}
+v(t_{spike}) = v_{th}.
+\end{equation}
+
+The voltage is reset over the instant $dt$: 
+\begin{equation}
+v(t_{spike} + dt) = v_{reset}.
+\end{equation}
+
+Using $\delta$ functions captures this behavior. The neuron's $k^{th}$ spike contributes to the neuron spike train $o(t)$:
+
+\begin{equation}
+o(t) = \sum_{k=0}^\infty \delta(t - t_{sp}^k).
+\end{equation}
+
+We model two types of connections between neurons: chemical synapses and electrical gap-junctions. At a synapse between neurons $a$ and $b$, We model the post-synaptic current of neuron $b$ $r_b(t)$ as a first order low-pass filter driven by the spike train of neuron $a$
+\begin{equation}
+\label{eq:r}
+r_{b}(t) = -r_b(t) + o_a(t).
+\end{equation}
+
+For electrical gap-junctions, the current flow from neuron $a$ to $b$ is 
+\begin{equation}
+I_{ab}(t) = g_{ab}(v_a(t) - v_b(t)).
+\end{equation}
+Note that current is conserved in gap-junctions:
+
+\begin{equation}
+I_{ab}(t) = - I_{ba}(t).
+\end{equation}
+
+
+\section{Efficient Balanced Networks}
+The Efficient Balanced Networks (EBN) framework describes how to obtain voltage and connectivity parameters for a network of LIF neurons such that the network mimics the behavior of a given linear dynamical system.  It consists of three steps:
+
+\begin{itemize}
+\item Define Network Readout and Error
+
+\item Optimize Readout Error to Get Membrane Voltage and Threshold
+
+\item Separate Voltage Dynamics from Given System Dynamics
+\end{itemize}
+
+\subsection{Network Readout and Error}
+The linear dynamical system describes the state variable $x$ in $d-$dimensional space:
+
+\begin{equation}
+\label{eq:x_hat}
+\dot{x}(t) = Ax(t) + Bc(t).
+\end{equation}
+
+
+The network estimate $\hat{x}(t)$ is defined as
+\begin{equation}
+\hat{x}(t) = D r(t),
+\end{equation}
+
+where 
+\begin{equation}
+D = \begin{bmatrix}
+d_1 & \ldots & d_N
+\end{bmatrix}
+\end{equation}
+gives the encoding directions of $N$ neurons in the $d-$dimensional space. 
+The error is the difference between the network estimate and the true state:
+
+\begin{align*}
+e(t) &= x(t) - \hat{x}(t)
+\\
+\\
+\implies
+\dot{e} &= \dot{x} - \dot{\hat{x}}
+\\
+\\
+&= 
+Ax + Bc - D \dot{r}
+\\
+\\
+&=
+Ax + Bc + Dr - Do
+\\
+\\
+&=
+A(e + \hat{x}) + Bc + Dr - Do.
+\end{align*}
+
+Since $\hat{x} = Dr$, this gives error dynamics
+\begin{equation}
+\dot{e}
+=
+Ae + (A + I)Dr + Bc - Do.
+\label{eq:error_dynamics}
+\end{equation}
+
+\subsection{Membrane Voltage from Error Optimization}
+EBN assumes neurons encode information in their spike times as opposed to their rate. We assume the neurons' thresholds and connectivity are configured such that their spike times greedily minimize the network error:
+
+\begin{equation}
+\mathcal{L}(t) = ||e(t + dt)||_2^2. 
+\end{equation}
+
+From equations (\ref{eq:r}), (\ref{eq:x_hat}), and (\ref{eq:error_dynamics}) it is clear that when neuron $j$ spikes, 
+
+\begin{align*}
+\mathcal{L}_{sp}(t)
+&=
+||x - (\hat{x} + d_j)||^2_2
+\\
+\\
+&= 
+||e(t)||_2^2 - 2 d_j^Te(t) + \frac{||d_j||^2_2}{2}
+\\
+\\
+&=
+\mathcal{L}_{ns} -2 d_j^Te(t) + \frac{||d_j||^2_2}{2},
+\end{align*}
+
+where $\mathcal{L}_{ns}$ is the objective if neuron $j$ does not spike. The greedy optimization gives spiking condition
+\begin{align*}
+\mathcal{L}_{sp} &< \mathcal{L}_{ns} 
+\\
+\\
+\implies
+d_j^T e(t) &> \frac{||d_j||^2_2}{2}.
+\end{align*}
+The left and right sides above give the neuron's membrane voltage and threshold respectively:
+\begin{equation}
+\label{eq:voltage}
+v_j(t) = d_j^T e(t),
+\end{equation}
+\begin{equation}
+v_{th} = \frac{||d_j||^2_2}{2}.
+\end{equation}
+
+The derivative of equation (\ref{eq:voltage}) gives voltage dynamics:
+
+\begin{align*}
+\dot{v}_j(t) = d_j^T \dot{e}(t).
+\end{align*}
+
+From equation (\ref{eq:error_dynamics}) the voltages for every neuron are given by 
+
+\begin{align}
+\label{eq:voltage_dynamics}
+\dot{v}(t) &= D^T \dot{e} \notag
+\\ \notag
+\\ 
+\implies
+\dot{v}&=
+D^TAe + D^T(A + I)Dr + D^TBc - D^TDo.
+\end{align}
+
+
+\subsection{Separating Voltage from Given System Dynamics} 
+The neurons should mimic the given linear dynamical system $\dot{x}$ using their own intrinsic LIF voltage dynamics. The presence of $e = x - \hat{x}$ in equation (\ref{eq:voltage_dynamics}) implies that a neuron has physical access to the dynamical system it's mimicking. If this were true, the network would be a waste of precious neural resources: it's entire purpose is to mimic the target system. 
+
+Assuming the neurons do not have access to the true dynamical system, we must remove the dependence of voltages $v(t)$ on the system dynamics $x(t)$.  EBN achieves this by assuming the network error is $0$ when the network is working as expected:
+$$
+x = \hat{x} \implies e = 0. 
+$$
+
+We arrive at the final EBN voltage dynamics equation:
+
+\begin{equation}
+\label{eq:voltage_dynamics_final}
+\dot{v}(t) = D^T(A + I)Dr(t) + D^TBc(t) - D^TDo(t).
+\end{equation}
+
+
+
+
+
+
+
+\end{document}

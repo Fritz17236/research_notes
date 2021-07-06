@@ -13,10 +13,22 @@
    viewBox="0 0 210 297"
    version="1.1"
    id="svg8"
-   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)"
    sodipodi:docname="ev_rotated_classic_graph.svg">
   <defs
      id="defs2">
+    <rect
+       x="256.07887"
+       y="129.07887"
+       width="245.30655"
+       height="91.470238"
+       id="rect1226" />
+    <rect
+       x="-12.095238"
+       y="24.001488"
+       width="248.70833"
+       height="108.10119"
+       id="rect1220" />
     <rect
        id="rect6354"
        height="15.772582"
@@ -718,8 +730,8 @@
      inkscape:window-maximized="1"
      inkscape:window-y="-8"
      inkscape:window-x="-8"
-     inkscape:window-height="1017"
-     inkscape:window-width="1920"
+     inkscape:window-height="1377"
+     inkscape:window-width="3440"
      showgrid="false"
      inkscape:document-rotation="0"
      inkscape:current-layer="layer1"
@@ -753,6 +765,16 @@
      id="layer1"
      inkscape:groupmode="layer"
      inkscape:label="Layer 1">
+    <rect
+       style="fill:#ffffff;stroke:#fffffc;stroke-width:0.697699"
+       id="rect1230"
+       width="207.64917"
+       height="95.061005"
+       x="0.9936865"
+       y="22.300594"
+       inkscape:export-filename="C:\Users\fritz\Desktop\git repos\talks_presentations_etc\phd_quals\figures\full_rotated_mapping.png"
+       inkscape:export-xdpi="128"
+       inkscape:export-ydpi="128" />
     <text
        style="line-height:1.25;font-family:sans-serif;font-size:2.11666667px;white-space:pre;shape-inside:url(#rect835);"
        id="text833"
@@ -1203,7 +1225,7 @@
          y="75.838737"
          x="164.88922"
          id="tspan6716"
-         sodipodi:role="line">Transformed Space</tspan></text>
+         sodipodi:role="line">Rotated Space</tspan></text>
     <path
        id="path6720"
        d="m 41.933976,74.378459 0.930701,0.542753 122.097073,0.0081"
@@ -1253,5 +1275,13 @@
            style="fill:#000000;fill-opacity:1" />
       </g>
     </g>
+    <text
+       xml:space="preserve"
+       id="text1218"
+       style="fill:black;fill-opacity:1;line-height:1.25;stroke:none;font-family:sans-serif;font-style:normal;font-weight:normal;font-size:10.58333333px;white-space:pre;shape-inside:url(#rect1220);" />
+    <text
+       xml:space="preserve"
+       id="text1224"
+       style="fill:black;fill-opacity:1;line-height:1.25;stroke:none;font-family:sans-serif;font-style:normal;font-weight:normal;font-size:10.58333333px;white-space:pre;shape-inside:url(#rect1226);" />
   </g>
 </svg>

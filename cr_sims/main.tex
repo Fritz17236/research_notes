@@ -26,11 +26,102 @@
 \maketitle
 
 
-Purpose: Numerically Investigate Decoupling Stimulation Techniques on Efficient Balanced Networks with Plastic Weights. 
+\section{Purpose} Numerically Investigate Decoupling Stimulation Techniques on Efficient Balanced Networks with Plastic Weights. 
 
-Methods: 
+\section{Methods}
 
-Generate a Network of LIF Neurons using the Efficient Balanced Networks (EBN) Framework (cite deneve).  
+
+We use an Efficient Balanced Network with Synaptic Delays[Chalk, Deneve] to implement a linear dynamical system. We add Hebbian Spike-Timing-Dependent Plasticity [cite tass] into the synaptic connections of the resulting LIF network giving time-varying synaptic weights. We study the effect of coordinated-reset (CR) and random-reset (RR) stimulations on both the synchrony of the spiking activity measured by the Kuramoto order paramter [cite tass],  and the network's estimate of the given linear dynamical system. 
+
+
+
+\begin{itemize}
+\item \textit{\textbf{Efficient Balanced Networks:}} Using the Efficient Balanced Networks (EBN) Framework (cite deneve), we implement the linear dynamical system,
+\begin{align}
+\dot{x} &= 
+\begin{bmatrix}  
+0 & -1 \\
+1 & 0
+\end{bmatrix}
+x, \notag
+\\ 
+\\ \notag
+x(0) &= \begin{bmatrix}1 & 0 \end{bmatrix}.
+\end{align}
+
+The neuron's voltage leak and readout decay rates are  $\lambda_d = \lambda_V =  1$ respectively, and the neuron's encoding directions are equally distributed along the unit circle:
+\begin{align}
+D &= \begin{bmatrix} d_1 & \hdots & d_{64} \end{bmatrix}, \notag
+\\
+\\
+d_j &=  \notag
+\begin{bmatrix}
+cos(\frac{j}{64} 2 \pi) &
+sin(\frac{j}{64} 2 \pi) 
+\end{bmatrix}^T.
+\end{align}
+
+The resulting LIF network with spike trains $o(t)$ has voltage dynamics
+
+\begin{align}
+\dot{v} &= -v + \Omega^{slow} \,  r - \Omega^{fast} \, o(t) + \eta(t) 
+\\ \notag
+\\ 
+\dot{r} &= -r + o(t),
+\\ \notag
+\\\notag
+\text{with }
+\\\notag
+\\
+\Omega^{slow} &= D^T (A + I) D  \notag
+\\\
+\label{eq:kernels}
+\\\notag
+\Omega^{fast} &= D^T D,
+\end{align} 
+spiking thresholds 
+\begin{equation}
+v_{th} = \frac{||d_j||^2}{2} = 1,
+\end{equation} and readout 
+\begin{equation}
+\hat{x} = D r. 
+\end{equation}
+
+\item \textbf{\textit{Synaptic Delays: }}
+
+
+\item  \textbf{\textit{Spike-Timing Dependent Plasticity: }} We incorporate plasticity by dynamically altering the weights using Hebbian STDP rules.[cite cite] The network connectivity features two sets of synapses, $\Omega^{slow}$ and $\Omega^{fast}$ in equation (\ref{eq:kernels}). The  arrival of a spike from pre-synaptic neuron $i$ to post-synaptic neuron $j$ triggers an update to the synaptic weight between the pre and post-synaptic neurons $\Omega^{slow/fast}_{ij}$. The update to the weight is
+$$
+\Omega_{ij} \rightarrow \Omega_{ij} + W(t_j - (t_i + t_d))), 
+$$
+
+where
+
+\begin{equation}
+W(\Delta t) = \alpha  
+\begin{cases}
+e^{-\frac{|\Delta t|}{\tau_+}}, & \Delta t > 0
+\\
+0, & \Delta t = 0
+\\
+-\frac{\beta}{\tau_R} e^{-\frac{|\Delta t|}{\tau_-}},
+\end{cases}
+\end{equation}
+
+models the time depedence of synaptic plasticity.
+
+\item \textbf{\textit{Coordinated Reset Stimulation: }}
+
+\end{itemize}
+
+
+
+
+
+\begin{align}
+1
+\end{align}
+where $S(t) \in \mathbf{R}^2$ is a stimulation signal. 
 \\
 \\
 Model Synaptic Plasticity via STDP on synaptic connections between neurons. 
@@ -38,8 +129,14 @@ Model Synaptic Plasticity via STDP on synaptic connections between neurons.
 Include Coordinated Reset and Random Reset Stimulation Techniques as Input Signal to EBN Networks
 \\
 \\
-Study the resulting neuron voltage dynamics, the network's readout by:  1) Measuring the Synchrony of the Neuron Voltages  2) Measuring the RMSE of the Network Readout vs The EBN 
-
+Study the resulting neuron voltage dynamics, the network's readout by: 
+	
+	 1) Measuring the Synchrony of the Neuron Voltages  
+	 
+	 2) Measuring the RMSE of the Network Readout vs The EBN 
+	 
+	 
+	 
 \clearpage
 
 \end{document}
